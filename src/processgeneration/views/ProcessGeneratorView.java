@@ -17,6 +17,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.swt.layout.FillLayout;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -41,7 +42,7 @@ public class ProcessGeneratorView extends ViewPart {
 		GridData gd = null;
 
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		parent.setLayout(new GridLayout(1, false));
+		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
 		form = toolkit.createScrolledForm(parent);
 		form.setDelayedReflow(true);
 		form.getBody().setLayout(new GridLayout(2, true));
@@ -361,26 +362,6 @@ public class ProcessGeneratorView extends ViewPart {
 		groupTerminaison.setBounds(0, 0, 70, 82);
 		toolkit.adapt(groupTerminaison);
 		toolkit.paintBordersFor(groupTerminaison);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
-		new Label(form.getBody(), SWT.NONE);
 		new Label(form.getBody(), SWT.NONE);
 		new Label(form.getBody(), SWT.NONE);
 		GridLayout layout = new GridLayout();
