@@ -15,3 +15,7 @@
 *.exe
 *.out
 *.app
+
+# java class
+*.class
+bin/*
