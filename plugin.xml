@@ -12,7 +12,7 @@
             name="ProcessGeneratorView"
             icon="icons/sample.gif"
             category="ProcessGeneration"
-            class="processgeneration.views.ProcessGeneratorView"
+            class="fr.lip6.move.processGenerator.views.ProcessGeneratorView"
             id="processgeneration.views.ProcessGeneratorView">
       </view>
    </extension>

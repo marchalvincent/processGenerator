@@ -1,4 +1,4 @@
-package processgeneration;
+package fr.lip6.move.processGenerator;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

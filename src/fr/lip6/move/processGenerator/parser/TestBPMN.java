@@ -1,4 +1,4 @@
-package processgeneration.parser;
+package fr.lip6.move.processGenerator.parser;
 
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
