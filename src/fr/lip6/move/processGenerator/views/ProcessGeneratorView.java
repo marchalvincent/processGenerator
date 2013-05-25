@@ -20,6 +20,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -100,22 +102,22 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(scrolledFormTarget);
 		scrolledFormTarget.getBody().setLayout(new GridLayout(2, true));
 
-		Section sctnLocationSize = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
-		sctnLocationSize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		sctnLocationSize.marginWidth = 0;
-		sctnLocationSize.marginHeight = 0;
-		toolkit.paintBordersFor(sctnLocationSize);
-		sctnLocationSize.setText("Location and size");
-		sctnLocationSize.setExpanded(true);
+		Section sctnFile = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
+		sctnFile.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sctnFile.marginWidth = 0;
+		sctnFile.marginHeight = 0;
+		toolkit.paintBordersFor(sctnFile);
+		sctnFile.setText("File information");
+		sctnFile.setExpanded(true);
 
-		Composite compositeTarget1 = new Composite(sctnLocationSize, SWT.NONE);
+		Composite compositeTarget1 = new Composite(sctnFile, SWT.NONE);
 		toolkit.adapt(compositeTarget1);
 		toolkit.paintBordersFor(compositeTarget1);
-		sctnLocationSize.setClient(compositeTarget1);
+		sctnFile.setClient(compositeTarget1);
 		compositeTarget1.setLayout(new GridLayout(1, false));
 
 		Composite compositeLigne1 = new Composite(compositeTarget1, SWT.NONE);
-		compositeLigne1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		compositeLigne1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(compositeLigne1);
 		toolkit.paintBordersFor(compositeLigne1);
 		compositeLigne1.setLayout(new GridLayout(3, false));
@@ -134,7 +136,7 @@ public class ProcessGeneratorView extends ViewPart {
 		btnChange_1.setText("Change");
 
 		Composite compositeLigne2 = new Composite(compositeTarget1, SWT.NONE);
-		compositeLigne2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		compositeLigne2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(compositeLigne2);
 		toolkit.paintBordersFor(compositeLigne2);
 		compositeLigne2.setLayout(new GridLayout(5, false));
@@ -160,6 +162,34 @@ public class ProcessGeneratorView extends ViewPart {
 		spinnerMargin.setSelection(5);
 		toolkit.adapt(spinnerMargin);
 		toolkit.paintBordersFor(spinnerMargin);
+		
+		Composite compositeLigne3 = new Composite(compositeTarget1, SWT.NONE);
+		compositeLigne3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		toolkit.adapt(compositeLigne3);
+		toolkit.paintBordersFor(compositeLigne3);
+		compositeLigne3.setLayout(new GridLayout(1, false));
+		
+		Group groupFileType = new Group(compositeLigne3, SWT.NONE);
+		groupFileType.setText("File type");
+		groupFileType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		toolkit.adapt(groupFileType);
+		toolkit.paintBordersFor(groupFileType);
+		groupFileType.setLayout(new GridLayout(2, true));
+		
+		Button btnBpmn = new Button(groupFileType, SWT.CHECK);
+		btnBpmn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnBpmn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		toolkit.adapt(btnBpmn, true, true);
+		btnBpmn.setText("BPMN 2.0");
+		
+		Button btnUmlAd = new Button(groupFileType, SWT.CHECK);
+		btnUmlAd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		toolkit.adapt(btnUmlAd, true, true);
+		btnUmlAd.setText("UML2.0 AD");
 
 		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2));

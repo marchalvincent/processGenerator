@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_vu_twcR8EeKvgp2oO0tEAg" targetNamespace="_test">
-  <bpmn2:process id="_model">
-    <bpmn2:startEvent id="_start"/>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" xmlns:tns="http://www.jboss.org/drools" xmlns:xmlns="http://www.jboss.org/drools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="_Ah4-8MVIEeKIz8d-jWOX9w" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:process id="_Ah4-8cVIEeKIz8d-jWOX9w">
+    <bpmn2:startEvent id="id_start_1" name="start_1">
+      <bpmn2:outgoing>id_sequence_9</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="id_task_2" name="task_2">
+      <bpmn2:incoming>id_sequence_9</bpmn2:incoming>
+      <bpmn2:outgoing>id_sequence_10</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:parallelGateway id="idparallelDiverging_3" name="parallelDiverging_3" gatewayDirection="Diverging">
+      <bpmn2:incoming>id_sequence_10</bpmn2:incoming>
+      <bpmn2:outgoing>id_sequence_11</bpmn2:outgoing>
+      <bpmn2:outgoing>id_sequence_12</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:task id="id_task_4" name="task_4">
+      <bpmn2:incoming>id_sequence_11</bpmn2:incoming>
+      <bpmn2:outgoing>id_sequence_13</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="id_task_5" name="task_5">
+      <bpmn2:incoming>id_sequence_12</bpmn2:incoming>
+      <bpmn2:outgoing>id_sequence_14</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:parallelGateway id="idparallelConverging_6" name="parallelConverging_6" gatewayDirection="Converging">
+      <bpmn2:incoming>id_sequence_13</bpmn2:incoming>
+      <bpmn2:incoming>id_sequence_14</bpmn2:incoming>
+      <bpmn2:outgoing>id_sequence_15</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:task id="id_task_7" name="task_7">
+      <bpmn2:incoming>id_sequence_15</bpmn2:incoming>
+      <bpmn2:outgoing>id_sequence_16</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:endEvent id="id_end_8" name="end_8">
+      <bpmn2:incoming>id_sequence_16</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="id_sequence_9" name="sequence_9" sourceRef="id_start_1" targetRef="id_task_2"/>
+    <bpmn2:sequenceFlow id="id_sequence_10" name="sequence_10" sourceRef="id_task_2" targetRef="idparallelDiverging_3"/>
+    <bpmn2:sequenceFlow id="id_sequence_11" name="sequence_11" sourceRef="idparallelDiverging_3" targetRef="id_task_4"/>
+    <bpmn2:sequenceFlow id="id_sequence_12" name="sequence_12" sourceRef="idparallelDiverging_3" targetRef="id_task_5"/>
+    <bpmn2:sequenceFlow id="id_sequence_13" name="sequence_13" sourceRef="id_task_4" targetRef="idparallelConverging_6"/>
+    <bpmn2:sequenceFlow id="id_sequence_14" name="sequence_14" sourceRef="id_task_5" targetRef="idparallelConverging_6"/>
+    <bpmn2:sequenceFlow id="id_sequence_15" name="sequence_15" sourceRef="idparallelConverging_6" targetRef="id_task_7"/>
+    <bpmn2:sequenceFlow id="id_sequence_16" name="sequence_16" sourceRef="id_task_7" targetRef="id_end_8"/>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="_model">
-      <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_start">
-        <dc:Bounds height="36.0" width="36.0" x="50.0" y="50.0"/>
-      </bpmndi:BPMNShape>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
