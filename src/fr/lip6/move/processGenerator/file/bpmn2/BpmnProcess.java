@@ -37,10 +37,10 @@ public class BpmnProcess {
 		
 		// définition du document
 		documentRoot.setDefinitions(Bpmn2Factory.eINSTANCE.createDefinitions());
-		documentRoot.getXMLNSPrefixMap().putAll(DocumentDefinition.xmlInformation);
-		documentRoot.getDefinitions().setExpressionLanguage(DocumentDefinition.expressionLanguage);
-		documentRoot.getDefinitions().setTargetNamespace(DocumentDefinition.targetNamespace);
-		documentRoot.getDefinitions().setTypeLanguage(DocumentDefinition.typeLanguage);
+		documentRoot.getXMLNSPrefixMap().putAll(BpmnDefinition.xmlInformation);
+		documentRoot.getDefinitions().setExpressionLanguage(BpmnDefinition.expressionLanguage);
+		documentRoot.getDefinitions().setTargetNamespace(BpmnDefinition.targetNamespace);
+		documentRoot.getDefinitions().setTypeLanguage(BpmnDefinition.typeLanguage);
 		
 		// création du process
 		process = Bpmn2Factory.eINSTANCE.createProcess();
@@ -155,31 +155,6 @@ public class BpmnProcess {
 		sequence.setTargetRef(target);
 		return sequence;
 	}
-	
-	public void createExample() {
-		
-		// les noeuds
-		StartEvent start = this.buildStartEvent();
-		Task a = this.buildTask();
-//		ExclusiveGateway decision = this.buildExclusiveGateway(GatewayDirection.DIVERGING);
-		ParallelGateway decision = this.buildParallelGateway(GatewayDirection.DIVERGING);
-		Task b = this.buildTask();
-		Task c = this.buildTask();
-//		ExclusiveGateway merge = this.buildExclusiveGateway(GatewayDirection.CONVERGING);
-		ParallelGateway merge = this.buildParallelGateway(GatewayDirection.CONVERGING);
-		Task d = this.buildTask();
-		EndEvent end = this.buildEndEvent();
-		
-		// les arcs
-		this.buildSequenceFlow(start, a);
-		this.buildSequenceFlow(a, decision);
-		this.buildSequenceFlow(decision, b);
-		this.buildSequenceFlow(decision, c);
-		this.buildSequenceFlow(b, merge);
-		this.buildSequenceFlow(c, merge);
-		this.buildSequenceFlow(merge, d);
-		this.buildSequenceFlow(d, end);
-	}
 
 	public void save(DocumentRoot model, String nameFile) throws IOException {
 		Bpmn2ResourceFactoryImpl resourceFactory = new Bpmn2ResourceFactoryImpl();
@@ -200,37 +175,11 @@ public class BpmnProcess {
 	}
 
 	public static void main(String[] args) throws IOException, BpmnException {
-		BpmnProcess bpmn = new BpmnProcess();
-		bpmn.createExample();
-
-		// serialize it
+		BpmnProcess bpmn = BpmnBuilder.createExampleWithParallel();
 		try {
 			bpmn.save(bpmn.getDocumentRoot(), "vincent.bpmn");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-
-//	public void createModel() throws IOException {
-//		BpmnDiFactory diFactory = new BpmnDiFactoryImpl();
-//		DcFactory dcFactory = new DcFactoryImpl();
-//
-//		//Create the diagram:
-//		BPMNDiagram diagram = diFactory.createBPMNDiagram();
-//		diagram.setPlane(diFactory.createBPMNPlane());
-//		diagram.setName("Test Diagram");
-//		documentRoot.getDefinitions().getDiagrams().add(diagram);
-//
-//		//Toss it in the Diagram:
-//		BPMNShape shape = diFactory.createBPMNShape();
-//		Bounds bounds = dcFactory.createBounds();
-//		bounds.setHeight(20);
-//		bounds.setWidth(20);
-//		bounds.setX(20);
-//		bounds.setY(20);
-//		shape.setBounds(bounds);
-//		shape.setBpmnElement(nodeName);
-//		diagram.getPlane().getPlaneElement().add(shape);
-//	}
 }

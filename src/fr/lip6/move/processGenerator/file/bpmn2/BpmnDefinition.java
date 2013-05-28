@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class DocumentDefinition {
+public class BpmnDefinition {
 
 	public static final String expressionLanguage = "http://www.mvel.org/2.0";
 	public static final String targetNamespace = "http://www.jboss.org/drools";
@@ -22,5 +22,5 @@ public class DocumentDefinition {
 		xmlInformation.put("schemaLocation", "http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
 	}
 	
-	private DocumentDefinition() {}
+	private BpmnDefinition() {}
 }

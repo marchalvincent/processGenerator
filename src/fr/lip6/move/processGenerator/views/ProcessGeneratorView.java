@@ -1,8 +1,14 @@
 package fr.lip6.move.processGenerator.views;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -16,12 +22,15 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import fr.lip6.move.processGenerator.file.Element;
+import fr.lip6.move.processGenerator.file.bpmn2.BpmnElement;
+import fr.lip6.move.processGenerator.file.uml.UmlElement;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -29,9 +38,10 @@ public class ProcessGeneratorView extends ViewPart {
 	public static final String ID = "processgeneration.views.ProcessGeneratorView";
 	private ScrolledForm form;
 	private Table tableWorkflow;
-	private Table tableElements;
 	private Table tableMutationParameters;
 	private Group groupMutationParameters;
+	private Table tableBpmnElements, tableUmlElements;
+	private Section sctnBpmnElements, sctnUmlElements;
 
 	/**
 	 * The constructor.
@@ -180,6 +190,13 @@ public class ProcessGeneratorView extends ViewPart {
 		btnBpmn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (((Button) e.getSource()).getSelection()) {
+					sctnBpmnElements.setEnabled(true);
+					sctnBpmnElements.setExpanded(true);
+				} else {
+					sctnBpmnElements.setEnabled(false);
+					sctnBpmnElements.setExpanded(false);
+				}
 			}
 		});
 		btnBpmn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -187,9 +204,82 @@ public class ProcessGeneratorView extends ViewPart {
 		btnBpmn.setText("BPMN 2.0");
 		
 		Button btnUmlAd = new Button(groupFileType, SWT.CHECK);
+		btnUmlAd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (((Button) e.getSource()).getSelection()) {
+					sctnUmlElements.setEnabled(true);
+					sctnUmlElements.setExpanded(true);
+				} else {
+					sctnUmlElements.setEnabled(false);
+					sctnUmlElements.setExpanded(false);
+				}
+			
+			}
+		});
 		btnUmlAd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(btnUmlAd, true, true);
 		btnUmlAd.setText("UML2.0 AD");
+		
+		sctnBpmnElements = toolkit.createSection(compositeLigne3, Section.TWISTIE | Section.TITLE_BAR);
+		sctnBpmnElements.setEnabled(false);
+		sctnBpmnElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sctnBpmnElements.marginWidth = 0;
+		sctnBpmnElements.marginHeight = 0;
+		toolkit.paintBordersFor(sctnBpmnElements);
+		sctnBpmnElements.setText("Bpmn Elements");
+		
+		tableBpmnElements = new Table(sctnBpmnElements, SWT.BORDER | SWT.FULL_SELECTION);
+		tableBpmnElements.setLinesVisible(true);
+		tableBpmnElements.setHeaderVisible(true);
+		toolkit.adapt(tableBpmnElements);
+		toolkit.paintBordersFor(tableBpmnElements);
+		sctnBpmnElements.setClient(tableBpmnElements);
+		
+		TableColumn tableColumn_2 = new TableColumn(tableBpmnElements, SWT.NONE);
+		tableColumn_2.setWidth(20);
+		
+		TableColumn tableColumn_3 = new TableColumn(tableBpmnElements, SWT.NONE);
+		tableColumn_3.setWidth(100);
+		tableColumn_3.setText("Element name");
+		
+		TableColumn tableColumn_4 = new TableColumn(tableBpmnElements, SWT.NONE);
+		tableColumn_4.setWidth(100);
+		tableColumn_4.setText("Quantity");
+		
+		TableColumn tableColumn_5 = new TableColumn(tableBpmnElements, SWT.NONE);
+		tableColumn_5.setWidth(100);
+		tableColumn_5.setText("Number");
+		
+		sctnUmlElements = toolkit.createSection(compositeLigne3, Section.TWISTIE | Section.TITLE_BAR);
+		sctnUmlElements.setEnabled(false);
+		sctnUmlElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sctnUmlElements.marginWidth = 0;
+		sctnUmlElements.marginHeight = 0;
+		toolkit.paintBordersFor(sctnUmlElements);
+		sctnUmlElements.setText("Uml Elements");
+		
+		tableUmlElements = new Table(sctnUmlElements, SWT.BORDER | SWT.FULL_SELECTION);
+		tableUmlElements.setLinesVisible(true);
+		tableUmlElements.setHeaderVisible(true);
+		toolkit.adapt(tableUmlElements);
+		toolkit.paintBordersFor(tableUmlElements);
+		sctnUmlElements.setClient(tableUmlElements);
+		
+		TableColumn tableColumn = new TableColumn(tableUmlElements, SWT.NONE);
+		tableColumn.setWidth(20);
+		
+		TableColumn tableColumn_6 = new TableColumn(tableUmlElements, SWT.NONE);
+		tableColumn_6.setWidth(100);
+		tableColumn_6.setText("Element name");
+		
+		TableColumn tableColumn_7 = new TableColumn(tableUmlElements, SWT.NONE);
+		tableColumn_7.setWidth(100);
+		tableColumn_7.setText("Quantity");
+		
+		TableColumn tableColumn_8 = new TableColumn(tableUmlElements, SWT.NONE);
+		tableColumn_8.setWidth(100);
+		tableColumn_8.setText("Number");
 
 		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2));
@@ -234,29 +324,10 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(compositeTarget3);
 		sctnElements.setClient(compositeTarget3);
 		compositeTarget3.setLayout(new GridLayout(1, false));
-
-		tableElements = new Table(compositeTarget3, SWT.BORDER | SWT.FULL_SELECTION);
-		tableElements.setLinesVisible(true);
-		tableElements.setHeaderVisible(true);
-		tableElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		toolkit.adapt(tableElements);
-		toolkit.paintBordersFor(tableElements);
-
-		TableColumn tableColumn = new TableColumn(tableElements, SWT.NONE);
-		tableColumn.setWidth(100);
-		tableColumn.setText("Element name");
-
-		TableColumn tableColumn_1 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_1.setWidth(100);
-		tableColumn_1.setText("Quantity");
-
-		TableColumn tableColumn_2 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_2.setWidth(100);
-		tableColumn_2.setText("Number");
-
-		Button btnAddOclConstraints_1 = new Button(compositeTarget3, SWT.NONE);
-		toolkit.adapt(btnAddOclConstraints_1, true, true);
-		btnAddOclConstraints_1.setText("Add OCL constraints");
+		
+				Button btnAddOclConstraints_1 = new Button(compositeTarget3, SWT.NONE);
+				toolkit.adapt(btnAddOclConstraints_1, true, true);
+				btnAddOclConstraints_1.setText("Add OCL constraints");
 
 		TabItem tbtmGeneticAlgorithmConfiguration = new TabItem(tabFolder, SWT.NONE);
 		tbtmGeneticAlgorithmConfiguration.setText("Genetic algorithm configuration");
@@ -421,7 +492,7 @@ public class ProcessGeneratorView extends ViewPart {
 
 		Button btnOneSolutionFound = new Button(compositeGA4, SWT.CHECK);
 		toolkit.adapt(btnOneSolutionFound, true, true);
-		btnOneSolutionFound.setText("Until # solution found");
+		btnOneSolutionFound.setText("Until # solutions found");
 
 		Spinner spinner_4 = new Spinner(compositeGA4, SWT.BORDER);
 		spinner_4.setMaximum(100000);
@@ -444,8 +515,13 @@ public class ProcessGeneratorView extends ViewPart {
 		new Label(compositeGA4, SWT.NONE);
 
 		Button btnGeneration = new Button(compositeGA4, SWT.CHECK);
+		btnGeneration.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
 		toolkit.adapt(btnGeneration, true, true);
-		btnGeneration.setText("Until # generation");
+		btnGeneration.setText("Until # generations");
 
 		Spinner spinner_3 = new Spinner(compositeGA4, SWT.BORDER);
 		spinner_3.setMaximum(100000);
@@ -457,7 +533,7 @@ public class ProcessGeneratorView extends ViewPart {
 
 		Button btnUntilStagnation = new Button(compositeGA4, SWT.CHECK);
 		toolkit.adapt(btnUntilStagnation, true, true);
-		btnUntilStagnation.setText("Until # stagnation");
+		btnUntilStagnation.setText("Until # stagnations");
 
 		Spinner spinner_5 = new Spinner(compositeGA4, SWT.BORDER);
 		spinner_5.setMaximum(100000);
@@ -475,6 +551,71 @@ public class ProcessGeneratorView extends ViewPart {
 		GridData gd_spnMarge = new GridData(GridData.VERTICAL_ALIGN_CENTER);
 		gd_spnMarge.widthHint = 19;
 
+		
+		manualCode();
+	}
+	
+	private void manualCode() {
+		// on remplit les tableaux d'éléments BPMN et UML
+		this.addElementToTable(tableBpmnElements, BpmnElement.values());
+		this.addElementToTable(tableUmlElements, UmlElement.values());
+		
+		// puis les workflow patterns 
+		// TODO
+		
+		
+	}
+	
+	private void addElementToTable(Table table, Element[] elements) {
+		
+		// on construit les lignes
+		for (int i = 0 ; i < elements.length ; i++) {
+			new TableItem(table, SWT.NONE);
+		}
+		
+		// pour chaque ligne...
+		TableItem[] lignes = table.getItems();
+		for (int i = 0 ; i < lignes.length ; i++) {
+			
+			// la case a cocher
+			Button check = new Button(table, SWT.CHECK);
+			check.setText("");
+			TableEditor editor = new TableEditor(table);
+			editor.grabHorizontal = true;
+			editor.setEditor(check, lignes[i], 0);
+			
+			// le nom de l'élément
+			lignes[i].setText(1, elements[i].toString());
+			
+			// le combobox
+			editor = new TableEditor(table);
+			CCombo combo = new CCombo(table, SWT.NONE);
+			combo.add("more than");
+			combo.add("less than");
+			combo.add("equal");
+			combo.select(0);
+			combo.setEditable(false);
+			editor.grabHorizontal = true;
+			editor.setEditor(combo, lignes[i], 2);
+			
+			// le nombre
+			editor = new TableEditor(table);
+			Text text = new Text(table, SWT.NONE);
+			text.setText("1");
+			text.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent me) {
+					Text t = (Text) me.getSource();
+					try {
+						Integer.parseInt(t.getText());
+					} catch (Exception ex) {
+						t.setText("1");
+					}
+				}
+			});
+			editor.grabHorizontal = true;
+			editor.setEditor(text, lignes[i], 3);
+		}
 	}
 
 	/**

@@ -1,0 +1,5 @@
+Activity.allInstances()->select(
+	activity : Activity | activity.outgoing->exists(
+		sequence : SequenceFlow | sequence.targetRef.oclIsKindOf(Activity)
+	)
+)->size()

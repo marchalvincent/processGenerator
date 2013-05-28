@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ASCII"?>
+<bpmn2:Process xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI">
+  <flowElements xsi:type="bpmn2:StartEvent" id="start" name="start" outgoing="seq1 seq2"/>
+  <flowElements xsi:type="bpmn2:Task" id="a" name="a" incoming="seq1"/>
+  <flowElements xsi:type="bpmn2:Task" name="b" incoming="seq2" outgoing="seq3"/>
+  <flowElements xsi:type="bpmn2:EndEvent" id="end" name="end" incoming="seq3"/>
+  <flowElements xsi:type="bpmn2:SequenceFlow" id="seq1" name="seq1" sourceRef="start" targetRef="a"/>
+  <flowElements xsi:type="bpmn2:SequenceFlow" id="seq2" name="seq2" sourceRef="start" targetRef="//@flowElements.2"/>
+  <flowElements xsi:type="bpmn2:SequenceFlow" id="seq3" name="seq3" sourceRef="//@flowElements.2" targetRef="end"/>
+</bpmn2:Process>
