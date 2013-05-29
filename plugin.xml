@@ -6,12 +6,12 @@
          point="org.eclipse.ui.views">
       <category
             name="ProcessGenerator"
-            id="ProcessGeneration">
+            id="ProcessGenerator">
       </category>
       <view
-            name="ProcessGeneratorView"
-            icon="icons/sample.gif"
-            category="ProcessGeneration"
+            name="ProcessGenerator"
+            icon="icons/process_generator.gif"
+            category="ProcessGenerator"
             class="fr.lip6.move.processGenerator.views.ProcessGeneratorView"
             id="processgeneration.views.ProcessGeneratorView">
       </view>

@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2;
+package fr.lip6.move.processGenerator.bpmn2.workflowPattern;
 
 import static org.junit.Assert.*;
 import org.junit.After;
@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.workflowPattern.WPCheckerBpmn;
 
 
-public class SimpleMergeTest {
+public class SynchronizationTest {
 
 	private BpmnProcess process;
 
@@ -27,7 +27,7 @@ public class SimpleMergeTest {
 
 	@Test(expected=BpmnException.class)
 	public void test0() throws BpmnException {
-		WPCheckerBpmn sequence = new WPCheckerBpmn(process, "simpleMerge");
+		WPCheckerBpmn sequence = new WPCheckerBpmn(process, "synchronization");
 		sequence.check(Quantity.EQUAL, -1);
 	}
 
@@ -38,7 +38,7 @@ public class SimpleMergeTest {
 		process = BpmnBuilder.initialFinal();
 
 		// init du workflow checker
-		WPCheckerBpmn sequence = new WPCheckerBpmn(process, "simpleMerge");
+		WPCheckerBpmn sequence = new WPCheckerBpmn(process, "synchronization");
 		assertTrue(sequence.check(Quantity.EQUAL, 0));
 	}
 
@@ -46,10 +46,10 @@ public class SimpleMergeTest {
 	public void test2() throws BpmnException {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithExclusiveChoice();
+		process = BpmnBuilder.createExampleWithParallel();
 
 		// init du workflow checker
-		WPCheckerBpmn sequence = new WPCheckerBpmn(process, "simpleMerge");
+		WPCheckerBpmn sequence = new WPCheckerBpmn(process, "synchronization");
 		assertTrue(sequence.check(Quantity.EQUAL, 1));
 	}
 }

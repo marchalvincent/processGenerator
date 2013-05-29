@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2;
+package fr.lip6.move.processGenerator.bpmn2.workflowPattern;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

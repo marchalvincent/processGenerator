@@ -37,6 +37,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnElement;
 import fr.lip6.move.processGenerator.bpmn2.workflowPattern.AbstractBpmnWorkflowPattern;
 import fr.lip6.move.processGenerator.uml.UmlElement;
 import fr.lip6.move.processGenerator.uml.workflowPattern.AbstractUmlWorkflowPattern;
+import org.eclipse.wb.swt.ResourceManager;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -51,7 +52,7 @@ public class ProcessGeneratorView extends ViewPart {
 	private Section sectionWorkflowBpmn, sectionWorkflowUml;
 	private Text text_oclConstraint;
 	private Combo comboTypeFile;
-
+	private Spinner spinner_nbNode, spinner_marginNbNode;
 
 	/**
 	 * The constructor.
@@ -75,6 +76,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(tabFolder);
 
 		TabItem tabRun = new TabItem(tabFolder, SWT.NONE);
+		tabRun.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/run.gif"));
 		tabRun.setText("Run");
 		form = toolkit.createScrolledForm(tabFolder);
 		tabRun.setControl(form);
@@ -110,6 +112,7 @@ public class ProcessGeneratorView extends ViewPart {
 		lblpath_1.setText("/path/");
 
 		Button btnChange = new Button(composite_1, SWT.NONE);
+		btnChange.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/folder.gif"));
 		toolkit.adapt(btnChange, true, true);
 		btnChange.setText("Change");
 
@@ -123,24 +126,24 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(lblNode, true, true);
 		lblNode.setText("Node (#) : ");
 
-		Spinner spinner_6 = new Spinner(composite_2, SWT.BORDER);
-		spinner_6.setMaximum(10000);
-		spinner_6.setIncrement(10);
-		spinner_6.setMinimum(2);
-		spinner_6.setSelection(100);
-		toolkit.adapt(spinner_6);
-		toolkit.paintBordersFor(spinner_6);
+		spinner_nbNode = new Spinner(composite_2, SWT.BORDER);
+		spinner_nbNode.setMaximum(10000);
+		spinner_nbNode.setIncrement(10);
+		spinner_nbNode.setMinimum(2);
+		spinner_nbNode.setSelection(100);
+		toolkit.adapt(spinner_nbNode);
+		toolkit.paintBordersFor(spinner_nbNode);
 		new Label(composite_2, SWT.NONE);
 
 		Label lblMargin = new Label(composite_2, SWT.NONE);
 		toolkit.adapt(lblMargin, true, true);
 		lblMargin.setText("Margin (%) : ");
 
-		Spinner spinner_7 = new Spinner(composite_2, SWT.BORDER);
-		spinner_7.setMaximum(500);
-		spinner_7.setSelection(5);
-		toolkit.adapt(spinner_7);
-		toolkit.paintBordersFor(spinner_7);
+		spinner_marginNbNode = new Spinner(composite_2, SWT.BORDER);
+		spinner_marginNbNode.setMaximum(500);
+		spinner_marginNbNode.setSelection(5);
+		toolkit.adapt(spinner_marginNbNode);
+		toolkit.paintBordersFor(spinner_marginNbNode);
 
 		Section sctnRun = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		sctnRun.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -163,10 +166,12 @@ public class ProcessGeneratorView extends ViewPart {
 		compRun.setLayout(new GridLayout(2, false));
 
 		Button btnStart = new Button(compRun, SWT.NONE);
+		btnStart.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/run.gif"));
 		toolkit.adapt(btnStart, true, true);
 		btnStart.setText("Start");
 
 		Button btnStop = new Button(compRun, SWT.NONE);
+		btnStop.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/stop.gif"));
 		toolkit.adapt(btnStop, true, true);
 		btnStop.setText("Stop");
 
@@ -174,6 +179,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(lblResult, true, true);
 
 		TabItem tbtmTargetConfiguration = new TabItem(tabFolder, SWT.NONE);
+		tbtmTargetConfiguration.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/target.gif"));
 		tbtmTargetConfiguration.setText("Target configuration");
 
 		ScrolledForm scrolledFormTarget = toolkit.createScrolledForm(tabFolder);
@@ -376,6 +382,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(text_oclConstraint, true, true);
 
 		TabItem tbtmGeneticAlgorithmConfiguration = new TabItem(tabFolder, SWT.NONE);
+		tbtmGeneticAlgorithmConfiguration.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/tool.gif"));
 		tbtmGeneticAlgorithmConfiguration.setText("Genetic algorithm configuration");
 
 		ScrolledForm scrolledForm = toolkit.createScrolledForm(tabFolder);
@@ -412,6 +419,7 @@ public class ProcessGeneratorView extends ViewPart {
 		new Label(compositeGA1, SWT.NONE);
 
 		Button btnSetInitialProcess_1 = new Button(compositeGA1, SWT.NONE);
+		btnSetInitialProcess_1.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/process.gif"));
 		toolkit.adapt(btnSetInitialProcess_1, true, true);
 		btnSetInitialProcess_1.setText("Set initial process");
 
@@ -669,7 +677,7 @@ public class ProcessGeneratorView extends ViewPart {
 			for (Quantity quantity : Quantity.values()) {
 				combo.add(quantity.toString().toLowerCase());
 			}
-			combo.select(0);
+			combo.select(3);
 			combo.setEditable(false);
 			editor.grabHorizontal = true;
 			editor.setEditor(combo, lignes[i], 2);
@@ -710,6 +718,34 @@ public class ProcessGeneratorView extends ViewPart {
 		return sectionWorkflowUml;
 	}
 
+	public Spinner getSpinnerNbNode() {
+		return spinner_nbNode;
+	}
+	
+	public Spinner getSpinnerMargin() {
+		return spinner_marginNbNode;
+	}
+	
+	public Combo getComboTypeFile() {
+		return comboTypeFile;
+	}
+	
+	public Table getTableBpmnElements() {
+		return tableBpmnElements;
+	}
+	
+	public Table getTableUmlElements() {
+		return tableUmlElements;
+	}
+	
+	public Table getTableBpmnWorkflow() {
+		return tableWorkflowBpmn;
+	}
+	
+	public Table getTableUmlWorkflow() {
+		return tableWorkflowUml;
+	}
+	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
