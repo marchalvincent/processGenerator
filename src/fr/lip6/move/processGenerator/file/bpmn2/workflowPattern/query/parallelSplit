@@ -1,3 +1,0 @@
-ParallelGateway.allInstances()->select(
-	gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Diverging
-)->size()

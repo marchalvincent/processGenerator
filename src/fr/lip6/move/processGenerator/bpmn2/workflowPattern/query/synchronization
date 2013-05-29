@@ -1,0 +1,3 @@
+ParallelGateway.allInstances()->select(
+	gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Converging
+)->size()

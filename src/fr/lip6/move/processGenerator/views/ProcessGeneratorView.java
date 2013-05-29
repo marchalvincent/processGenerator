@@ -30,13 +30,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
-import fr.lip6.move.processGenerator.file.Element;
-import fr.lip6.move.processGenerator.file.bpmn2.BpmnElement;
-import fr.lip6.move.processGenerator.file.bpmn2.workflowPattern.AbstractBpmnWorkflowPattern;
-import fr.lip6.move.processGenerator.file.uml.UmlElement;
-import fr.lip6.move.processGenerator.file.uml.workflowPattern.AbstractUmlWorkflowPattern;
-import fr.lip6.move.processGenerator.workflowPattern.IWorkflowPattern;
-import fr.lip6.move.processGenerator.workflowPattern.Quantity;
+import fr.lip6.move.processGenerator.Element;
+import fr.lip6.move.processGenerator.WorkflowPattern;
+import fr.lip6.move.processGenerator.Quantity;
+import fr.lip6.move.processGenerator.bpmn2.BpmnElement;
+import fr.lip6.move.processGenerator.bpmn2.workflowPattern.AbstractBpmnWorkflowPattern;
+import fr.lip6.move.processGenerator.uml.UmlElement;
+import fr.lip6.move.processGenerator.uml.workflowPattern.AbstractUmlWorkflowPattern;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -628,9 +628,9 @@ public class ProcessGeneratorView extends ViewPart {
 	 * @param table le tableau à remplir 
 	 * @param liste une liste de class représentant les workflow patterns.
 	 */
-	private void setWorkflowPatternToTable(Table table, List<Class<? extends IWorkflowPattern>> liste) {
+	private void setWorkflowPatternToTable(Table table, List<Class<? extends WorkflowPattern>> liste) {
 		List<String> elements = new ArrayList<String>(liste.size());
-		for (Class<? extends IWorkflowPattern> clazz : liste) {
+		for (Class<? extends WorkflowPattern> clazz : liste) {
 			elements.add(clazz.getSimpleName().replace("Bpmn", "").replace("Uml", ""));
 		}
 		this.addElementToTable(table, elements);

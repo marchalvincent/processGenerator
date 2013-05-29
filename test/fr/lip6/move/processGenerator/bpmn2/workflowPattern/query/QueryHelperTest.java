@@ -2,8 +2,8 @@ package fr.lip6.move.processGenerator.bpmn2.workflowPattern.query;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import fr.lip6.move.processGenerator.file.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.file.bpmn2.workflowPattern.query.QueryReaderHelper;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.workflowPattern.query.QueryReaderHelper;
 
 
 public class QueryHelperTest {

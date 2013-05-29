@@ -1,4 +1,0 @@
-ExclusiveGateway.allInstances()->select(
-	gate : ExclusiveGateway | gate.gatewayDirection = GatewayDirection::Diverging
-	
-)->size()

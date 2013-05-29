@@ -4,11 +4,11 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import fr.lip6.move.processGenerator.file.bpmn2.BpmnBuilder;
-import fr.lip6.move.processGenerator.file.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.file.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.file.bpmn2.workflowPattern.WPCheckerBpmn;
-import fr.lip6.move.processGenerator.workflowPattern.Quantity;
+import fr.lip6.move.processGenerator.Quantity;
+import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.workflowPattern.WPCheckerBpmn;
 
 
 public class SimpleMergeTest {
