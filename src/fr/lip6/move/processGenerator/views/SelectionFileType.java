@@ -10,11 +10,11 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Vincent
  *
  */
-public class FileTypeSelected extends SelectionAdapter {
+public class SelectionFileType extends SelectionAdapter {
 	
 	private ProcessGeneratorView view;
 	
-	public FileTypeSelected(ProcessGeneratorView view) {
+	public SelectionFileType(ProcessGeneratorView view) {
 		super();
 		this.view = view;
 	}

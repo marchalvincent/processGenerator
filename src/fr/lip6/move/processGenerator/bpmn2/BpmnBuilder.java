@@ -9,6 +9,11 @@ import org.eclipse.bpmn2.Task;
 
 public class BpmnBuilder {
 
+	/**
+	 * Construit un process simple : 
+	 * StartEvent -> EndEvent.
+	 * @return
+	 */
 	public static BpmnProcess initialFinal() {
 		BpmnProcess process = new BpmnProcess();
 
@@ -22,6 +27,11 @@ public class BpmnBuilder {
 		return process;
 	}
 
+	/**
+	 * Construit un process simple : 
+	 * StartEvent -> Task -> Task -> EndEvent.
+	 * @return
+	 */
 	public static BpmnProcess initialABFinal() {
 		BpmnProcess process = new BpmnProcess();
 
@@ -39,6 +49,11 @@ public class BpmnBuilder {
 		return process;
 	}
 
+	/**
+	 * Construit un process simple : 
+	 * StartEvent -> Task -> Task -> Task -> EndEvent.
+	 * @return
+	 */
 	public static BpmnProcess initialABCFinal() {
 		BpmnProcess process = new BpmnProcess();
 

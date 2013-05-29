@@ -596,6 +596,9 @@ public class ProcessGeneratorView extends ViewPart {
 		manualCode();
 	}
 
+	/**
+	 * Toutes les opérations codées à la main
+	 */
 	private void manualCode() {
 
 		// on remplit les tableaux d'éléments BPMN et UML
@@ -617,9 +620,7 @@ public class ProcessGeneratorView extends ViewPart {
 
 		// les listeners
 		// selection du type de fichier de sortie (bpmn, uml, etc.)
-		FileTypeSelected selection = new FileTypeSelected(this);
-		comboTypeFile.addSelectionListener(selection);
-
+		comboTypeFile.addSelectionListener(new SelectionFileType(this));
 
 	}
 
