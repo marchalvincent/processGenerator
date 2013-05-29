@@ -20,9 +20,9 @@ import fr.lip6.move.processGenerator.workflowPattern.IWorkflowPattern;
 
 public abstract class AbstractBpmnWorkflowPattern implements IWorkflowPattern {
 
-	private static List<Class<? extends AbstractBpmnWorkflowPattern>> patterns;
+	public static List<Class<? extends IWorkflowPattern>> patterns;
 	static {
-		patterns = new ArrayList<Class<? extends AbstractBpmnWorkflowPattern>>();
+		patterns = new ArrayList<Class<? extends IWorkflowPattern>>();
 		patterns.add(BpmnSequence.class);
 		patterns.add(BpmnParallelSplit.class);
 		patterns.add(BpmnSynchronization.class);

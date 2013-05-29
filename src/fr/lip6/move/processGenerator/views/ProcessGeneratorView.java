@@ -1,5 +1,7 @@
 package fr.lip6.move.processGenerator.views;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TableEditor;
@@ -30,18 +32,26 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
 import fr.lip6.move.processGenerator.file.Element;
 import fr.lip6.move.processGenerator.file.bpmn2.BpmnElement;
+import fr.lip6.move.processGenerator.file.bpmn2.workflowPattern.AbstractBpmnWorkflowPattern;
 import fr.lip6.move.processGenerator.file.uml.UmlElement;
+import fr.lip6.move.processGenerator.file.uml.workflowPattern.AbstractUmlWorkflowPattern;
+import fr.lip6.move.processGenerator.workflowPattern.IWorkflowPattern;
+import fr.lip6.move.processGenerator.workflowPattern.Quantity;
 
 
 public class ProcessGeneratorView extends ViewPart {
 
 	public static final String ID = "processgeneration.views.ProcessGeneratorView";
 	private ScrolledForm form;
-	private Table tableWorkflow;
+	private Table tableWorkflowBpmn, tableWorkflowUml;
 	private Table tableMutationParameters;
 	private Group groupMutationParameters;
 	private Table tableBpmnElements, tableUmlElements;
 	private Section sctnBpmnElements, sctnUmlElements;
+	private Section sectionWorkflowBpmn, sectionWorkflowUml;
+	private Text text_oclConstraint;
+	private Combo comboTypeFile;
+
 
 	/**
 	 * The constructor.
@@ -69,11 +79,71 @@ public class ProcessGeneratorView extends ViewPart {
 		form = toolkit.createScrolledForm(tabFolder);
 		tabRun.setControl(form);
 		form.setDelayedReflow(true);
-		form.getBody().setLayout(new GridLayout(1, true));
+		form.getBody().setLayout(new GridLayout(2, true));
 		toolkit.decorateFormHeading(form.getForm());
 
+		Section sectionSizeLocation = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
+		sectionSizeLocation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sectionSizeLocation.marginWidth = 0;
+		sectionSizeLocation.marginHeight = 0;
+		toolkit.paintBordersFor(sectionSizeLocation);
+		sectionSizeLocation.setText("Size and location");
+
+		Composite composite = new Composite(sectionSizeLocation, SWT.NONE);
+		toolkit.adapt(composite);
+		toolkit.paintBordersFor(composite);
+		sectionSizeLocation.setClient(composite);
+		composite.setLayout(new GridLayout(1, false));
+
+		Composite composite_1 = new Composite(composite, SWT.NONE);
+		composite_1.setLayout(new GridLayout(3, false));
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		toolkit.adapt(composite_1);
+		toolkit.paintBordersFor(composite_1);
+
+		Label lblSaveLocation = new Label(composite_1, SWT.NONE);
+		toolkit.adapt(lblSaveLocation, true, true);
+		lblSaveLocation.setText("Save location : ");
+
+		Label lblpath_1 = new Label(composite_1, SWT.NONE);
+		toolkit.adapt(lblpath_1, true, true);
+		lblpath_1.setText("/path/");
+
+		Button btnChange = new Button(composite_1, SWT.NONE);
+		toolkit.adapt(btnChange, true, true);
+		btnChange.setText("Change");
+
+		Composite composite_2 = new Composite(composite, SWT.NONE);
+		composite_2.setLayout(new GridLayout(5, false));
+		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		toolkit.adapt(composite_2);
+		toolkit.paintBordersFor(composite_2);
+
+		Label lblNode = new Label(composite_2, SWT.NONE);
+		toolkit.adapt(lblNode, true, true);
+		lblNode.setText("Node (#) : ");
+
+		Spinner spinner_6 = new Spinner(composite_2, SWT.BORDER);
+		spinner_6.setMaximum(10000);
+		spinner_6.setIncrement(10);
+		spinner_6.setMinimum(2);
+		spinner_6.setSelection(100);
+		toolkit.adapt(spinner_6);
+		toolkit.paintBordersFor(spinner_6);
+		new Label(composite_2, SWT.NONE);
+
+		Label lblMargin = new Label(composite_2, SWT.NONE);
+		toolkit.adapt(lblMargin, true, true);
+		lblMargin.setText("Margin (%) : ");
+
+		Spinner spinner_7 = new Spinner(composite_2, SWT.BORDER);
+		spinner_7.setMaximum(500);
+		spinner_7.setSelection(5);
+		toolkit.adapt(spinner_7);
+		toolkit.paintBordersFor(spinner_7);
+
 		Section sctnRun = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
-		sctnRun.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		sctnRun.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnRun.marginWidth = 0;
 		sctnRun.marginHeight = 0;
 		toolkit.paintBordersFor(sctnRun);
@@ -112,7 +182,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(scrolledFormTarget);
 		scrolledFormTarget.getBody().setLayout(new GridLayout(2, true));
 
-		Section sctnFile = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
+		Section sctnFile = toolkit.createSection(scrolledFormTarget.getBody(), Section.TITLE_BAR);
 		sctnFile.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnFile.marginWidth = 0;
 		sctnFile.marginHeight = 0;
@@ -126,131 +196,60 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnFile.setClient(compositeTarget1);
 		compositeTarget1.setLayout(new GridLayout(1, false));
 
-		Composite compositeLigne1 = new Composite(compositeTarget1, SWT.NONE);
-		compositeLigne1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		toolkit.adapt(compositeLigne1);
-		toolkit.paintBordersFor(compositeLigne1);
-		compositeLigne1.setLayout(new GridLayout(3, false));
+		Composite composite_3 = new Composite(compositeTarget1, SWT.NONE);
+		composite_3.setLayout(new GridLayout(2, false));
+		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		toolkit.adapt(composite_3);
+		toolkit.paintBordersFor(composite_3);
 
-		Label lblSaveLocation_1 = new Label(compositeLigne1, SWT.NONE);
-		toolkit.adapt(lblSaveLocation_1, true, true);
-		lblSaveLocation_1.setText("Save location");
+		Label lblFileType = new Label(composite_3, SWT.NONE);
+		lblFileType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		toolkit.adapt(lblFileType, true, true);
+		lblFileType.setText("File type : ");
 
-		Label lblpath = new Label(compositeLigne1, SWT.NONE);
-		lblpath.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		toolkit.adapt(lblpath, true, true);
-		lblpath.setText("/path/");
+		comboTypeFile = new Combo(composite_3, SWT.READ_ONLY);
+		comboTypeFile.setItems(new String[] {"BPMN 2.0", "UML 2.0 AD"});
+		comboTypeFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		toolkit.adapt(comboTypeFile);
+		toolkit.paintBordersFor(comboTypeFile);
+		comboTypeFile.select(0);
 
-		Button btnChange_1 = new Button(compositeLigne1, SWT.NONE);
-		toolkit.adapt(btnChange_1, true, true);
-		btnChange_1.setText("Change");
-
-		Composite compositeLigne2 = new Composite(compositeTarget1, SWT.NONE);
-		compositeLigne2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		toolkit.adapt(compositeLigne2);
-		toolkit.paintBordersFor(compositeLigne2);
-		compositeLigne2.setLayout(new GridLayout(5, false));
-
-		Label lblNodes = new Label(compositeLigne2, SWT.NONE);
-		toolkit.adapt(lblNodes, true, true);
-		lblNodes.setText("Nodes (#) :");
-
-		Spinner spinnerNodes = new Spinner(compositeLigne2, SWT.BORDER);
-		spinnerNodes.setMaximum(10000);
-		spinnerNodes.setIncrement(10);
-		spinnerNodes.setMinimum(2);
-		spinnerNodes.setSelection(100);
-		toolkit.adapt(spinnerNodes);
-		toolkit.paintBordersFor(spinnerNodes);
-		new Label(compositeLigne2, SWT.NONE);
-
-		Label lblMargin_1 = new Label(compositeLigne2, SWT.NONE);
-		toolkit.adapt(lblMargin_1, true, true);
-		lblMargin_1.setText("Margin (%) :");
-
-		Spinner spinnerMargin = new Spinner(compositeLigne2, SWT.BORDER);
-		spinnerMargin.setSelection(5);
-		toolkit.adapt(spinnerMargin);
-		toolkit.paintBordersFor(spinnerMargin);
-		
 		Composite compositeLigne3 = new Composite(compositeTarget1, SWT.NONE);
 		compositeLigne3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(compositeLigne3);
 		toolkit.paintBordersFor(compositeLigne3);
 		compositeLigne3.setLayout(new GridLayout(1, false));
-		
-		Group groupFileType = new Group(compositeLigne3, SWT.NONE);
-		groupFileType.setText("File type");
-		groupFileType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		toolkit.adapt(groupFileType);
-		toolkit.paintBordersFor(groupFileType);
-		groupFileType.setLayout(new GridLayout(2, true));
-		
-		Button btnBpmn = new Button(groupFileType, SWT.CHECK);
-		btnBpmn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (((Button) e.getSource()).getSelection()) {
-					sctnBpmnElements.setEnabled(true);
-					sctnBpmnElements.setExpanded(true);
-				} else {
-					sctnBpmnElements.setEnabled(false);
-					sctnBpmnElements.setExpanded(false);
-				}
-			}
-		});
-		btnBpmn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		toolkit.adapt(btnBpmn, true, true);
-		btnBpmn.setText("BPMN 2.0");
-		
-		Button btnUmlAd = new Button(groupFileType, SWT.CHECK);
-		btnUmlAd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (((Button) e.getSource()).getSelection()) {
-					sctnUmlElements.setEnabled(true);
-					sctnUmlElements.setExpanded(true);
-				} else {
-					sctnUmlElements.setEnabled(false);
-					sctnUmlElements.setExpanded(false);
-				}
-			
-			}
-		});
-		btnUmlAd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		toolkit.adapt(btnUmlAd, true, true);
-		btnUmlAd.setText("UML2.0 AD");
-		
+
 		sctnBpmnElements = toolkit.createSection(compositeLigne3, Section.TWISTIE | Section.TITLE_BAR);
-		sctnBpmnElements.setEnabled(false);
 		sctnBpmnElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnBpmnElements.marginWidth = 0;
 		sctnBpmnElements.marginHeight = 0;
 		toolkit.paintBordersFor(sctnBpmnElements);
 		sctnBpmnElements.setText("Bpmn Elements");
-		
+		sctnBpmnElements.setExpanded(true);
+
 		tableBpmnElements = new Table(sctnBpmnElements, SWT.BORDER | SWT.FULL_SELECTION);
 		tableBpmnElements.setLinesVisible(true);
 		tableBpmnElements.setHeaderVisible(true);
 		toolkit.adapt(tableBpmnElements);
 		toolkit.paintBordersFor(tableBpmnElements);
 		sctnBpmnElements.setClient(tableBpmnElements);
-		
+
 		TableColumn tableColumn_2 = new TableColumn(tableBpmnElements, SWT.NONE);
 		tableColumn_2.setWidth(20);
-		
+
 		TableColumn tableColumn_3 = new TableColumn(tableBpmnElements, SWT.NONE);
 		tableColumn_3.setWidth(100);
 		tableColumn_3.setText("Element name");
-		
+
 		TableColumn tableColumn_4 = new TableColumn(tableBpmnElements, SWT.NONE);
 		tableColumn_4.setWidth(100);
 		tableColumn_4.setText("Quantity");
-		
+
 		TableColumn tableColumn_5 = new TableColumn(tableBpmnElements, SWT.NONE);
 		tableColumn_5.setWidth(100);
 		tableColumn_5.setText("Number");
-		
+
 		sctnUmlElements = toolkit.createSection(compositeLigne3, Section.TWISTIE | Section.TITLE_BAR);
 		sctnUmlElements.setEnabled(false);
 		sctnUmlElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -258,30 +257,30 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnUmlElements.marginHeight = 0;
 		toolkit.paintBordersFor(sctnUmlElements);
 		sctnUmlElements.setText("Uml Elements");
-		
+
 		tableUmlElements = new Table(sctnUmlElements, SWT.BORDER | SWT.FULL_SELECTION);
 		tableUmlElements.setLinesVisible(true);
 		tableUmlElements.setHeaderVisible(true);
 		toolkit.adapt(tableUmlElements);
 		toolkit.paintBordersFor(tableUmlElements);
 		sctnUmlElements.setClient(tableUmlElements);
-		
+
 		TableColumn tableColumn = new TableColumn(tableUmlElements, SWT.NONE);
 		tableColumn.setWidth(20);
-		
+
 		TableColumn tableColumn_6 = new TableColumn(tableUmlElements, SWT.NONE);
 		tableColumn_6.setWidth(100);
 		tableColumn_6.setText("Element name");
-		
+
 		TableColumn tableColumn_7 = new TableColumn(tableUmlElements, SWT.NONE);
 		tableColumn_7.setWidth(100);
 		tableColumn_7.setText("Quantity");
-		
+
 		TableColumn tableColumn_8 = new TableColumn(tableUmlElements, SWT.NONE);
 		tableColumn_8.setWidth(100);
 		tableColumn_8.setText("Number");
 
-		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
+		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TITLE_BAR);
 		sctnWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2));
 		sctnWorkflow.marginWidth = 0;
 		sctnWorkflow.marginHeight = 0;
@@ -295,39 +294,86 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnWorkflow.setClient(compositeTarget2);
 		compositeTarget2.setLayout(new GridLayout(1, false));
 
-		tableWorkflow = new Table(compositeTarget2, SWT.BORDER | SWT.FULL_SELECTION);
-		tableWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableWorkflow.setLinesVisible(true);
-		tableWorkflow.setHeaderVisible(true);
-		tableWorkflow.setBounds(0, 0, 85, 85);
-		toolkit.adapt(tableWorkflow);
-		toolkit.paintBordersFor(tableWorkflow);
+		sectionWorkflowBpmn = toolkit.createSection(compositeTarget2, Section.TWISTIE | Section.TITLE_BAR);
+		sectionWorkflowBpmn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sectionWorkflowBpmn.marginWidth = 0;
+		sectionWorkflowBpmn.marginHeight = 0;
+		toolkit.paintBordersFor(sectionWorkflowBpmn);
+		sectionWorkflowBpmn.setText("Bpmn workflow patterns");
+		sectionWorkflowBpmn.setExpanded(true);
 
-		TableColumn tableColumnName = new TableColumn(tableWorkflow, SWT.NONE);
+		tableWorkflowBpmn = new Table(sectionWorkflowBpmn, SWT.BORDER | SWT.FULL_SELECTION);
+		sectionWorkflowBpmn.setClient(tableWorkflowBpmn);
+		tableWorkflowBpmn.setLinesVisible(true);
+		tableWorkflowBpmn.setHeaderVisible(true);
+		tableWorkflowBpmn.setBounds(0, 0, 85, 85);
+		toolkit.adapt(tableWorkflowBpmn);
+		toolkit.paintBordersFor(tableWorkflowBpmn);
+
+		TableColumn tableColumn_1_checkbox = new TableColumn(tableWorkflowBpmn, SWT.NONE);
+		tableColumn_1_checkbox.setWidth(20);
+
+		TableColumn tableColumnName = new TableColumn(tableWorkflowBpmn, SWT.NONE);
 		tableColumnName.setWidth(148);
 		tableColumnName.setText("Workflow name");
 
-		TableColumn tableColumnQuantity = new TableColumn(tableWorkflow, SWT.NONE);
+		TableColumn tableColumnQuantity = new TableColumn(tableWorkflowBpmn, SWT.NONE);
 		tableColumnQuantity.setWidth(115);
 		tableColumnQuantity.setText("Quantity");
 
-		Section sctnElements = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
-		sctnElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		sctnElements.marginWidth = 0;
-		sctnElements.marginHeight = 0;
-		toolkit.paintBordersFor(sctnElements);
-		sctnElements.setText("Elements");
-		sctnElements.setExpanded(true);
+		TableColumn tblclmnNumber = new TableColumn(tableWorkflowBpmn, SWT.NONE);
+		tblclmnNumber.setWidth(100);
+		tblclmnNumber.setText("Number");
 
-		Composite compositeTarget3 = new Composite(sctnElements, SWT.NONE);
+		sectionWorkflowUml = toolkit.createSection(compositeTarget2, Section.TWISTIE | Section.TITLE_BAR);
+		sectionWorkflowUml.setEnabled(false);
+		sectionWorkflowUml.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sectionWorkflowUml.marginWidth = 0;
+		sectionWorkflowUml.marginHeight = 0;
+		toolkit.paintBordersFor(sectionWorkflowUml);
+		sectionWorkflowUml.setText("Uml workflow patterns");
+
+		tableWorkflowUml = new Table(sectionWorkflowUml, SWT.BORDER | SWT.FULL_SELECTION);
+		sectionWorkflowUml.setClient(tableWorkflowUml);
+		tableWorkflowUml.setLinesVisible(true);
+		tableWorkflowUml.setHeaderVisible(true);
+		toolkit.adapt(tableWorkflowUml);
+		toolkit.paintBordersFor(tableWorkflowUml);
+
+		TableColumn tableColumn_1 = new TableColumn(tableWorkflowUml, SWT.NONE);
+		tableColumn_1.setWidth(20);
+
+		TableColumn tableColumn_9 = new TableColumn(tableWorkflowUml, SWT.NONE);
+		tableColumn_9.setWidth(148);
+		tableColumn_9.setText("Workflow name");
+
+		TableColumn tableColumn_10 = new TableColumn(tableWorkflowUml, SWT.NONE);
+		tableColumn_10.setWidth(115);
+		tableColumn_10.setText("Quantity");
+
+		TableColumn tableColumn_11 = new TableColumn(tableWorkflowUml, SWT.NONE);
+		tableColumn_11.setWidth(100);
+		tableColumn_11.setText("Number");
+
+		Section sctnOclConstraints = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
+		sctnOclConstraints.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		sctnOclConstraints.marginWidth = 0;
+		sctnOclConstraints.marginHeight = 0;
+		toolkit.paintBordersFor(sctnOclConstraints);
+		sctnOclConstraints.setText("Add OCL constraints");
+		sctnOclConstraints.setExpanded(true);
+
+		Composite compositeTarget3 = new Composite(sctnOclConstraints, SWT.NONE);
 		toolkit.adapt(compositeTarget3);
 		toolkit.paintBordersFor(compositeTarget3);
-		sctnElements.setClient(compositeTarget3);
+		sctnOclConstraints.setClient(compositeTarget3);
 		compositeTarget3.setLayout(new GridLayout(1, false));
-		
-				Button btnAddOclConstraints_1 = new Button(compositeTarget3, SWT.NONE);
-				toolkit.adapt(btnAddOclConstraints_1, true, true);
-				btnAddOclConstraints_1.setText("Add OCL constraints");
+
+		text_oclConstraint = new Text(compositeTarget3, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+		GridData gd_text_oclConstraint = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_text_oclConstraint.heightHint = 71;
+		text_oclConstraint.setLayoutData(gd_text_oclConstraint);
+		toolkit.adapt(text_oclConstraint, true, true);
 
 		TabItem tbtmGeneticAlgorithmConfiguration = new TabItem(tabFolder, SWT.NONE);
 		tbtmGeneticAlgorithmConfiguration.setText("Genetic algorithm configuration");
@@ -460,11 +506,6 @@ public class ProcessGeneratorView extends ViewPart {
 		tableColumnProbability.setWidth(100);
 		tableColumnProbability.setText("Probability");
 
-		Button button_2 = new Button(groupMutationParameters, SWT.CHECK);
-		button_2.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		button_2.setText("auto adapt mutation with workflow patterns");
-		toolkit.adapt(button_2, true, true);
-
 		Section sctnTermination = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnTermination.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnTermination.marginWidth = 0;
@@ -551,53 +592,87 @@ public class ProcessGeneratorView extends ViewPart {
 		GridData gd_spnMarge = new GridData(GridData.VERTICAL_ALIGN_CENTER);
 		gd_spnMarge.widthHint = 19;
 
-		
+
 		manualCode();
 	}
-	
+
 	private void manualCode() {
+
 		// on remplit les tableaux d'éléments BPMN et UML
-		this.addElementToTable(tableBpmnElements, BpmnElement.values());
-		this.addElementToTable(tableUmlElements, UmlElement.values());
-		
-		// puis les workflow patterns 
-		// TODO
-		
-		
+		List<String> elements = new ArrayList<String>(BpmnElement.values().length);
+		for (Element elem : BpmnElement.values()) {
+			elements.add(elem.toString().toLowerCase());
+		}
+		this.addElementToTable(tableBpmnElements, elements);
+
+		elements = new ArrayList<String>(UmlElement.values().length);
+		for (Element elem : UmlElement.values()) {
+			elements.add(elem.toString().toLowerCase());
+		}
+		this.addElementToTable(tableUmlElements, elements);
+
+		// on remplit les tableaux des workflow patterns
+		this.setWorkflowPatternToTable(tableWorkflowBpmn, AbstractBpmnWorkflowPattern.patterns);
+		this.setWorkflowPatternToTable(tableWorkflowUml, AbstractUmlWorkflowPattern.patterns);
+
+		// les listeners
+		// selection du type de fichier de sortie (bpmn, uml, etc.)
+		FileTypeSelected selection = new FileTypeSelected(this);
+		comboTypeFile.addSelectionListener(selection);
+
+
 	}
-	
-	private void addElementToTable(Table table, Element[] elements) {
-		
+
+	/**
+	 * Remplit le tableau des workflow patterns dynamiquement.
+	 * @param table le tableau à remplir 
+	 * @param liste une liste de class représentant les workflow patterns.
+	 */
+	private void setWorkflowPatternToTable(Table table, List<Class<? extends IWorkflowPattern>> liste) {
+		List<String> elements = new ArrayList<String>(liste.size());
+		for (Class<? extends IWorkflowPattern> clazz : liste) {
+			elements.add(clazz.getSimpleName().replace("Bpmn", "").replace("Uml", ""));
+		}
+		this.addElementToTable(table, elements);
+	}
+
+	/**
+	 * Remplit un tableau selon la liste des éléments passés en paramètre.
+	 * @param table le {@link Table} à remplir.
+	 * @param elements la {@link List} des éléments constituant le tableau.
+	 */
+	private void addElementToTable(Table table, List<String> elements) {
+
 		// on construit les lignes
-		for (int i = 0 ; i < elements.length ; i++) {
+		for (int i = 0 ; i < elements.size() ; i++) {
 			new TableItem(table, SWT.NONE);
 		}
-		
+
 		// pour chaque ligne...
 		TableItem[] lignes = table.getItems();
 		for (int i = 0 ; i < lignes.length ; i++) {
-			
+
 			// la case a cocher
 			Button check = new Button(table, SWT.CHECK);
 			check.setText("");
 			TableEditor editor = new TableEditor(table);
 			editor.grabHorizontal = true;
 			editor.setEditor(check, lignes[i], 0);
-			
+
 			// le nom de l'élément
-			lignes[i].setText(1, elements[i].toString());
-			
+			lignes[i].setText(1, elements.get(i));
+
 			// le combobox
 			editor = new TableEditor(table);
 			CCombo combo = new CCombo(table, SWT.NONE);
-			combo.add("more than");
-			combo.add("less than");
-			combo.add("equal");
+			for (Quantity quantity : Quantity.values()) {
+				combo.add(quantity.toString().toLowerCase());
+			}
 			combo.select(0);
 			combo.setEditable(false);
 			editor.grabHorizontal = true;
 			editor.setEditor(combo, lignes[i], 2);
-			
+
 			// le nombre
 			editor = new TableEditor(table);
 			Text text = new Text(table, SWT.NONE);
@@ -616,6 +691,22 @@ public class ProcessGeneratorView extends ViewPart {
 			editor.grabHorizontal = true;
 			editor.setEditor(text, lignes[i], 3);
 		}
+	}
+
+	public Section getBpmnElements() {
+		return sctnBpmnElements;
+	}
+
+	public Section getUmlElements() {
+		return sctnUmlElements;
+	}
+
+	public Section getSectionWorkflowBpmn() {
+		return sectionWorkflowBpmn;
+	}
+	
+	public Section getSectionWorkflowUml() {
+		return sectionWorkflowUml;
 	}
 
 	/**
