@@ -57,6 +57,11 @@ public class BpmnProcess {
 			process = (Process) documentRoot.getDefinitions().getRootElements().get(0);
 	}
 	
+	public BpmnProcess(DocumentRoot documentRoot) {
+		super();
+		this.documentRoot = documentRoot;
+	}
+	
 	public DocumentRoot getDocumentRoot() {
 		return documentRoot;
 	}
@@ -68,7 +73,7 @@ public class BpmnProcess {
 	public StartEvent buildStartEvent() {
 		StartEvent start = Bpmn2Factory.eINSTANCE.createStartEvent();
 		
-		String name = NameManager.getStartName();
+		String name = BpmnNameManager.getStartName();
 		start.setId("id_" + name);
 		start.setName(name);
 		
@@ -79,7 +84,7 @@ public class BpmnProcess {
 	public EndEvent buildEndEvent() {
 		EndEvent end = Bpmn2Factory.eINSTANCE.createEndEvent();
 		
-		String name = NameManager.getEndName();
+		String name = BpmnNameManager.getEndName();
 		end.setId("id_" + name);
 		end.setName(name);
 		
@@ -90,7 +95,7 @@ public class BpmnProcess {
 	public Task buildTask() {
 		Task task = Bpmn2Factory.eINSTANCE.createTask();
 		
-		String name = NameManager.getTaskName();
+		String name = BpmnNameManager.getTaskName();
 		task.setId("id_" + name);
 		task.setName(name);
 		
@@ -110,7 +115,7 @@ public class BpmnProcess {
 		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
-		String name = NameManager.getParallelName(direction.toString());
+		String name = BpmnNameManager.getParallelName(direction.toString());
 		parallel.setId("id" + name);
 		parallel.setName(name);
 		
@@ -130,7 +135,7 @@ public class BpmnProcess {
 		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
-		String name = NameManager.getExclusiveName(direction.toString());
+		String name = BpmnNameManager.getExclusiveName(direction.toString());
 		exclusive.setId("id" + name);
 		exclusive.setName(name);
 		
@@ -141,7 +146,7 @@ public class BpmnProcess {
 	public SequenceFlow buildSequenceFlow() {
 		SequenceFlow sequence = Bpmn2Factory.eINSTANCE.createSequenceFlow();
 		
-		String name = NameManager.getSequenceName();
+		String name = BpmnNameManager.getSequenceName();
 		sequence.setId("id_" + name);
 		sequence.setName(name);
 		

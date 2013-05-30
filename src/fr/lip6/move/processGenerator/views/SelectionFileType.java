@@ -25,23 +25,27 @@ public class SelectionFileType extends SelectionAdapter {
 		String s = combo.getText();
 		if (s.toLowerCase().contains("bpmn")) {
 			// on affiche les éléments bpmn
-			this.setSectionVisibility(view.getBpmnElements(), true);
+			this.setSectionVisibility(view.getSectionBpmnElements(), true);
 			// on cache les éléments uml
-			this.setSectionVisibility(view.getUmlElements(), false);
+			this.setSectionVisibility(view.getSectionUmlElements(), false);
 			// on affiche les workflows bpmn
 			this.setSectionVisibility(view.getSectionWorkflowBpmn(), true);
 			// on cache les workflows uml
 			this.setSectionVisibility(view.getSectionWorkflowUml(), false);
 			
+			view.getLabelSetInitialProcess().setText("(bpmn file)");
+			
 		} else {
 			// on cache les éléments bpmn
-			this.setSectionVisibility(view.getBpmnElements(), false);
+			this.setSectionVisibility(view.getSectionBpmnElements(), false);
 			// on affiche les éléments uml
-			this.setSectionVisibility(view.getUmlElements(), true);
+			this.setSectionVisibility(view.getSectionUmlElements(), true);
 			// on cache les workflows bpmn
 			this.setSectionVisibility(view.getSectionWorkflowBpmn(), false);
 			// on affiche les workflows uml
 			this.setSectionVisibility(view.getSectionWorkflowUml(), true);
+
+			view.getLabelSetInitialProcess().setText("(uml file)");
 		}
 	}
 	
