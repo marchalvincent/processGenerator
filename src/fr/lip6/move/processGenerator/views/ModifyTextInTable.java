@@ -10,11 +10,13 @@ public class ModifyTextInTable implements ModifyListener {
 
 	private TableItem item;
 	private Text text;
+	private int indexOfTable;
 	
-	public ModifyTextInTable(TableItem item, Text text) {
+	public ModifyTextInTable(TableItem item, Text text, int indexOfTable) {
 		super();
 		this.item = item;
 		this.text = text;
+		this.indexOfTable = indexOfTable;
 	}
 	
 	@Override
@@ -26,6 +28,6 @@ public class ModifyTextInTable implements ModifyListener {
 			text.setText("1");
 		}
 		// puis on met à jour la valeur du Tableitem
-		item.setText(3, text.getText());
+		item.setText(indexOfTable, text.getText());
 	}
 }

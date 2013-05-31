@@ -5,6 +5,8 @@ import org.eclipse.uml2.uml.Activity;
 
 public class UmlProcess {
 	
+	// TODO implémenter le diagramme d'activités de UML2.0
+	@SuppressWarnings("unused")
 	private Activity activity;
 	
 	public UmlProcess() {

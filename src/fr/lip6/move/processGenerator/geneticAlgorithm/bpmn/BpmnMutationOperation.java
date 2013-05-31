@@ -13,6 +13,8 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> {
 
+	// TODO lancer les change patterns en random
+	@SuppressWarnings("unused")
 	private List<IBpmnChangePatterns> changePatterns;
 	
 	public BpmnMutationOperation(List<IBpmnChangePatterns> changePatterns) {

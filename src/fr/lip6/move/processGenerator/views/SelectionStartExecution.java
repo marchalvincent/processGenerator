@@ -6,8 +6,15 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.uncommons.watchmaker.framework.TerminationCondition;
+import org.uncommons.watchmaker.framework.termination.ElapsedTime;
+import org.uncommons.watchmaker.framework.termination.GenerationCount;
+import org.uncommons.watchmaker.framework.termination.Stagnation;
+import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
+import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmData;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
@@ -29,6 +36,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		this.view = view;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 
@@ -44,20 +52,26 @@ public class SelectionStartExecution extends SelectionAdapter {
 		Table tableElements = null;
 		Table tableWorkflow = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
-			tableElements = view.getTableBpmnElements();
-			tableWorkflow = view.getTableBpmnWorkflow();
+			typeFile = "bpmn";
 		} else {
-			tableElements = view.getTableUmlElements();
-			tableWorkflow = view.getTableUmlWorkflow();
+			typeFile = "uml";
 		}
+
+		tableElements = view.getTableElements();
+		tableWorkflow = view.getTableWorkflow();
+		
 		// les listes de contraintes structurelles en fonction des tableaux
 		List<StructuralConstraintChecker> contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element);
 		List<StructuralConstraintChecker> contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow);
 
 		// la contrainte OCL écrite à la main
 		String manualOcl = view.getTextOclConstraint().getText();
-		IStructuralConstraint contrainte = BpmnStructuralConstraintFactory.getInstance().newManualOclConstraint(manualOcl);
-		StructuralConstraintChecker manualOclChecker = new StructuralConstraintChecker(contrainte, EQuantity.MORE_OR_EQUAL, 1);
+		IStructuralConstraint contrainte = null;
+		StructuralConstraintChecker manualOclChecker = null;
+		if (!manualOcl.isEmpty()) {
+			contrainte = BpmnStructuralConstraintFactory.getInstance().newManualOclConstraint(manualOcl);
+			manualOclChecker = new StructuralConstraintChecker(contrainte, EQuantity.MORE_OR_EQUAL, 1);
+		}
 		
 		// ONGLET ALGO GENETIQUE
 		// le nombre de population
@@ -67,20 +81,49 @@ public class SelectionStartExecution extends SelectionAdapter {
 		BpmnProcess initialBpmnProcess = view.getInitialBpmnProcess();
 		UmlProcess initialUmlProcess = view.getInitialUmlProcess();
 
-		// le nombre d'elitism
+		// le nombre d'elitism et la stratégie de sélection 
 		int elitism = view.getSpinnerElitism().getSelection();
 		String selectionStrategy = view.getComboStrategySelection().getText();
 
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
 		if (isCheckMutation) {
-			List<IChangePattern> changePatterns; // TODO construire la liste en fonction du tableau
-			// TODO
+			List<IChangePattern> changePatterns = this.getChangePatterns(typeFile);
 		}
 		
 		boolean isCheckCrossover = view.getButtonCheckCrossover().getSelection();
 		
+		// les conditions de terminaison
+		List<TerminationCondition> conditions = new ArrayList<TerminationCondition>();
+		// 1 solution trouvée
+		if (view.getButtonUntilSolutionFound().getSelection())
+			conditions.add(new TargetFitness(GeneticAlgorithmData.totalFitness, true));
+		
+		// during x secondes
+		if (view.getButtonDuringSeconde().getSelection()) 
+			conditions.add(new ElapsedTime(view.getSpinnerUntilSeconde().getSelection() * 1000));
+		
+		// during x generation
+		if (view.getButtonUntilGeneration().getSelection())
+			conditions.add(new GenerationCount(view.getSpinnerUntilGeneration().getSelection()));
+		
+		// during x stagnation
+		if (view.getButtonUntilStagnation().getSelection())
+			conditions.add(new Stagnation(view.getSpinnerUntilStagnation().getSelection(), true));
 		
 		// Enfin on peut construire l'exécuteur de l'algo génétique
+		// TODO construire l'executor
+	}
+
+	private List<IChangePattern> getChangePatterns(String typeFile) {
+
+		IChangePattern cPattern;
+		List<IChangePattern> changePatterns = new ArrayList<IChangePattern>();
+		for (TableItem item : view.getTableMutationParameters().getItems()) {
+			cPattern = ChangePatternFactory.getInstance().getChangePattern(typeFile, item.getText(0), item.getText(1));
+			if (cPattern != null)
+				changePatterns.add(cPattern);
+		}
+		return changePatterns;
 	}
 
 	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType) {
