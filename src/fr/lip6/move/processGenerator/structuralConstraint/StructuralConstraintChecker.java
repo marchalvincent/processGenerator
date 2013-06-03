@@ -12,7 +12,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnException;
  *
  */
 public class StructuralConstraintChecker {
-	
+
 	private IStructuralConstraint constraint;
 	private EQuantity quantity;
 	private int number;
@@ -47,5 +47,12 @@ public class StructuralConstraintChecker {
 			default:
 				return false;
 		}
+	}
+	
+	@Override
+	public String toString() {
+
+		return "StructuralConstraintChecker [constraint=" + constraint + ", quantity=" + quantity
+				+ ", number=" + number + "]";
 	}
 }

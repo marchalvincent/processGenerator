@@ -9,17 +9,24 @@ import org.eclipse.bpmn2.Task;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
+import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 
 
 public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> {
 
 	// TODO lancer les change patterns en random
-	@SuppressWarnings("unused")
-	private List<IBpmnChangePatterns> changePatterns;
+	private List<IBpmnChangePattern> changePatterns;
 	
-	public BpmnMutationOperation(List<IBpmnChangePatterns> changePatterns) {
+	public BpmnMutationOperation(List<IChangePattern> changePatterns) throws GeneticException {
 		super();
-		this.changePatterns = changePatterns;
+		this.changePatterns = new ArrayList<IBpmnChangePattern>();
+		for (IChangePattern iChangePattern : changePatterns) {
+			if (iChangePattern instanceof IBpmnChangePattern)
+				this.changePatterns.add((IBpmnChangePattern) iChangePattern);
+			else 
+				throw new GeneticException("BpmnMutationOperation constructor : one change pattern is not implementing IBpmnChangePattern.");
+		}
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.views;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.SWT;
@@ -12,6 +13,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
@@ -30,6 +32,7 @@ import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
+import fr.lip6.move.processGenerator.geneticAlgorithm.ESelectionStrategy;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
@@ -47,8 +50,8 @@ public class ProcessGeneratorView extends ViewPart {
 	private Spinner spinner_nbNode, spinner_marginNbNode, spinnerNbPopulation, spinnerElitism, spinnerUntilSecondes, 
 				spinnerUntilGeneration, spinnerUntilStagnation;
 	private Button btnStart, btnStop, btnSetInitialProcess, checkMutation, checkCrossover, btnOneSolutionFound, btnDuringSec,
-				btnGeneration, btnUntilStagnation;
-	private Label lblResult, lblSaveLocation, lblFiletype;
+				btnGeneration, btnUntilStagnation, btnChange;
+	private Label lblResult, lblpath, lblFiletype;
 	private FormToolkit toolkit;
 	private Composite compositeTarget2;
 
@@ -104,15 +107,15 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(composite_1);
 		toolkit.paintBordersFor(composite_1);
 
-		lblSaveLocation = new Label(composite_1, SWT.NONE);
+		Label lblSaveLocation = new Label(composite_1, SWT.NONE);
 		toolkit.adapt(lblSaveLocation, true, true);
 		lblSaveLocation.setText("Save location : ");
 
-		Label lblpath_1 = new Label(composite_1, SWT.NONE);
-		toolkit.adapt(lblpath_1, true, true);
-		lblpath_1.setText("/path/");
+		lblpath = new Label(composite_1, SWT.NONE);
+		toolkit.adapt(lblpath, true, true);
+		lblpath.setText("/model/");
 
-		Button btnChange = new Button(composite_1, SWT.NONE);
+		btnChange = new Button(composite_1, SWT.NONE);
 		btnChange.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/folder.gif"));
 		toolkit.adapt(btnChange, true, true);
 		btnChange.setText("Change");
@@ -386,10 +389,9 @@ public class ProcessGeneratorView extends ViewPart {
 		comboStrategySelection = new Combo(compositeGA2, SWT.READ_ONLY);
 		comboStrategySelection.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		comboStrategySelection.setVisibleItemCount(10);
-		comboStrategySelection.setItems(new String[] {"Roulette wheel selection", "Stochastic universal sampling", "Rank selection", "Tournament selection"});
+//		comboStrategySelection.setItems(new String[] {"Roulette wheel selection", "Stochastic universal sampling", "Rank selection", "Tournament selection"});
 		toolkit.adapt(comboStrategySelection);
 		toolkit.paintBordersFor(comboStrategySelection);
-		comboStrategySelection.setText("Roulette wheel selection");
 		new Label(compositeGA2, SWT.NONE);
 		new Label(compositeGA2, SWT.NONE);
 
@@ -538,6 +540,10 @@ public class ProcessGeneratorView extends ViewPart {
 	 */
 	private void manualCode() {
 
+		// on set le path directory par défaut 
+		lblpath.setText(System.getProperty("user.home") + File.separator);
+		lblpath.getParent().layout(true);
+		
 		// on remplit le tableau d'élément par défaut avec les valeurs BPMN
 		List<String> elements = new ArrayList<String>(EBpmnElement.values().length);
 		for (EBpmnElement elem : EBpmnElement.values()) {
@@ -548,6 +554,12 @@ public class ProcessGeneratorView extends ViewPart {
 		// on remplit le tableau des workflow patterns avec les valeurs BPMN
 		this.setWorkflowPatternToTable(EBpmnWorkflowPattern.patterns);
 
+		// on remplit le combo box de la stratégie de sélection 
+		for (ESelectionStrategy strat : ESelectionStrategy.values()) {
+			comboStrategySelection.add(strat.toString());
+		}
+		comboStrategySelection.select(0);
+		
 		// on remplit les tableaux des change patterns
 		this.setChangePatternToTable(ChangePatternFactory.getInstance().getBpmnChangePatterns());
 
@@ -556,6 +568,7 @@ public class ProcessGeneratorView extends ViewPart {
 		comboTypeFile.addSelectionListener(new SelectionFileType(this));
 		btnStart.addSelectionListener(new SelectionStartExecution(this));
 		btnSetInitialProcess.addSelectionListener(new SelectSetInitialProcess(this));
+		btnChange.addSelectionListener(new SelectPathDirectory(this));
 	}
 
 	/**
@@ -663,7 +676,7 @@ public class ProcessGeneratorView extends ViewPart {
 	}
 
 	public Label getLabelLocation() {
-		return lblSaveLocation;
+		return lblpath;
 	}
 
 	public Text getTextOclConstraint() {
@@ -734,6 +747,10 @@ public class ProcessGeneratorView extends ViewPart {
 		return spinnerUntilStagnation;
 	}
 	
+	public Label getLabelResult() {
+		return lblResult;
+	}
+	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
@@ -747,6 +764,15 @@ public class ProcessGeneratorView extends ViewPart {
 
 	public void setUmlInitialProcess(UmlProcess process) {
 		this.umlInitialProcess = process;
+	}
+	
+	public void setPathDirectory(String path) {
+		this.lblpath.setText(path);
+		this.lblpath.getParent().layout(true);
+	}
+	
+	public void print(String text) {
+		Display.getDefault().asyncExec(new RunnablePrintView(lblResult, text));
 	}
 
 	public void majTableOfElements(List<String> elements) {

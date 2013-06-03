@@ -31,7 +31,7 @@ public class BpmnQueryReaderHelper {
 		try {
 			lines.addAll(Files.readAllLines(sequencePath, Charset.forName("UTF-8")));
 		} catch (IOException e) {
-			throw new BpmnException("Attention, impossible de lire dans le fichier de la requete " + nameFile + ".");
+			throw new BpmnException("Warning, impossible to read the file of the following query : " + nameFile + ".");
 		}
 		
 		StringBuilder query = new StringBuilder();

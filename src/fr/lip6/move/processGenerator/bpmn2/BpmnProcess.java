@@ -161,16 +161,17 @@ public class BpmnProcess {
 		return sequence;
 	}
 
-	public void save(DocumentRoot model, String nameFile) throws IOException {
+	public void save(String nameFile) throws IOException {
 		Bpmn2ResourceFactoryImpl resourceFactory = new Bpmn2ResourceFactoryImpl();
 		File tempFile = File.createTempFile("bpmn20convert", "tmp");
 		try {
 			Resource resource = resourceFactory.createResource(URI.createFileURI(tempFile.getAbsolutePath()));
-			resource.getContents().add(model);
+			resource.getContents().add(this.documentRoot);
 			Bpmn2XMLProcessor proc = new Bpmn2XMLProcessor();
 			Map<Object, Object> options = new HashMap<Object, Object>();
 
 			File f = new File(nameFile);
+			f.createNewFile();
 			OutputStream outt = new FileOutputStream(f);
 			proc.save(outt, resource, options);
 		}
@@ -182,7 +183,7 @@ public class BpmnProcess {
 	public static void main(String[] args) throws IOException, BpmnException {
 		BpmnProcess bpmn = BpmnBuilder.createExampleWithParallel();
 		try {
-			bpmn.save(bpmn.getDocumentRoot(), "vincent.bpmn");
+			bpmn.save("vincent.bpmn");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

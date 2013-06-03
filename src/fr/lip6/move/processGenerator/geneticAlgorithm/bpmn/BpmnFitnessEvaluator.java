@@ -5,6 +5,7 @@ import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
 /**
  * L'évaluateur d'un candidat. C'est une fonction de fitness "naturelle", c'est à dire
@@ -13,6 +14,23 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
  *
  */
 public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
+
+	private int nbNodes;
+	private int margin;
+	private List<StructuralConstraintChecker> contraintesElements, contraintesWorkflows;
+	private StructuralConstraintChecker manualOclChecker;
+	
+	public BpmnFitnessEvaluator(Integer nbNodes, Integer margin,
+			List<StructuralConstraintChecker> contraintesElements,
+			List<StructuralConstraintChecker> contraintesWorkflows,
+			StructuralConstraintChecker manualOclChecker) {
+		super();
+		this.nbNodes = nbNodes;
+		this.margin = margin;
+		this.contraintesElements = contraintesElements;
+		this.contraintesWorkflows = contraintesWorkflows;
+		this.manualOclChecker = manualOclChecker;
+	}
 
 	@Override
 	public double getFitness(BpmnProcess candidate, List<? extends BpmnProcess> population) {

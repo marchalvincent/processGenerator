@@ -67,4 +67,10 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		}
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+
+		return "AbstractOclSolver [oclQuery=" + oclQuery + "]";
+	}
 }

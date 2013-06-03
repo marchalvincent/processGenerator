@@ -7,15 +7,10 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryRe
 
 public class BpmnElementConstraint extends AbstractOclSolver {
 
-	public BpmnElementConstraint(String element) {
+	public BpmnElementConstraint(String element) throws BpmnException {
 		super();
-		try {
-			String query = BpmnQueryReaderHelper.read("elementConstraint");
-			query.replace("%dynamic%", element);
-			super.setOclQuery(query);
-			
-		} catch (BpmnException e) {
-			e.printStackTrace();
-		}
+		String query = BpmnQueryReaderHelper.read("elementConstraint");
+		query.replace("%dynamic%", element);
+		super.setOclQuery(query);
 	}
 }

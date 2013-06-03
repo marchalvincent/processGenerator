@@ -4,7 +4,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 
 
-public interface IBpmnChangePatterns extends IChangePattern {
+public interface IBpmnChangePattern extends IChangePattern {
 	
 	BpmnProcess apply(BpmnProcess process);
 }

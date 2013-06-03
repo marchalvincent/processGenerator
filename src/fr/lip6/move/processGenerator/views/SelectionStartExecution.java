@@ -12,9 +12,12 @@ import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.Stagnation;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import fr.lip6.move.processGenerator.EQuantity;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmData;
+import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmExecutor;
+import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
@@ -36,10 +39,11 @@ public class SelectionStartExecution extends SelectionAdapter {
 		this.view = view;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 
+		view.print("Initialization...");
+		
 		// ONGLET RUN
 		String location = view.getLabelLocation().getText();
 		int nbNode = view.getSpinnerNbNode().getSelection();
@@ -61,9 +65,17 @@ public class SelectionStartExecution extends SelectionAdapter {
 		tableWorkflow = view.getTableWorkflow();
 		
 		// les listes de contraintes structurelles en fonction des tableaux
-		List<StructuralConstraintChecker> contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element);
-		List<StructuralConstraintChecker> contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow);
-
+		List<StructuralConstraintChecker> contraintesElements = null;
+		List<StructuralConstraintChecker> contraintesWorkflows = null;
+		try {
+			contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element);
+			contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow);
+		} catch(BpmnException ex) {
+			view.print(ex.getMessage());
+			System.err.println(ex.getMessage());
+			return;
+		}
+		
 		// la contrainte OCL écrite à la main
 		String manualOcl = view.getTextOclConstraint().getText();
 		IStructuralConstraint contrainte = null;
@@ -86,8 +98,9 @@ public class SelectionStartExecution extends SelectionAdapter {
 		String selectionStrategy = view.getComboStrategySelection().getText();
 
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
+		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
-			List<IChangePattern> changePatterns = this.getChangePatterns(typeFile);
+			changePatterns = this.getChangePatterns(typeFile);
 		}
 		
 		boolean isCheckCrossover = view.getButtonCheckCrossover().getSelection();
@@ -111,7 +124,28 @@ public class SelectionStartExecution extends SelectionAdapter {
 			conditions.add(new Stagnation(view.getSpinnerUntilStagnation().getSelection(), true));
 		
 		// Enfin on peut construire l'exécuteur de l'algo génétique
-		// TODO construire l'executor
+		GeneticAlgorithmExecutor executor = new GeneticAlgorithmExecutor();
+		executor.setFileType(typeFile);
+		executor.setGeneticOperations(isCheckMutation, changePatterns, isCheckCrossover);
+		executor.setGeneticSelection(elitism, selectionStrategy);
+		try {
+			if (typeFile.contains("bpmn") && initialBpmnProcess != null)
+				executor.setInitialProcess(initialBpmnProcess);
+			else if (initialUmlProcess != null)
+				executor.setInitialProcess(initialUmlProcess);
+		} catch (GeneticException ex) {
+			view.print(ex.getMessage());
+			System.err.println(ex.getMessage());
+			return;
+		}
+		executor.setLabel(view);
+		executor.setNbPopulation(nbPopulation);
+		executor.setRunConfiguration(location, nbNode, margin);
+		executor.setStructuralsConstraintsChecker(contraintesElements, contraintesWorkflows, manualOclChecker);
+		executor.setTerminationCondition(conditions);
+		
+		executor.start();
+		// TODO tester
 	}
 
 	private List<IChangePattern> getChangePatterns(String typeFile) {
@@ -126,7 +160,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		return changePatterns;
 	}
 
-	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType) {
+	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType) throws BpmnException {
 
 		List<StructuralConstraintChecker> liste = new ArrayList<StructuralConstraintChecker>();
 		// pour chaque ligne du tableau

@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
 
@@ -29,7 +30,7 @@ public class BpmnStructuralConstraintFactory {
 		return null;
 	}
 	
-	public IStructuralConstraint newElementConstraint(String nameElement) {
+	public IStructuralConstraint newElementConstraint(String nameElement) throws BpmnException {
 		return new BpmnElementConstraint(nameElement);
 	}
 	

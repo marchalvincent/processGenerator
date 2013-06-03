@@ -34,7 +34,7 @@ public class Example {
 		EvolutionaryOperator<BpmnProcess> pipeline = new EvolutionPipeline<BpmnProcess>(operations);
 		
 		// la classe calculant le fitness
-		FitnessEvaluator<BpmnProcess> fitnessEvaluator = new BpmnFitnessEvaluator();
+		FitnessEvaluator<BpmnProcess> fitnessEvaluator = null;
 		
 		// la méthode de sélection
 		SelectionStrategy<Object> selection = new RouletteWheelSelection();
@@ -51,7 +51,7 @@ public class Example {
 				random);
 		
 		// un petit observeur pour voir ce qu'il se passe
-		engine.addEvolutionObserver(new BpmnEvolutionObserver());
+//		engine.addEvolutionObserver(new BpmnEvolutionObserver());
 		
 		// les conditions de terminaisons
 		TerminationCondition condition = new TargetFitness(100, true);
