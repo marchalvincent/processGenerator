@@ -6,14 +6,9 @@ import fr.lip6.move.processGenerator.structuralConstraint.uml.query.UmlQueryRead
 
 public class UmlSequence extends AbstractOclSolver {
 	
-	public UmlSequence() {
+	public UmlSequence() throws UmlException {
 		super();
-		// TODO définir la requête
 		System.err.println("Attention la requête OCL de UmlSequence n'est pas définie.");
-		try {
-			super.setOclQuery(UmlQueryReaderHelper.read("sequence"));
-		} catch (UmlException e) {
-			e.printStackTrace();
-		}
+		super.setOclQuery(UmlQueryReaderHelper.read("sequence"));
 	}
 }

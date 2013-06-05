@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.EndEvent;
@@ -22,12 +23,14 @@ import org.eclipse.bpmn2.util.Bpmn2XMLProcessor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.uncommons.maths.random.MersenneTwisterRNG;
 
 
 public class BpmnProcess {
 
 	private DocumentRoot documentRoot;
 	private Process process;
+	private final static Random rng = new MersenneTwisterRNG();
 
 	public BpmnProcess() {
 		super();
@@ -93,7 +96,8 @@ public class BpmnProcess {
 	}
 	
 	public Task buildTask() {
-		Task task = Bpmn2Factory.eINSTANCE.createTask();
+//		Task task = Bpmn2Factory.eINSTANCE.createTask();
+		Task task = this.buildRandomSubTask();
 		
 		String name = BpmnNameManager.getTaskName();
 		task.setId("id_" + name);
@@ -101,6 +105,28 @@ public class BpmnProcess {
 		
 		process.getFlowElements().add(task);
 		return task;
+	}
+	
+	private Task buildRandomSubTask() {
+		switch (rng.nextInt(7)) {
+			case 0:
+				return Bpmn2Factory.eINSTANCE.createBusinessRuleTask();
+			case 1:
+				return Bpmn2Factory.eINSTANCE.createManualTask();
+			case 2:
+				return Bpmn2Factory.eINSTANCE.createReceiveTask();
+			case 3:
+				return Bpmn2Factory.eINSTANCE.createScriptTask();
+			case 4:
+				return Bpmn2Factory.eINSTANCE.createSendTask();
+			case 5:
+				return Bpmn2Factory.eINSTANCE.createServiceTask();
+			case 6:
+				return Bpmn2Factory.eINSTANCE.createUserTask();
+			default:
+				break;
+		}
+		return Bpmn2Factory.eINSTANCE.createTask();
 	}
 
 	public ParallelGateway buildParallelGatewayDiverging() {

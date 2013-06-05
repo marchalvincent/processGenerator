@@ -3,12 +3,13 @@ package fr.lip6.move.processGenerator;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import fr.lip6.move.processGenerator.bpmn2.workflowPattern.ExclusiveChoiceTest;
-import fr.lip6.move.processGenerator.bpmn2.workflowPattern.ParallelSplitTest;
-import fr.lip6.move.processGenerator.bpmn2.workflowPattern.SequenceTest;
-import fr.lip6.move.processGenerator.bpmn2.workflowPattern.SimpleMergeTest;
-import fr.lip6.move.processGenerator.bpmn2.workflowPattern.SynchronizationTest;
-import fr.lip6.move.processGenerator.bpmn2.workflowPattern.query.QueryHelperTest;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnFitnessEvaluatorTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ExclusiveChoiceTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ParallelSplitTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SequenceTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SimpleMergeTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SynchronizationTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.QueryHelperTest;
 
 
 @RunWith(Suite.class)
@@ -17,6 +18,7 @@ import fr.lip6.move.processGenerator.bpmn2.workflowPattern.query.QueryHelperTest
 	SynchronizationTest.class, 
 	ExclusiveChoiceTest.class,
 	SimpleMergeTest.class, 
-	QueryHelperTest.class})
+	QueryHelperTest.class,
+	BpmnFitnessEvaluatorTest.class})
 public class WholeTests {
 }

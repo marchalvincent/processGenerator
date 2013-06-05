@@ -7,7 +7,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -37,6 +36,7 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
+import org.eclipse.swt.layout.FillLayout;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -48,7 +48,8 @@ public class ProcessGeneratorView extends ViewPart {
 	private Text text_oclConstraint;
 	private Combo comboTypeFile, comboStrategySelection;
 	private Spinner spinner_nbNode, spinner_marginNbNode, spinnerNbPopulation, spinnerElitism, spinnerUntilSecondes, 
-				spinnerUntilGeneration, spinnerUntilStagnation;
+				spinnerUntilGeneration, spinnerUntilStagnation, spinnerSizeWeight, spinnerElementWeight, spinnerWorkflowWeight,
+				spinnerManualOclWeight;
 	private Button btnStart, btnStop, btnSetInitialProcess, checkMutation, checkCrossover, btnOneSolutionFound, btnDuringSec,
 				btnGeneration, btnUntilStagnation, btnChange;
 	private Label lblResult, lblpath, lblFiletype;
@@ -57,6 +58,7 @@ public class ProcessGeneratorView extends ViewPart {
 
 	private BpmnProcess bpmnInitialProcess;
 	private UmlProcess umlInitialProcess;
+	private String directorypath = System.getProperty("user.home") + File.separator + ".processGenerator" + File.separator;
 
 	/**
 	 * The constructor.
@@ -192,7 +194,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(scrolledFormTarget);
 		scrolledFormTarget.getBody().setLayout(new GridLayout(2, true));
 
-		Section sctnFile = toolkit.createSection(scrolledFormTarget.getBody(), Section.TITLE_BAR);
+		Section sctnFile = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnFile.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnFile.marginWidth = 0;
 		sctnFile.marginHeight = 0;
@@ -515,8 +517,58 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(spinnerUntilStagnation);
 		toolkit.paintBordersFor(spinnerUntilStagnation);
 		new Label(compositeGA4, SWT.NONE);
-		new Label(scrolledForm.getBody(), SWT.NONE);
-		new Label(scrolledForm.getBody(), SWT.NONE);
+		
+		Section sctnCustomFitness = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
+		sctnCustomFitness.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		sctnCustomFitness.marginWidth = 0;
+		sctnCustomFitness.marginHeight = 0;
+		toolkit.paintBordersFor(sctnCustomFitness);
+		sctnCustomFitness.setText("Custom fitness function");
+		
+		Composite composite_4 = new Composite(sctnCustomFitness, SWT.NONE);
+		toolkit.adapt(composite_4);
+		toolkit.paintBordersFor(composite_4);
+		sctnCustomFitness.setClient(composite_4);
+		composite_4.setLayout(new GridLayout(11, false));
+		
+		Label lblSizeWeight = new Label(composite_4, SWT.NONE);
+		toolkit.adapt(lblSizeWeight, true, true);
+		lblSizeWeight.setText("Size weight : ");
+		
+		spinnerSizeWeight = new Spinner(composite_4, SWT.BORDER);
+		spinnerSizeWeight.setSelection(1);
+		toolkit.adapt(spinnerSizeWeight);
+		toolkit.paintBordersFor(spinnerSizeWeight);
+		new Label(composite_4, SWT.NONE);
+		
+		Label lblElementsWeight = new Label(composite_4, SWT.NONE);
+		toolkit.adapt(lblElementsWeight, true, true);
+		lblElementsWeight.setText("Elements weight : ");
+		
+		spinnerElementWeight = new Spinner(composite_4, SWT.BORDER);
+		spinnerElementWeight.setSelection(1);
+		toolkit.adapt(spinnerElementWeight);
+		toolkit.paintBordersFor(spinnerElementWeight);
+		new Label(composite_4, SWT.NONE);
+		
+		Label lblWorkflowWeight = new Label(composite_4, SWT.NONE);
+		toolkit.adapt(lblWorkflowWeight, true, true);
+		lblWorkflowWeight.setText("Workflow weight : ");
+		
+		spinnerWorkflowWeight = new Spinner(composite_4, SWT.BORDER);
+		spinnerWorkflowWeight.setSelection(1);
+		toolkit.adapt(spinnerWorkflowWeight);
+		toolkit.paintBordersFor(spinnerWorkflowWeight);
+		new Label(composite_4, SWT.NONE);
+		
+		Label lblManualOclWeight = new Label(composite_4, SWT.NONE);
+		toolkit.adapt(lblManualOclWeight, true, true);
+		lblManualOclWeight.setText("Manual Ocl weight : ");
+		
+		spinnerManualOclWeight = new Spinner(composite_4, SWT.BORDER);
+		spinnerManualOclWeight.setSelection(1);
+		toolkit.adapt(spinnerManualOclWeight);
+		toolkit.paintBordersFor(spinnerManualOclWeight);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		GridData gd_spnNode = new GridData(GridData.VERTICAL_ALIGN_CENTER);
@@ -541,7 +593,7 @@ public class ProcessGeneratorView extends ViewPart {
 	private void manualCode() {
 
 		// on set le path directory par défaut 
-		lblpath.setText(System.getProperty("user.home") + File.separator);
+		lblpath.setText(directorypath);
 		lblpath.getParent().layout(true);
 		
 		// on remplit le tableau d'élément par défaut avec les valeurs BPMN
@@ -749,6 +801,30 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	public Label getLabelResult() {
 		return lblResult;
+	}
+	
+	public String getDirectoryPath() {
+		return directorypath;
+	}
+	
+	public Button getButtonStop() {
+		return btnStop;
+	}
+	
+	public Spinner getspinnerSizeWeight() {
+		return spinnerSizeWeight;
+	}
+	
+	public Spinner getSpinnerElementWeight() {
+		return spinnerElementWeight;
+	}
+	
+	public Spinner getSpinnerWorkflowWeight() {
+		return spinnerWorkflowWeight;
+	}
+	
+	public Spinner getSpinnerManualOclWeight() {
+		return spinnerManualOclWeight;
 	}
 	
 	/**

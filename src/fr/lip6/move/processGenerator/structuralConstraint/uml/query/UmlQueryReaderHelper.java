@@ -16,7 +16,7 @@ import fr.lip6.move.processGenerator.structuralConstraint.uml.UmlException;
  */
 public class UmlQueryReaderHelper {
 	
-	public static final String directory = "src/fr/lip6/move/processGenerator/StructuralConstraint/uml/query/";
+	public static final String directory = "configuration/fr.lip6.move.processGenerator/uml.query";
 	
 	/**
 	 * Renvoie la requête lue dans le fichier dont le nom est passé en paramètre.
@@ -31,7 +31,7 @@ public class UmlQueryReaderHelper {
 		try {
 			lines.addAll(Files.readAllLines(sequencePath, Charset.forName("UTF-8")));
 		} catch (IOException e) {
-			throw new UmlException("Attention, impossible de lire dans le fichier de la requete " + nameFile + ".");
+			throw new UmlException("Warning, impossible to read the file of the following query : " + nameFile + ".");
 		}
 		
 		StringBuilder query = new StringBuilder();

@@ -7,12 +7,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryRe
 
 public class BpmnExclusiveChoice extends AbstractOclSolver {
 
-	public BpmnExclusiveChoice() {
+	public BpmnExclusiveChoice() throws BpmnException {
 		super();
-		try {
-			super.setOclQuery(BpmnQueryReaderHelper.read("exclusiveChoice"));
-		} catch (BpmnException e) {
-			e.printStackTrace();
-		}
+		super.setOclQuery(BpmnQueryReaderHelper.read("exclusiveChoice"));
 	}
 }

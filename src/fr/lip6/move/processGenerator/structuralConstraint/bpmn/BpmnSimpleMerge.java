@@ -7,12 +7,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryRe
 
 public class BpmnSimpleMerge extends AbstractOclSolver {
 
-	public BpmnSimpleMerge() {
+	public BpmnSimpleMerge() throws BpmnException {
 		super();
-		try {
-			super.setOclQuery(BpmnQueryReaderHelper.read("simpleMerge"));
-		} catch (BpmnException e) {
-			e.printStackTrace();
-		}
+		super.setOclQuery(BpmnQueryReaderHelper.read("simpleMerge"));
 	}
 }

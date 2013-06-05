@@ -161,4 +161,13 @@ public class BpmnBuilder {
 		
 		return process;
 	}
+	
+	public static BpmnProcess numberNodes(int number) {
+
+		BpmnProcess process = new BpmnProcess();
+		for (int i = 0; i < number; i++) {
+			process.buildTask();
+		}
+		return process;
+	}
 }

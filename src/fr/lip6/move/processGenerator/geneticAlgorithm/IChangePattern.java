@@ -10,7 +10,7 @@ public interface IChangePattern {
 	void setProba(String proba);
 	
 	/**
-	 * Getter sur la probabilité
+	 * Getter sur la probabilité que ce change pattern soit exécuté.
 	 * @return
 	 */
 	int getProba();

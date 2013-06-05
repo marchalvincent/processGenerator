@@ -11,12 +11,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryRe
  */
 public class BpmnSequence extends AbstractOclSolver {
 
-	public BpmnSequence() {
+	public BpmnSequence() throws BpmnException {
 		super();
-		try {
-			super.setOclQuery(BpmnQueryReaderHelper.read("sequence"));
-		} catch (BpmnException e) {
-			e.printStackTrace();
-		}
+		super.setOclQuery(BpmnQueryReaderHelper.read("sequence"));
 	}
 }

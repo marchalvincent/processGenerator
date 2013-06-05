@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.views;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -11,10 +12,12 @@ import org.uncommons.watchmaker.framework.termination.ElapsedTime;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.Stagnation;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
+import org.uncommons.watchmaker.framework.termination.UserAbort;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
+import fr.lip6.move.processGenerator.geneticAlgorithm.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmData;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmExecutor;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
@@ -44,6 +47,17 @@ public class SelectionStartExecution extends SelectionAdapter {
 
 		view.print("Initialization...");
 		
+		// on créé le répertoire s'il n'existe pas
+		File directory = new File(view.getDirectoryPath());
+		if (!directory.isDirectory()) {
+			boolean bool = directory.mkdir();
+			if (!bool) {
+				view.print("Impossible to create the directory path.");
+				System.err.println("Impossible to create the directory path.");
+				return;
+			}
+		}
+		
 		// ONGLET RUN
 		String location = view.getLabelLocation().getText();
 		int nbNode = view.getSpinnerNbNode().getSelection();
@@ -51,18 +65,15 @@ public class SelectionStartExecution extends SelectionAdapter {
 
 		// ONGLET TARGET
 		String typeFile = view.getComboTypeFile().getText();
-
-		// les elements et workflows sélectionnés
-		Table tableElements = null;
-		Table tableWorkflow = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
 			typeFile = "bpmn";
 		} else {
 			typeFile = "uml";
 		}
-
-		tableElements = view.getTableElements();
-		tableWorkflow = view.getTableWorkflow();
+		
+		// les elements et workflows sélectionnés
+		Table tableElements = view.getTableElements();
+		Table tableWorkflow = view.getTableWorkflow();
 		
 		// les listes de contraintes structurelles en fonction des tableaux
 		List<StructuralConstraintChecker> contraintesElements = null;
@@ -97,6 +108,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		int elitism = view.getSpinnerElitism().getSelection();
 		String selectionStrategy = view.getComboStrategySelection().getText();
 
+		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
 		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
@@ -123,6 +135,23 @@ public class SelectionStartExecution extends SelectionAdapter {
 		if (view.getButtonUntilStagnation().getSelection())
 			conditions.add(new Stagnation(view.getSpinnerUntilStagnation().getSelection(), true));
 		
+		// les poids fitness
+		int sizeWeight = view.getspinnerSizeWeight().getSelection();
+		int elementWeight = view.getSpinnerElementWeight().getSelection();
+		int workflowWeight = view.getSpinnerWorkflowWeight().getSelection();
+		int manualOclWeight = view.getSpinnerManualOclWeight().getSelection();
+		FitnessWeightHelper weightHelper = new FitnessWeightHelper(sizeWeight, elementWeight, workflowWeight, manualOclWeight);
+		
+		// le bouton stop
+		final UserAbort userAbort = new UserAbort();
+		view.getButtonStop().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				userAbort.abort();
+			}
+		});
+		conditions.add(userAbort);
+		
 		// Enfin on peut construire l'exécuteur de l'algo génétique
 		GeneticAlgorithmExecutor executor = new GeneticAlgorithmExecutor();
 		executor.setFileType(typeFile);
@@ -143,9 +172,9 @@ public class SelectionStartExecution extends SelectionAdapter {
 		executor.setRunConfiguration(location, nbNode, margin);
 		executor.setStructuralsConstraintsChecker(contraintesElements, contraintesWorkflows, manualOclChecker);
 		executor.setTerminationCondition(conditions);
+		executor.setWeightHelper(weightHelper);
 		
 		executor.start();
-		// TODO tester
 	}
 
 	private List<IChangePattern> getChangePatterns(String typeFile) {

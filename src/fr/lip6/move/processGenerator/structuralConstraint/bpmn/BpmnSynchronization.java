@@ -7,12 +7,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryRe
 
 public class BpmnSynchronization extends AbstractOclSolver {
 
-	public BpmnSynchronization() {
+	public BpmnSynchronization() throws BpmnException {
 		super();
-		try {
-			super.setOclQuery(BpmnQueryReaderHelper.read("synchronization"));
-		} catch (BpmnException e) {
-			e.printStackTrace();
-		}
+		super.setOclQuery(BpmnQueryReaderHelper.read("synchronization"));
 	}
 }

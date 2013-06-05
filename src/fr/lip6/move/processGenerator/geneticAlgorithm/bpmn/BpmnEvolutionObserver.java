@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn;
 
+import java.text.DecimalFormat;
 import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
@@ -17,6 +18,8 @@ public class BpmnEvolutionObserver implements EvolutionObserver<BpmnProcess> {
 
 	@Override
 	public void populationUpdate(PopulationData<? extends BpmnProcess> data) {
-		view.print("Generation " + data.getGenerationNumber() + ": " + data.getBestCandidateFitness());
+		Double best = new Double(data.getBestCandidateFitness());
+		DecimalFormat df = new DecimalFormat("#.###");
+		view.print("Generation " + data.getGenerationNumber() + ": " + df.format(best) + "% matches.");
 	}
 }

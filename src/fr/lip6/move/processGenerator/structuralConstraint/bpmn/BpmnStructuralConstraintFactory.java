@@ -14,7 +14,7 @@ public class BpmnStructuralConstraintFactory {
 		return instance;
 	}
 	
-	public IStructuralConstraint newWorkflowPatternConstraint(String name) {
+	public IStructuralConstraint newWorkflowPatternConstraint(String name) throws BpmnException {
 		
 		if (name.toLowerCase().equals("sequence")) {
 			return new BpmnSequence();

@@ -3,11 +3,8 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.eclipse.bpmn2.FlowNode;
-import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.Task;
+import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
@@ -15,8 +12,8 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 
 public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> {
 
-	// TODO lancer les change patterns en random
 	private List<IBpmnChangePattern> changePatterns;
+	private Random rng;
 	
 	public BpmnMutationOperation(List<IChangePattern> changePatterns) throws GeneticException {
 		super();
@@ -27,48 +24,47 @@ public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> 
 			else 
 				throw new GeneticException("BpmnMutationOperation constructor : one change pattern is not implementing IBpmnChangePattern.");
 		}
+		this.rng = new MersenneTwisterRNG();
 	}
 	
 	@Override
 	public List<BpmnProcess> apply(List<BpmnProcess> selectedCandidates, Random rng) {
 		
 		List<BpmnProcess> newGeneration = new ArrayList<BpmnProcess>();
+		// pour chaque candidat...
 		for (BpmnProcess bpmnProcess : selectedCandidates) {
-			newGeneration.add(this.mutate(bpmnProcess, rng));
+			// on prend un changePattern au hasard
+			IBpmnChangePattern changePattern = this.getRandomChangePattern();
+			// et on applique la mutation
+			newGeneration.add(changePattern.apply(bpmnProcess, rng));
 		}
 		return newGeneration;
 	}
-
 	
-	/**
-	 * Temporaire fait une insertion la plus basique qu'elle soit
-	 * @param bpmnProcess
-	 * @param rng
-	 * @return
-	 */
-	private BpmnProcess mutate(BpmnProcess bpmnProcess, Random rng) {
+	private IBpmnChangePattern getRandomChangePattern() {
 		
-		if (rng.nextInt(100) < 90) {
-			return bpmnProcess;
+		// on initialise un tableau d'entier pour donner un poids à chaque probabilité
+		int totalPoid = 0;
+		for (IBpmnChangePattern changeP : this.changePatterns) {
+			totalPoid = totalPoid + changeP.getProba();
 		}
 		
-		BpmnProcess newProcess = null;
-		try {
-			newProcess = new BpmnProcess(bpmnProcess);
-		} catch (BpmnException e) {
-			// en cas d'echec de la copie, on renvoie le candidat tel qu'il est
-			return bpmnProcess;
+		int cpt = 0;
+		int[] randomTable = new int[totalPoid];
+		// pour chaque change pattern
+		for (int i = 0; i < this.changePatterns.size(); i++) {
+			// on remplit le tableau selon son poid
+			for (int j = 0; j < this.changePatterns.get(i).getProba(); j++) {
+				randomTable[cpt] = i;
+				cpt++;
+			}
 		}
 		
-		// on prend le StartEvent
-		FlowNode startEvent = (FlowNode) newProcess.getProcess().getFlowElements().get(0);
-		SequenceFlow arc = startEvent.getOutgoing().get(0);
+		// petite vérification au cas ou
+		if (cpt != totalPoid)
+			System.err.println("getRandomChangePattern : the random table is not correctly created.");
 		
-		Task t = newProcess.buildTask();
-		newProcess.buildSequenceFlow(t, arc.getTargetRef());
-		
-		arc.setTargetRef(t);
-		
-		return newProcess;
+		// on peut enfin faire notre random
+		return this.changePatterns.get(randomTable[rng.nextInt(totalPoid)]);
 	}
 }

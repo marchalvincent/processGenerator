@@ -5,13 +5,13 @@ import org.eclipse.uml2.uml.Activity;
 
 public class UmlProcess {
 	
-	// TODO implémenter le diagramme d'activités de UML2.0
+	// implémenter le diagramme d'activités de UML2.0
 	@SuppressWarnings("unused")
 	private Activity activity;
 	
 	public UmlProcess() {
 		super();
-		// TODO faire un process initial -> final
+		// faire un process initial -> final
 	}
 	
 	public UmlProcess(Activity activity) {

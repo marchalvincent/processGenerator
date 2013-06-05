@@ -64,7 +64,7 @@ public class ChangePatternFactory {
 					cp.setProba(proba);
 					return cp;
 				} catch (InstantiationException | IllegalAccessException e) {
-					System.err.println("Impossible d'instancier dynamiquement le change pattern '" + changePatternName + "'.");
+					System.err.println("Impossible to create the following change pattern : '" + changePatternName + "'.");
 					e.printStackTrace();
 				}
 			}

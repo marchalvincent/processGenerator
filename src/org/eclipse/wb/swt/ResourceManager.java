@@ -253,7 +253,7 @@ public class ResourceManager extends SWTResourceManager {
 	 */
 	public static Image getPluginImage(String symbolicName, String path) {
 		try {
-			URL url = getPluginImageURL(symbolicName, path);
+			URL url = getPluginFileURL(symbolicName, path);
 			if (url != null) {
 				return getPluginImageFromUrl(url);
 			}
@@ -324,7 +324,7 @@ public class ResourceManager extends SWTResourceManager {
 	 */
 	public static ImageDescriptor getPluginImageDescriptor(String symbolicName, String path) {
 		try {
-			URL url = getPluginImageURL(symbolicName, path);
+			URL url = getPluginFileURL(symbolicName, path);
 			if (url != null) {
 				return ImageDescriptor.createFromURL(url);
 			}
@@ -336,7 +336,7 @@ public class ResourceManager extends SWTResourceManager {
 	/**
 	 * Returns an {@link URL} based on a {@link Bundle} and resource entry path.
 	 */
-	private static URL getPluginImageURL(String symbolicName, String path) {
+	public static URL getPluginFileURL(String symbolicName, String path) {
 		// try runtime plugins
 		{
 			Bundle bundle = Platform.getBundle(symbolicName);

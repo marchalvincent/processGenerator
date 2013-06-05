@@ -55,6 +55,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 	private Boolean isCheckCrossover;
 
 	private List<TerminationCondition> terminationCondition;
+	private FitnessWeightHelper weightHelper;
 	
 	private ProcessGeneratorView view;
 
@@ -128,12 +129,16 @@ public class GeneticAlgorithmExecutor extends Thread {
 		this.view = view;
 	}
 
+	public void setWeightHelper(FitnessWeightHelper weightHelper) {
+		this.weightHelper = weightHelper;
+	}
+	
 	public boolean isReady() {	
 		return (this.isCheckCrossover == null) || (this.isCheckMutation == null) || (this.changePatterns == null) || 
 				(this.contraintesElements == null) || (this.contraintesWorkflows == null) || (this.elitism == null) || 
 				(this.initialProcess == null) || (this.location == null) || (this.manualOclChecker == null) || 
 				(this.margin == null) || (this.nbNodes == null) || (this.nbPopulation == null) || (this.selectionStrategy == null) || 
-				(this.terminationCondition == null) || (this.typeFile == null) || (view == null);
+				(this.terminationCondition == null) || (this.typeFile == null) || (view == null) || (weightHelper == null);
 	}
 
 	/**
@@ -154,7 +159,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 		if (typeFile.contains("bpmn")) {
 			try {
 				this.runBpmn();
-			} catch (GeneticException | IOException e) {
+			} catch (GeneticException | IOException | IllegalArgumentException e) {
 				view.print(e.getMessage());
 			}
 		}
@@ -183,7 +188,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 
 		// la classe calculant le fitness
 		FitnessEvaluator<BpmnProcess> fitnessEvaluator = new BpmnFitnessEvaluator(nbNodes, margin, 
-				contraintesElements, contraintesWorkflows, manualOclChecker);
+				contraintesElements, contraintesWorkflows, manualOclChecker, weightHelper);
 
 		// le random rapide et juste de watchmaker
 		Random random = new MersenneTwisterRNG();

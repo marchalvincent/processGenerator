@@ -8,12 +8,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryRe
 public class BpmnParallelSplit extends AbstractOclSolver {
 
 	
-	public BpmnParallelSplit() {
+	public BpmnParallelSplit() throws BpmnException {
 		super();
-		try {
-			super.setOclQuery(BpmnQueryReaderHelper.read("parallelSplit"));
-		} catch (BpmnException e) {
-			e.printStackTrace();
-		}
+		super.setOclQuery(BpmnQueryReaderHelper.read("parallelSplit"));
 	}
 }

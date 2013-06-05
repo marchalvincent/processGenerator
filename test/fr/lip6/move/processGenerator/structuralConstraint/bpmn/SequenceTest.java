@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2.workflowPattern;
+package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2.workflowPattern;
+package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.After;
@@ -9,10 +9,10 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnSimpleMerge;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnExclusiveChoice;
 
 
-public class SimpleMergeTest {
+public class ExclusiveChoiceTest {
 
 	private BpmnProcess process;
 
@@ -28,7 +28,7 @@ public class SimpleMergeTest {
 
 	@Test(expected=BpmnException.class)
 	public void test0() throws Exception {
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSimpleMerge(), EQuantity.EQUAL, -1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExclusiveChoice(), EQuantity.EQUAL, -1);
 		checker.check(process.getProcess());
 	}
 
@@ -39,7 +39,7 @@ public class SimpleMergeTest {
 		process = BpmnBuilder.initialFinal();
 
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSimpleMerge(), EQuantity.EQUAL, 0);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExclusiveChoice(), EQuantity.EQUAL, 0);
 		assertTrue(checker.check(process.getProcess()));
 	}
 
@@ -50,7 +50,7 @@ public class SimpleMergeTest {
 		process = BpmnBuilder.createExampleWithExclusiveChoice();
 
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSimpleMerge(), EQuantity.EQUAL, 1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExclusiveChoice(), EQuantity.EQUAL, 1);
 		assertTrue(checker.check(process.getProcess()));
 	}
 }

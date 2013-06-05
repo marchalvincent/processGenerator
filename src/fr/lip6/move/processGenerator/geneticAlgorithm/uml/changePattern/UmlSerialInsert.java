@@ -9,8 +9,7 @@ public class UmlSerialInsert extends AbstractChangePattern implements IUmlChange
 
 	@Override
 	public UmlProcess apply(UmlProcess process) {
-
-		// TODO Auto-generated method stub
-		return null;
+		// non implémenté
+		return process;
 	}
 }

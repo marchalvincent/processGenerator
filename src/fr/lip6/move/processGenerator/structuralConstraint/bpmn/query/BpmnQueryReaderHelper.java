@@ -16,7 +16,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnException;
  */
 public class BpmnQueryReaderHelper {
 	
-	public static final String directory = "src/fr/lip6/move/processGenerator/StructuralConstraint/bpmn/query/";
+	public static final String directory = "configuration/fr.lip6.move.processGenerator/bpmn.query";
 	
 	/**
 	 * Renvoie la requête lue dans le fichier dont le nom est passé en paramètre.
