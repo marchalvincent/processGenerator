@@ -602,7 +602,7 @@ public class ProcessGeneratorView extends ViewPart {
 		for (ESelectionStrategy strat : ESelectionStrategy.values()) {
 			comboStrategySelection.add(strat.toString());
 		}
-		comboStrategySelection.select(0);
+		comboStrategySelection.select(1);
 		
 		// on remplit les tableaux des change patterns
 		this.setChangePatternToTable(EBpmnChangePattern.values());
