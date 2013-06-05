@@ -1,12 +1,11 @@
 package fr.lip6.move.processGenerator.views;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -30,13 +29,12 @@ import org.eclipse.wb.swt.ResourceManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
-import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
 import fr.lip6.move.processGenerator.geneticAlgorithm.ESelectionStrategy;
-import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
-import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
+import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.EBpmnChangePattern;
+import fr.lip6.move.processGenerator.structuralConstraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
-import org.eclipse.swt.layout.FillLayout;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -136,7 +134,7 @@ public class ProcessGeneratorView extends ViewPart {
 		spinner_nbNode.setMaximum(10000);
 		spinner_nbNode.setIncrement(10);
 		spinner_nbNode.setMinimum(2);
-		spinner_nbNode.setSelection(100);
+		spinner_nbNode.setSelection(10);
 		toolkit.adapt(spinner_nbNode);
 		toolkit.paintBordersFor(spinner_nbNode);
 		new Label(composite_2, SWT.NONE);
@@ -147,7 +145,7 @@ public class ProcessGeneratorView extends ViewPart {
 
 		spinner_marginNbNode = new Spinner(composite_2, SWT.BORDER);
 		spinner_marginNbNode.setMaximum(500);
-		spinner_marginNbNode.setSelection(5);
+		spinner_marginNbNode.setSelection(10);
 		toolkit.adapt(spinner_marginNbNode);
 		toolkit.paintBordersFor(spinner_marginNbNode);
 
@@ -391,7 +389,6 @@ public class ProcessGeneratorView extends ViewPart {
 		comboStrategySelection = new Combo(compositeGA2, SWT.READ_ONLY);
 		comboStrategySelection.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		comboStrategySelection.setVisibleItemCount(10);
-//		comboStrategySelection.setItems(new String[] {"Roulette wheel selection", "Stochastic universal sampling", "Rank selection", "Tournament selection"});
 		toolkit.adapt(comboStrategySelection);
 		toolkit.paintBordersFor(comboStrategySelection);
 		new Label(compositeGA2, SWT.NONE);
@@ -593,18 +590,13 @@ public class ProcessGeneratorView extends ViewPart {
 	private void manualCode() {
 
 		// on set le path directory par défaut 
-		lblpath.setText(directorypath);
-		lblpath.getParent().layout(true);
+		this.setPathDirectory(directorypath);
 		
 		// on remplit le tableau d'élément par défaut avec les valeurs BPMN
-		List<String> elements = new ArrayList<String>(EBpmnElement.values().length);
-		for (EBpmnElement elem : EBpmnElement.values()) {
-			elements.add(elem.toString().toLowerCase());
-		}
-		this.addElementToTable(tableElements, elements);
+		this.addElementToTable(tableElements, EBpmnElement.values());
 
 		// on remplit le tableau des workflow patterns avec les valeurs BPMN
-		this.setWorkflowPatternToTable(EBpmnWorkflowPattern.patterns);
+		this.addElementToTable(tableWorkflow, EBpmnWorkflowPattern.values());
 
 		// on remplit le combo box de la stratégie de sélection 
 		for (ESelectionStrategy strat : ESelectionStrategy.values()) {
@@ -613,7 +605,7 @@ public class ProcessGeneratorView extends ViewPart {
 		comboStrategySelection.select(0);
 		
 		// on remplit les tableaux des change patterns
-		this.setChangePatternToTable(ChangePatternFactory.getInstance().getBpmnChangePatterns());
+		this.setChangePatternToTable(EBpmnChangePattern.values());
 
 		// les listeners
 		// selection du type de fichier de sortie (bpmn, uml, etc.)
@@ -624,26 +616,14 @@ public class ProcessGeneratorView extends ViewPart {
 	}
 
 	/**
-	 * Remplit le tableau des workflow patterns dynamiquement.
-	 * @param liste une liste de class représentant les workflow patterns.
-	 */
-	private void setWorkflowPatternToTable(List<Class<? extends IStructuralConstraint>> liste) {
-		List<String> elements = new ArrayList<String>(liste.size());
-		for (Class<? extends IStructuralConstraint> clazz : liste) {
-			elements.add(clazz.getSimpleName().replace("Bpmn", "").replace("Uml", ""));
-		}
-		this.addElementToTable(tableWorkflow, elements);
-	}
-
-	/**
 	 * Remplit un tableau selon la liste des éléments passés en paramètre.
 	 * @param table le {@link Table} à remplir.
-	 * @param elements la {@link List} des éléments constituant le tableau.
+	 * @param elements un tableau d'{@link Object} représentant les éléments constituant le tableau.
 	 */
-	private void addElementToTable(Table table, List<String> elements) {
+	private void addElementToTable(Table table, Object[] elements) {
 
 		// on construit les lignes
-		for (int i = 0 ; i < elements.size() ; i++) {
+		for (int i = 0 ; i < elements.length; i++) {
 			new TableItem(table, SWT.NONE);
 		}
 
@@ -654,7 +634,8 @@ public class ProcessGeneratorView extends ViewPart {
 			// empalcement 0 : la case a cocher est déjà intégrée par le tableau
 
 			// emplacement 1 : le nom de l'élément
-			lignes[i].setText(1, elements.get(i));
+			lignes[i].setText(1, elements[i].toString());
+			lignes[i].setData("1", elements[i]);
 
 			// emplacement 2 : le combobox
 			TableEditor editor = new TableEditor(table);
@@ -663,7 +644,7 @@ public class ProcessGeneratorView extends ViewPart {
 			for (EQuantity quantity : EQuantity.values()) {
 				combo.add(quantity.toString().toLowerCase());
 			}
-			combo.select(3);
+			combo.select(2);
 			editor.grabHorizontal = true;
 			editor.setEditor(combo, lignes[i], 2);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction de la selection du combo
@@ -682,10 +663,10 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 	}
 
-	private void setChangePatternToTable(List<Class<? extends IChangePattern>> classes) {
+	private void setChangePatternToTable(IEnumChangePattern[] eBpmnChangePatterns) {
 
 		// on construit les lignes
-		for (int i = 0 ; i < classes.size() ; i++) {
+		for (int i = 0 ; i < eBpmnChangePatterns.length ; i++) {
 			new TableItem(tableMutationParameters, SWT.NONE);
 		}
 
@@ -693,7 +674,8 @@ public class ProcessGeneratorView extends ViewPart {
 		TableItem[] lignes = tableMutationParameters.getItems();
 		for (int i = 0 ; i < lignes.length ; i++) {
 			// emplacement 0 : le nom
-			lignes[i].setText(0, classes.get(i).getSimpleName().replace("Bpmn", "").replace("Uml", ""));
+			lignes[i].setText(0, eBpmnChangePatterns[i].toString());
+			lignes[i].setData("0", eBpmnChangePatterns[i]);
 
 			// emplacement 1 : le nombre de proba
 			TableEditor editor = new TableEditor(tableMutationParameters);
@@ -851,19 +833,19 @@ public class ProcessGeneratorView extends ViewPart {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblResult, text));
 	}
 
-	public void majTableOfElements(List<String> elements) {
+	public void majTableOfElements(Object[] elements) {
 		this.newTableElement();
 		this.addElementToTable(tableElements, elements);
 	}
 
-	public void majTableOfWorkflows(List<Class<? extends IStructuralConstraint>> elements) {
+	public void majTableOfWorkflows(IEnumWorkflowPattern[] elements) {
 		this.newTableWorkflow();
-		this.setWorkflowPatternToTable(elements);
+		this.addElementToTable(tableWorkflow, elements);
 	}
 	
-	public void majTableOfChangePatterns(List<Class<? extends IChangePattern>> classes) {
+	public void majTableOfChangePatterns(IEnumChangePattern[] eBpmnChangePatterns) {
 		this.newTableMutation();
-		this.setChangePatternToTable(classes);
+		this.setChangePatternToTable(eBpmnChangePatterns);
 	}
 
 	private void newTableElement() {

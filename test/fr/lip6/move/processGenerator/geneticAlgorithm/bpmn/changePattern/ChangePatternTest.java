@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
-import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnMutationOperation;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
@@ -65,12 +63,12 @@ public class ChangePatternTest {
 	}
 
 	@Test
-	public void test2() throws GeneticException, IOException {
+	public void test2() throws Exception {
 		
 		List<IChangePattern> listeChangePattern = new ArrayList<IChangePattern>();
-		listeChangePattern.add(ChangePatternFactory.getInstance().getChangePattern("bpmn", "ParallelInsert", "2"));
-		listeChangePattern.add(ChangePatternFactory.getInstance().getChangePattern("bpmn", "ConditionalInsert", "2"));
-		listeChangePattern.add(ChangePatternFactory.getInstance().getChangePattern("bpmn", "SerialInsert", "2"));
+		listeChangePattern.add(EBpmnChangePattern.PARALLEL_INSERT.newInstance("2"));
+		listeChangePattern.add(EBpmnChangePattern.CONDITIONAL_INSERT.newInstance("2"));
+		listeChangePattern.add(EBpmnChangePattern.SERIAL_INSERT.newInstance("2"));
 		
 		BpmnMutationOperation mutation = new BpmnMutationOperation(listeChangePattern);
 		List<BpmnProcess> listeCandidat = new ArrayList<BpmnProcess>();

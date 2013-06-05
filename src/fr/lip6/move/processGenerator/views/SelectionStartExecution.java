@@ -14,17 +14,18 @@ import org.uncommons.watchmaker.framework.termination.Stagnation;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.uncommons.watchmaker.framework.termination.UserAbort;
 import fr.lip6.move.processGenerator.EQuantity;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
 import fr.lip6.move.processGenerator.geneticAlgorithm.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmData;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmExecutor;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
+import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
+import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnStructuralConstraintFactory;
+import fr.lip6.move.processGenerator.structuralConstraint.uml.UmlStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
 
 
@@ -65,10 +66,14 @@ public class SelectionStartExecution extends SelectionAdapter {
 
 		// ONGLET TARGET
 		String typeFile = view.getComboTypeFile().getText();
+		// on construit la factory des contraintes au passage
+		AbstractStructuralConstraintFactory factory = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
 			typeFile = "bpmn";
+			factory = BpmnStructuralConstraintFactory.getInstance();
 		} else {
 			typeFile = "uml";
+			factory = UmlStructuralConstraintFactory.getInstance();
 		}
 		
 		// les elements et workflows sélectionnés
@@ -79,9 +84,9 @@ public class SelectionStartExecution extends SelectionAdapter {
 		List<StructuralConstraintChecker> contraintesElements = null;
 		List<StructuralConstraintChecker> contraintesWorkflows = null;
 		try {
-			contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element);
-			contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow);
-		} catch(BpmnException ex) {
+			contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element, factory);
+			contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow, factory);
+		} catch(Exception ex) {
 			view.print(ex.getMessage());
 			System.err.println(ex.getMessage());
 			return;
@@ -92,7 +97,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		IStructuralConstraint contrainte = null;
 		StructuralConstraintChecker manualOclChecker = null;
 		if (!manualOcl.isEmpty()) {
-			contrainte = BpmnStructuralConstraintFactory.getInstance().newManualOclConstraint(manualOcl);
+			contrainte = factory.newManualOclConstraint(manualOcl);
 			manualOclChecker = new StructuralConstraintChecker(contrainte, EQuantity.MORE_OR_EQUAL, 1);
 		}
 		
@@ -112,7 +117,13 @@ public class SelectionStartExecution extends SelectionAdapter {
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
 		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
-			changePatterns = this.getChangePatterns(typeFile);
+			try {
+				changePatterns = this.getChangePatterns(typeFile);
+			} catch (Exception ex) {
+				view.print(ex.getMessage());
+				System.err.println(ex.getMessage());
+				return;
+			}
 		}
 		
 		boolean isCheckCrossover = view.getButtonCheckCrossover().getSelection();
@@ -177,19 +188,26 @@ public class SelectionStartExecution extends SelectionAdapter {
 		executor.start();
 	}
 
-	private List<IChangePattern> getChangePatterns(String typeFile) {
+	private List<IChangePattern> getChangePatterns(String typeFile) throws Exception {
 
-		IChangePattern cPattern;
 		List<IChangePattern> changePatterns = new ArrayList<IChangePattern>();
+		
+		// pour chaque ligne du tableau
 		for (TableItem item : view.getTableMutationParameters().getItems()) {
-			cPattern = ChangePatternFactory.getInstance().getChangePattern(typeFile, item.getText(0), item.getText(1));
-			if (cPattern != null)
+			// on vérifie que l'item est bien une enum de change pattern
+			if (item.getData("0") instanceof IEnumChangePattern) {
+				// si oui, on instancie dynamiquement la classe
+				IChangePattern cPattern = ((IEnumChangePattern) item.getData("0")).newInstance(item.getText(1));
 				changePatterns.add(cPattern);
+			} else {
+				System.err.println("Carreful, the item data is not a IEnumChangePattern.");
+			}
 		}
 		return changePatterns;
 	}
 
-	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType) throws BpmnException {
+	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType, 
+			AbstractStructuralConstraintFactory factory) throws Exception {
 
 		List<StructuralConstraintChecker> liste = new ArrayList<StructuralConstraintChecker>();
 		// pour chaque ligne du tableau
@@ -200,9 +218,9 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// on construit la StructuralConstraint dyamiquement en fonction du type
 				IStructuralConstraint contrainte;
 				if (constraintType.equals(ConstraintType.Element)) {
-					contrainte = BpmnStructuralConstraintFactory.getInstance().newElementConstraint(item.getText(1));
+					contrainte = factory.newElementConstraint(item.getData("1"));
 				} else {
-					contrainte = BpmnStructuralConstraintFactory.getInstance().newWorkflowPatternConstraint(item.getText(1));
+					contrainte = factory.newWorkflowPatternConstraint(item.getData("1"));
 				}
 				
 				// on récupère la quantité
@@ -217,7 +235,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number);
 					liste.add(checker);
 				} catch(Exception e) {
-					System.err.println("Le nombre du tableau ne peut être parsé !");
+					System.err.println("NumberFormatException : " + e.getMessage());
 				}
 			}
 		}

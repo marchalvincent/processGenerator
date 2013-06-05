@@ -1,15 +1,21 @@
 package fr.lip6.move.processGenerator.structuralConstraint.uml;
 
-import java.util.ArrayList;
-import java.util.List;
+import fr.lip6.move.processGenerator.structuralConstraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
 
-public final class EUmlWorkflowPattern {
+public enum EUmlWorkflowPattern implements IEnumWorkflowPattern {
 
-	public static List<Class<? extends IStructuralConstraint>> patterns;
-	static {
-		patterns = new ArrayList<Class<? extends IStructuralConstraint>>();
-		patterns.add(UmlSequence.class);
+	SEQUENCE(UmlSequence.class);
+	
+	private Class<? extends IStructuralConstraint> clazz;
+	
+	private EUmlWorkflowPattern(Class<? extends IStructuralConstraint> clazz) {
+		this.clazz = clazz;
+	}
+
+	@Override
+	public IStructuralConstraint newInstance() throws Exception {
+		return this.clazz.newInstance();
 	}
 }

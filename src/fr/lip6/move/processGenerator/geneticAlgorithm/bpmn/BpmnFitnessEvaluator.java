@@ -21,6 +21,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 	private List<StructuralConstraintChecker> contraintesElements, contraintesWorkflows;
 	private StructuralConstraintChecker manualOclChecker;
 	private FitnessWeightHelper weightHelper;
+	private final boolean debug = false;
 
 	public BpmnFitnessEvaluator(Integer nbNodes, Integer margin,
 			List<StructuralConstraintChecker> contraintesElements,
@@ -50,6 +51,18 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 				consManual = 1;
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+		}
+		
+		if (debug) {
+			System.out.println("sizeFitness : " + sizeFitness);
+			System.out.println("constElements : " + constElements);
+			System.out.println("constWorkflow : " + constWorkflow);
+			System.out.println("consManual : " + consManual);
+			System.out.println("total : " + (sizeFitness * weightHelper.getSizePercent() + constElements * weightHelper.getElementPercent() +
+					constWorkflow * weightHelper.getWorkflowPercent() + consManual * weightHelper.getManualOclPercent()));
+			System.out.println();
+			System.out.println();
+			System.out.println();
 		}
 
 		return (sizeFitness * weightHelper.getSizePercent() + constElements * weightHelper.getElementPercent() +

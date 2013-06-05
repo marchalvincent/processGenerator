@@ -1,23 +1,36 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
-import java.util.ArrayList;
-import java.util.List;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.structuralConstraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
+
 /**
- * Cette classe liste l'ensemble des workflow patterns implémentés pour le type de fichier bpmn.
+ * Cette enumération liste l'ensemble des workflow patterns implémentés pour le type de fichier bpmn.
  * @author Vincent
  *
  */
-public final class EBpmnWorkflowPattern {
+public enum EBpmnWorkflowPattern implements IEnumWorkflowPattern {
 	
-	public static List<Class<? extends IStructuralConstraint>> patterns;
-	static {
-		patterns = new ArrayList<Class<? extends IStructuralConstraint>>();
-		patterns.add(BpmnSequence.class);
-		patterns.add(BpmnParallelSplit.class);
-		patterns.add(BpmnSynchronization.class);
-		patterns.add(BpmnExclusiveChoice.class);
-		patterns.add(BpmnSimpleMerge.class);
+	SEQUENCE(BpmnSequence.class),
+	PARALLEL_SPLIT(BpmnParallelSplit.class),
+	SYNCHRONISATION(BpmnSynchronization.class),
+	EXCLUSIVE_CHOICE(BpmnExclusiveChoice.class),
+	SIMPLE_MERGE(BpmnSimpleMerge.class);
+	
+	private Class<? extends IStructuralConstraint> clazz;
+	
+	private EBpmnWorkflowPattern(Class<? extends IStructuralConstraint> clazz) {
+		this.clazz = clazz;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws BpmnException peut renvoyer cette exception si la lecture de la requête OCL est impossible
+	 */
+	@Override
+	public IStructuralConstraint newInstance() throws Exception {
+		return this.clazz.newInstance();
 	}
 }

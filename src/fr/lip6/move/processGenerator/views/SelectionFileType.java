@@ -1,12 +1,11 @@
 package fr.lip6.move.processGenerator.views;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
-import fr.lip6.move.processGenerator.geneticAlgorithm.ChangePatternFactory;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.EBpmnChangePattern;
+import fr.lip6.move.processGenerator.geneticAlgorithm.uml.changePattern.EUmlChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
 import fr.lip6.move.processGenerator.structuralConstraint.uml.EUmlWorkflowPattern;
 import fr.lip6.move.processGenerator.uml.EUmlElement;
@@ -31,38 +30,30 @@ public class SelectionFileType extends SelectionAdapter {
 		String s = combo.getText();
 		if (s.toLowerCase().contains("bpmn")) {
 			// les champs du tableau éléments
-			List<String> elements = new ArrayList<String>(EBpmnElement.values().length);
-			for (EBpmnElement elem : EBpmnElement.values()) {
-				elements.add(elem.toString().toLowerCase());
-			}
-			view.majTableOfElements(elements);
+			view.majTableOfElements(EBpmnElement.values());
 			
 			// on met à jour le tableau des workflow patterns
-			view.majTableOfWorkflows(EBpmnWorkflowPattern.patterns);
+			view.majTableOfWorkflows(EBpmnWorkflowPattern.values());
 			
 			// on met a jour le texte à coté du bouton (set initial process)
 			view.getLabelSetInitialProcess().setText("(bpmn file)");
 			
 			// on affiche le bon tableau des mutations change patterns
-			view.majTableOfChangePatterns(ChangePatternFactory.getInstance().getBpmnChangePatterns());
+			view.majTableOfChangePatterns(EBpmnChangePattern.values());
 			
 			
 		} else {
 			// on met à jour le tableau des éléments
-			List<String> elements = new ArrayList<String>(EUmlElement.values().length);
-			for (EUmlElement elem : EUmlElement.values()) {
-				elements.add(elem.toString().toLowerCase());
-			}
-			view.majTableOfElements(elements);
+			view.majTableOfElements(EUmlElement.values());
 			
 			// on met à jour le tableau des workflow patterns
-			view.majTableOfWorkflows(EUmlWorkflowPattern.patterns);
+			view.majTableOfWorkflows(EUmlWorkflowPattern.values());
 			
 			// on met a jour le texte à coté du bouton (set initial process)
 			view.getLabelSetInitialProcess().setText("(uml file)");
 
 			// on affiche le bon tableau des mutations change patterns
-			view.majTableOfChangePatterns(ChangePatternFactory.getInstance().getUmlChangePatterns());
+			view.majTableOfChangePatterns(EUmlChangePattern.values());
 		}
 	}
 }

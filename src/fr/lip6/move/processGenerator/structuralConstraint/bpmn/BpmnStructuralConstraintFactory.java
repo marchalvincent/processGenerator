@@ -1,10 +1,12 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
+import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
 
-public class BpmnStructuralConstraintFactory {
+public class BpmnStructuralConstraintFactory extends AbstractStructuralConstraintFactory {
 
 	private static BpmnStructuralConstraintFactory instance = new BpmnStructuralConstraintFactory();
 	
@@ -14,27 +16,16 @@ public class BpmnStructuralConstraintFactory {
 		return instance;
 	}
 	
-	public IStructuralConstraint newWorkflowPatternConstraint(String name) throws BpmnException {
-		
-		if (name.toLowerCase().equals("sequence")) {
-			return new BpmnSequence();
-		} else if (name.toLowerCase().equals("parallelsplit")) {
-			return new BpmnParallelSplit();
-		} else if (name.toLowerCase().equals("synchronization")) {
-			return new BpmnSynchronization();
-		} else if (name.toLowerCase().equals("exclusivechoice")) {
-			return new BpmnExclusiveChoice();
-		} else if (name.toLowerCase().equals("simplemerge")) {
-			return new BpmnSimpleMerge();
-		}
-		return null;
-	}
-	
-	public IStructuralConstraint newElementConstraint(String nameElement) throws BpmnException {
-		return new BpmnElementConstraint(nameElement);
-	}
-	
+	@Override
 	public IStructuralConstraint newManualOclConstraint(String query) {
 		return new BpmnManualOclConstraint(query);
+	}
+
+	@Override
+	public IStructuralConstraint newElementConstraint(Object eElement) throws BpmnException {
+		if (eElement instanceof EBpmnElement) {
+			return new BpmnElementConstraint((EBpmnElement) eElement);
+		}
+		throw new BpmnException("The parameter of the newElementConstraint method is not a EBpmnElement.");
 	}
 }
