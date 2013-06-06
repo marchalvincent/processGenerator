@@ -23,6 +23,7 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 			process = new BpmnProcess(oldProcess);
 		} catch (BpmnException e) {
 			// impossible de copier...
+			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
 		
@@ -44,11 +45,11 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		List<SequenceFlow> sequencesIn = activity.getIncoming();
 		List<SequenceFlow> sequencesOut = activity.getOutgoing();
 		if (sequencesIn.size() != 1)
-			System.err.println("BpmnParallelInsert : The number of incoming sequenceFlows is not correct : " + sequencesIn.size() + "." +
-					" " + activity.getClass());
+			System.err.println(getClass().getSimpleName() + " : The number of incoming sequenceFlows is not correct : " 
+					+ sequencesIn.size() + ". " + activity.getClass());
 		if (sequencesOut.size() != 1)
-			System.err.println("BpmnParallelInsert : The number of outgoing sequenceFlows is not correct : " + sequencesIn.size() + "." +
-					" " + activity.getClass());
+			System.err.println(getClass().getSimpleName() + " : The number of outgoing sequenceFlows is not correct : " 
+					+ sequencesIn.size() + ". " + activity.getClass());
 
 		SequenceFlow arcIn = sequencesIn.get(0);
 		SequenceFlow arcOut = sequencesOut.get(0);

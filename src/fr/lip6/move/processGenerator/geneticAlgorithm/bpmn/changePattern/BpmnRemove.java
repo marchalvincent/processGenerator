@@ -20,6 +20,7 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 			process = new BpmnProcess(oldProcess);
 		} catch (BpmnException e) {
 			// impossible de copier...
+			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
 		
@@ -35,11 +36,11 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 		List<SequenceFlow> sequencesIn = ancienneTask.getIncoming();
 		List<SequenceFlow> sequencesOut = ancienneTask.getOutgoing();
 		if (sequencesIn.size() != 1)
-			System.err.println("BpmnRemove : The number of incoming sequenceFlows is not correct : " + sequencesIn.size() + "." +
-					" " + ancienneTask.getClass());
+			System.err.println(getClass().getSimpleName() + " : The number of incoming sequenceFlows is not correct : " 
+					+ sequencesIn.size() + ". " + ancienneTask.getClass());
 		if (sequencesOut.size() != 1)
-			System.err.println("BpmnRemove : The number of outgoing sequenceFlows is not correct : " + sequencesIn.size() + "." +
-					" " + ancienneTask.getClass());
+			System.err.println(getClass().getSimpleName() + " : The number of outgoing sequenceFlows is not correct : " 
+					+ sequencesIn.size() + ". " + ancienneTask.getClass());
 
 		SequenceFlow arcIn = sequencesIn.get(0);
 		SequenceFlow arcOut = sequencesOut.get(0);
@@ -51,7 +52,8 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 		process.removeFlowNode(ancienneTask);
 		process.removeSequenceFlow(arcOut);
 		
-		// TODO voir comment on peut simplifier les fork et decision "vides"
+		// on simplifie les fork et decision "vides"
+		ChangePatternHelper.getInstance().cleanProcess(process);
 		return process;
 	}
 }

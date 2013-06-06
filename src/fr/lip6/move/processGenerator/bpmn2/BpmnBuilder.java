@@ -135,6 +135,26 @@ public class BpmnBuilder {
 		return process;
 	}
 
+	public static BpmnProcess createExampleWithParallel3() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		// init du process
+		StartEvent start = process.buildStartEvent();
+		ParallelGateway parallel = process.buildParallelGatewayDiverging();
+		Task c = process.buildTask();
+		ParallelGateway join = process.buildParallelGatewayConverging();
+		EndEvent end = process.buildEndEvent();
+
+		process.buildSequenceFlow(start, parallel);
+		process.buildSequenceFlow(parallel, c);
+		process.buildSequenceFlow(parallel, join);
+		process.buildSequenceFlow(c, join);
+		process.buildSequenceFlow(join, end);
+		
+		return process;
+	}
+
 	/**
 	 * Construit un process avec : 
 	 *  init -> exclusiveChoice -> (b & c) -> merge -> final

@@ -63,6 +63,7 @@ public class BpmnProcess {
 	public BpmnProcess(DocumentRoot documentRoot) {
 		super();
 		this.documentRoot = documentRoot;
+		this.process = (Process) documentRoot.getDefinitions().getRootElements().get(0);
 	}
 	
 	public DocumentRoot getDocumentRoot() {

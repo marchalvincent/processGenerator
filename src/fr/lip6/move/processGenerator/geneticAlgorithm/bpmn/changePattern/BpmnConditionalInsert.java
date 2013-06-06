@@ -21,6 +21,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 			process = new BpmnProcess(oldProcess);
 		} catch (BpmnException e) {
 			// impossible de copier...
+			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
 		
@@ -28,7 +29,8 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 		try {
 			ancienArc = ChangePatternHelper.getInstance().getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
-			// ici on n'a trouvé aucun arc
+			// ici on n'a trouvé aucun arc (ce n'est pas normal, il doit toujours en avoir)
+			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
 
