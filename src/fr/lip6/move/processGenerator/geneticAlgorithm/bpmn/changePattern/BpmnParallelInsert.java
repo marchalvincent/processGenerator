@@ -6,6 +6,7 @@ import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
@@ -15,15 +16,23 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnChangePattern {
 
 	@Override
-	public BpmnProcess apply(BpmnProcess process, Random rng) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng) {
 
+		BpmnProcess process = null;
+		try {
+			process = new BpmnProcess(oldProcess);
+		} catch (BpmnException e) {
+			// impossible de copier...
+			return oldProcess;
+		}
+		
 		// on considère qu'une insertion parallèle ne peut arriver qu'autour d'une Activity
 		Activity activity = null;
 		try {
 			activity = ChangePatternHelper.getInstance().getRandomActivity(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
-			return process;
+			return oldProcess;
 		}
 		
 		// on créé les nouveaux noeuds
@@ -35,9 +44,11 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		List<SequenceFlow> sequencesIn = activity.getIncoming();
 		List<SequenceFlow> sequencesOut = activity.getOutgoing();
 		if (sequencesIn.size() != 1)
-			System.err.println("The number of incoming sequenceFlow is not correct : " + sequencesIn.size() + ".");
+			System.err.println("BpmnParallelInsert : The number of incoming sequenceFlows is not correct : " + sequencesIn.size() + "." +
+					" " + activity.getClass());
 		if (sequencesOut.size() != 1)
-			System.err.println("The number of outgoing sequenceFlow is not correct : " + sequencesIn.size() + ".");
+			System.err.println("BpmnParallelInsert : The number of outgoing sequenceFlows is not correct : " + sequencesIn.size() + "." +
+					" " + activity.getClass());
 
 		SequenceFlow arcIn = sequencesIn.get(0);
 		SequenceFlow arcOut = sequencesOut.get(0);

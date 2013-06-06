@@ -3,6 +3,7 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 import java.util.Random;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
@@ -17,8 +18,16 @@ public class BpmnSerialInsert extends AbstractChangePattern implements IBpmnChan
 
 	
 	@Override
-	public BpmnProcess apply(BpmnProcess process, Random rng) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng) {
 
+		BpmnProcess process = null;
+		try {
+			process = new BpmnProcess(oldProcess);
+		} catch (BpmnException e) {
+			// impossible de copier...
+			return oldProcess;
+		}
+		
 		// on en prend un au hasard
 		SequenceFlow ancienArc = null;
 		try {

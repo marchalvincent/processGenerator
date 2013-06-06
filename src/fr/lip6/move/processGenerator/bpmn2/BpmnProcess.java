@@ -55,7 +55,7 @@ public class BpmnProcess {
 		documentRoot = EcoreUtil.copy(processToCopy.getDocumentRoot());
 		if (documentRoot.getDefinitions().getRootElements().isEmpty() 
 				|| !(documentRoot.getDefinitions().getRootElements().get(0) instanceof Process))
-			throw new BpmnException("Impossible de copier le process du document bpmn.");
+			throw new BpmnException("Impossible to copy the process of the bpmn document.");
 		else
 			process = (Process) documentRoot.getDefinitions().getRootElements().get(0);
 	}
@@ -186,6 +186,16 @@ public class BpmnProcess {
 		sequence.setTargetRef(target);
 		return sequence;
 	}
+	
+	public boolean removeFlowNode(FlowNode flowNode) {
+		return process.getFlowElements().remove(flowNode);
+	}
+	
+	public boolean removeSequenceFlow(SequenceFlow sequence) {
+		sequence.setSourceRef(null);
+		sequence.setTargetRef(null);
+		return process.getFlowElements().remove(sequence);
+	}
 
 	public void save(String nameFile) throws IOException {
 		Bpmn2ResourceFactoryImpl resourceFactory = new Bpmn2ResourceFactoryImpl();
@@ -203,15 +213,6 @@ public class BpmnProcess {
 		}
 		finally {
 			tempFile.delete();
-		}
-	}
-
-	public static void main(String[] args) throws IOException, BpmnException {
-		BpmnProcess bpmn = BpmnBuilder.createExampleWithParallel();
-		try {
-			bpmn.save("vincent.bpmn");
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

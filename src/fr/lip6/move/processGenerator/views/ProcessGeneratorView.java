@@ -590,7 +590,8 @@ public class ProcessGeneratorView extends ViewPart {
 	private void manualCode() {
 
 		// on set le path directory par défaut 
-		this.setPathDirectory(directorypath);
+//		this.setPathDirectory(directorypath);
+		this.setPathDirectory("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\");
 		
 		// on remplit le tableau d'élément par défaut avec les valeurs BPMN
 		this.addElementToTable(tableElements, EBpmnElement.values());

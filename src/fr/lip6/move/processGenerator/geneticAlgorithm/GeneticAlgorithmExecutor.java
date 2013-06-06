@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,6 +230,10 @@ public class GeneticAlgorithmExecutor extends Thread {
 		BpmnProcess winner = engine.evolve(nbPopulation, elitism, cond);
 
 		// la sauvegarde du process winner
-		winner.save(location + "gen.bpmn");
+		i = 0;
+		while (new File(location + "gen" + i + ".bpmn").exists()) {
+			i++;
+		}
+		winner.save(location + "gen" + i + ".bpmn");
 	}
 }
