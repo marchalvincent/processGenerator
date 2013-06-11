@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.eclipse.bpmn2.Activity;
+import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.GatewayDirection;
@@ -90,7 +91,7 @@ public class ChangePatternHelper {
 	private void removeUselessParallelGateway(BpmnProcess process) {
 
 		// on récupère la liste des ParallelGateway divergentes
-		ParallelGateway parallel;
+		ParallelGateway parallel = null;
 		List<ParallelGateway> liste = new ArrayList<ParallelGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			parallel = this.isParallelGateway(elem, GatewayDirection.DIVERGING);
@@ -128,7 +129,7 @@ public class ChangePatternHelper {
 			if (parallelGateway.getOutgoing().size() == 1) {
 				// on cherche la parallelGateway converging qui referme le chemin
 				FlowNode nextNode = parallelGateway;
-				int cpt = 0;
+				int cpt = 0, error = 0;
 				do {
 					nextNode = nextNode.getOutgoing().get(0).getTargetRef();
 					// si on a trouvé une gateway
@@ -146,9 +147,12 @@ public class ChangePatternHelper {
 							break;
 						}
 					}
-				} while (true);
+					error++;
+				} while (error < 10000000);
 				
 				// petite vérification
+				if (parallel == null) 
+					return;
 				if (parallel.getIncoming().size() != 1) 
 					System.err.println(this.getClass().getSimpleName() + " : The parallelGateway have more than 1 incoming sequence flow.");
 				
@@ -168,7 +172,7 @@ public class ChangePatternHelper {
 	/**
 	 * Renvoie un {@link ParallelGateway} si le FlowElement est une instance de ParallelGateway avec 
 	 * la direction passée en paramètre. Renvoie null sinon.
-	 * @param elem le {@link FlowElement}.
+	 * @param elem le {@link FlowElement} l'élément à tester.
 	 * @param direction la {@link GatewayDirection}.
 	 * @return {@link ParallelGateway} ou null.
 	 */
@@ -187,5 +191,75 @@ public class ChangePatternHelper {
 	 */
 	private void removeUselessExclusiveGateway(BpmnProcess process) {
 
+		// on récupère la liste des ExclusiveGateway divergentes
+		ExclusiveGateway exclusive = null;
+		List<ExclusiveGateway> liste = new ArrayList<ExclusiveGateway>();
+		for (FlowElement elem : process.getProcess().getFlowElements()) {
+			exclusive = this.isExclusiveGateway(elem, GatewayDirection.DIVERGING);
+			if (exclusive != null)
+				liste.add(exclusive);
+		}
+
+		// pour chaque ExclusiveGateway divergentes
+		for (ExclusiveGateway exclusiveGateway : liste) {
+
+			// si l'ExclusiveGateway n'a qu'une seule sortie, on peut simplifier
+			if (exclusiveGateway.getOutgoing().size() == 1) {
+				// on cherche l'ExclusiveGateway converging qui referme le chemin
+				FlowNode nextNode = exclusiveGateway;
+				int cpt = 0, error = 0;
+				do {
+					nextNode = nextNode.getOutgoing().get(0).getTargetRef();
+					// si on a trouvé une ExclusiveGateway
+					if (nextNode instanceof ExclusiveGateway) {
+						// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
+						exclusive = (ExclusiveGateway) nextNode;
+						if (exclusive.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
+							cpt++;
+						} else if (exclusive.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
+							cpt--;
+						}
+						
+						// quand le compteur est a -1 c'est qu'on vient de passer la bonne gateway fermante
+						if (cpt == -1) {
+							break;
+						}
+					}
+					error++;
+				} while (error < 10000000);
+				
+				// petites vérifications
+				if (exclusive == null)
+					return;
+				if (exclusive.getIncoming().size() != 1) 
+					System.err.println(this.getClass().getSimpleName() + " : The ExclusiveGateway have more than 1 incoming sequence flow.");
+				
+				// ici on peut faire la suppression des 2 ExclusiveGateway
+				exclusiveGateway.getIncoming().get(0).setTargetRef(exclusiveGateway.getOutgoing().get(0).getTargetRef());
+				process.removeSequenceFlow(exclusiveGateway.getOutgoing().get(0));
+				process.removeFlowNode(exclusiveGateway);
+				
+				exclusive.getIncoming().get(0).setTargetRef(exclusive.getOutgoing().get(0).getTargetRef());
+				process.removeSequenceFlow(exclusive.getOutgoing().get(0));
+				process.removeFlowNode(exclusive);
+				
+			} // fin de : si l'ExclusiveGateway divergente n'a qu'une sortie
+		} // fin de : pour chaque ExclusiveGateway divergente
+	}
+	
+	/**
+	 * Renvoie un {@link ExclusiveGateway} si le FlowElement est une instance de ExclusiveGateway avec 
+	 * la direction passée en paramètre. Renvoie null sinon.
+	 * @param elem le {@link FlowElement} l'élément à tester.
+	 * @param direction la {@link GatewayDirection}.
+	 * @return {@link ExclusiveGateway} ou null.
+	 */
+	private ExclusiveGateway isExclusiveGateway(FlowElement elem, GatewayDirection direction) {
+		if (elem != null && elem instanceof ExclusiveGateway) {
+			if (((ExclusiveGateway) elem).getGatewayDirection().equals(direction)) {
+				return (ExclusiveGateway) elem;
+			}
+		}
+		return null;
 	}
 }

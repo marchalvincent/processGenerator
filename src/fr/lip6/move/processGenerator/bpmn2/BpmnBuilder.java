@@ -135,7 +135,7 @@ public class BpmnBuilder {
 		return process;
 	}
 
-	public static BpmnProcess createExampleWithParallel3() {
+	public static BpmnProcess createExampleWithUselessParallel() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -149,6 +149,53 @@ public class BpmnBuilder {
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, c);
 		process.buildSequenceFlow(parallel, join);
+		process.buildSequenceFlow(c, join);
+		process.buildSequenceFlow(join, end);
+		
+		return process;
+	}
+	
+	public static BpmnProcess createExampleWithUselessExclusive() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		// init du process
+		StartEvent start = process.buildStartEvent();
+		ExclusiveGateway parallel = process.buildExclusiveGatewayDiverging();
+		Task c = process.buildTask();
+		ExclusiveGateway join = process.buildExclusiveGatewayConverging();
+		EndEvent end = process.buildEndEvent();
+
+		process.buildSequenceFlow(start, parallel);
+		process.buildSequenceFlow(parallel, c);
+		process.buildSequenceFlow(parallel, join);
+		process.buildSequenceFlow(c, join);
+		process.buildSequenceFlow(join, end);
+		
+		return process;
+	}
+	
+	public static BpmnProcess createExampleWithUselessParallelAndExclusive() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		// init du process
+		StartEvent start = process.buildStartEvent();
+		ParallelGateway parallel = process.buildParallelGatewayDiverging();
+		Task c = process.buildTask();
+		ParallelGateway join = process.buildParallelGatewayConverging();
+		ExclusiveGateway exclusive = process.buildExclusiveGatewayDiverging();
+		Task d = process.buildTask();
+		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		EndEvent end = process.buildEndEvent();
+
+		process.buildSequenceFlow(start, parallel);
+		process.buildSequenceFlow(parallel, c);
+		process.buildSequenceFlow(parallel, exclusive);
+		process.buildSequenceFlow(exclusive, merge);
+		process.buildSequenceFlow(exclusive, d);
+		process.buildSequenceFlow(d, merge);
+		process.buildSequenceFlow(merge, join);
 		process.buildSequenceFlow(c, join);
 		process.buildSequenceFlow(join, end);
 		
@@ -189,5 +236,38 @@ public class BpmnBuilder {
 			process.buildTask();
 		}
 		return process;
+	}
+	
+	public static BpmnProcess getExampleForSESE() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		// init du process
+		StartEvent start = process.buildStartEvent();
+		Task a = process.buildTask();
+		ExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
+		Task b = process.buildTask();
+		Task c = process.buildTask();
+		Task d = process.buildTask();
+		Task e = process.buildTask();
+		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		Task f = process.buildTask();
+		Task g = process.buildTask();
+		EndEvent end = process.buildEndEvent();
+
+		process.buildSequenceFlow(start, a);
+		process.buildSequenceFlow(a, choice);
+		process.buildSequenceFlow(choice, b);
+		process.buildSequenceFlow(choice, d);
+		process.buildSequenceFlow(b, c);
+		process.buildSequenceFlow(d, e);
+		process.buildSequenceFlow(c, merge);
+		process.buildSequenceFlow(e, merge);
+		process.buildSequenceFlow(merge, f);
+		process.buildSequenceFlow(f, g);
+		process.buildSequenceFlow(g, end);
+		
+		return process;
+	
 	}
 }

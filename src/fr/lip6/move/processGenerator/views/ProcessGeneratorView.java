@@ -1,11 +1,9 @@
 package fr.lip6.move.processGenerator.views;
 
-import java.io.File;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -26,15 +24,20 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
+import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 import fr.lip6.move.processGenerator.geneticAlgorithm.ESelectionStrategy;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.EBpmnChangePattern;
+import fr.lip6.move.processGenerator.geneticAlgorithm.uml.changePattern.EUmlChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
+import fr.lip6.move.processGenerator.structuralConstraint.uml.EUmlWorkflowPattern;
+import fr.lip6.move.processGenerator.uml.EUmlElement;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
+import org.eclipse.swt.layout.FillLayout;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -50,13 +53,12 @@ public class ProcessGeneratorView extends ViewPart {
 				spinnerManualOclWeight;
 	private Button btnStart, btnStop, btnSetInitialProcess, checkMutation, checkCrossover, btnOneSolutionFound, btnDuringSec,
 				btnGeneration, btnUntilStagnation, btnChange;
-	private Label lblResult, lblpath, lblFiletype;
+	private Label lblResult, lblpath, lblFiletype, lblErrors;
 	private FormToolkit toolkit;
 	private Composite compositeTarget2;
 
 	private BpmnProcess bpmnInitialProcess;
 	private UmlProcess umlInitialProcess;
-	private String directorypath = System.getProperty("user.home") + File.separator + ".processGenerator" + File.separator;
 
 	/**
 	 * The constructor.
@@ -181,6 +183,9 @@ public class ProcessGeneratorView extends ViewPart {
 
 		lblResult = new Label(compSctnRun, SWT.NONE);
 		toolkit.adapt(lblResult, true, true);
+		
+		lblErrors = new Label(compSctnRun, SWT.NONE);
+		toolkit.adapt(lblErrors, true, true);
 
 		TabItem tbtmTargetConfiguration = new TabItem(tabFolder, SWT.NONE);
 		tbtmTargetConfiguration.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/target.gif"));
@@ -589,28 +594,51 @@ public class ProcessGeneratorView extends ViewPart {
 	 */
 	private void manualCode() {
 
-		// on set le path directory par défaut 
-//		this.setPathDirectory(directorypath);
-		this.setPathDirectory("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\");
+		// les préférences utilisateur pour la partie run
+		setPathDirectory(ConfigurationManager.getInstance().getLocation());
+		getSpinnerNbNode().setSelection(ConfigurationManager.getInstance().getNbNodes());
+		getSpinnerMargin().setSelection(ConfigurationManager.getInstance().getMargin());
+		getComboTypeFile().select(ConfigurationManager.getInstance().getTypeFile());
 		
-		// on remplit le tableau d'élément par défaut avec les valeurs BPMN
-		this.addElementToTable(tableElements, EBpmnElement.values());
-
-		// on remplit le tableau des workflow patterns avec les valeurs BPMN
-		this.addElementToTable(tableWorkflow, EBpmnWorkflowPattern.values());
+		// on remplit les tableaux d'éléments, de workflows et de change pattern par défaut
+		String typeFile = getComboTypeFile().getText();
+		if (typeFile.toLowerCase().contains("bpmn")) {
+			addElementToTable(tableElements, EBpmnElement.values());
+			addElementToTable(tableWorkflow, EBpmnWorkflowPattern.values());
+			setChangePatternToTable(EBpmnChangePattern.values());
+		} else {
+			addElementToTable(tableElements, EUmlElement.values());
+			addElementToTable(tableWorkflow, EUmlWorkflowPattern.values());
+			setChangePatternToTable(EUmlChangePattern.values());
+		}
+		
+		// le nombre de population, elitism et stratégie de séléction
+		getSpinnerNbPopulation().setSelection(ConfigurationManager.getInstance().getPopulation());
+		getSpinnerElitism().setSelection(ConfigurationManager.getInstance().getElitism());
 
 		// on remplit le combo box de la stratégie de sélection 
 		for (ESelectionStrategy strat : ESelectionStrategy.values()) {
-			comboStrategySelection.add(strat.toString());
+			getComboStrategySelection().add(strat.toString());
 		}
-		comboStrategySelection.select(1);
+		getComboStrategySelection().select(ConfigurationManager.getInstance().getSelectionStrategy());
 		
-		// on remplit les tableaux des change patterns
-		this.setChangePatternToTable(EBpmnChangePattern.values());
+		// les préférences des checkbox des opérations d'évolutions
+		boolean bool = ConfigurationManager.getInstance().isCheckMutation();
+		getButtonCheckMutation().setSelection(bool);
+		groupMutationParameters.setVisible(bool);
+		
+		bool = ConfigurationManager.getInstance().isCheckCrossover();
+		getButtonCheckCrossover().setSelection(bool);
+		
+		// les préférences sur le custom fitness
+		getSpinnerSizeWeight().setSelection(ConfigurationManager.getInstance().getSizeWeight());
+		getSpinnerElementWeight().setSelection(ConfigurationManager.getInstance().getElementsWeight());
+		getSpinnerWorkflowWeight().setSelection(ConfigurationManager.getInstance().getWorkflowsWeight());
+		getSpinnerManualOclWeight().setSelection(ConfigurationManager.getInstance().getManualOCLWeight());
 
 		// les listeners
 		// selection du type de fichier de sortie (bpmn, uml, etc.)
-		comboTypeFile.addSelectionListener(new SelectionFileType(this));
+		getComboTypeFile().addSelectionListener(new SelectionFileType(this));
 		btnStart.addSelectionListener(new SelectionStartExecution(this));
 		btnSetInitialProcess.addSelectionListener(new SelectSetInitialProcess(this));
 		btnChange.addSelectionListener(new SelectPathDirectory(this));
@@ -786,15 +814,15 @@ public class ProcessGeneratorView extends ViewPart {
 		return lblResult;
 	}
 	
-	public String getDirectoryPath() {
-		return directorypath;
+	public Label getLabelError() {
+		return lblErrors;
 	}
 	
 	public Button getButtonStop() {
 		return btnStop;
 	}
 	
-	public Spinner getspinnerSizeWeight() {
+	public Spinner getSpinnerSizeWeight() {
 		return spinnerSizeWeight;
 	}
 	
@@ -832,6 +860,10 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	public void print(String text) {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblResult, text));
+	}
+	
+	public void printError(String text) {
+		Display.getDefault().asyncExec(new RunnablePrintView(lblErrors, text));
 	}
 
 	public void majTableOfElements(Object[] elements) {

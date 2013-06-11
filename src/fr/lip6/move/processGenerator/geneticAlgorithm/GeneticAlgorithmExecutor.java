@@ -153,7 +153,8 @@ public class GeneticAlgorithmExecutor extends Thread {
 			return;
 		}
 		if (typeFile.contains("uml")) {
-			view.print("The uml generation is not implemented yet.");
+			view.printError("The uml generation is not implemented yet.");
+			view.print("");
 			return;
 		}
 
@@ -161,7 +162,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 			try {
 				this.runBpmn();
 			} catch (GeneticException | IOException | IllegalArgumentException e) {
-				view.print(e.getMessage());
+				view.printError(e.getMessage());
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package fr.lip6.move.processGenerator.views;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,6 +14,7 @@ import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.Stagnation;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.uncommons.watchmaker.framework.termination.UserAbort;
+import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.FitnessWeightHelper;
@@ -49,11 +51,11 @@ public class SelectionStartExecution extends SelectionAdapter {
 		view.print("Initialization...");
 		
 		// on créé le répertoire s'il n'existe pas
-		File directory = new File(view.getDirectoryPath());
+		File directory = new File(view.getLabelLocation().getText());
 		if (!directory.isDirectory()) {
 			boolean bool = directory.mkdir();
 			if (!bool) {
-				view.print("Impossible to create the directory path.");
+				view.printError("Impossible to create the directory path.");
 				System.err.println("Impossible to create the directory path.");
 				return;
 			}
@@ -63,9 +65,15 @@ public class SelectionStartExecution extends SelectionAdapter {
 		String location = view.getLabelLocation().getText();
 		int nbNode = view.getSpinnerNbNode().getSelection();
 		int margin = view.getSpinnerMargin().getSelection();
+		
+		ConfigurationManager.getInstance().setLocation(location);
+		ConfigurationManager.getInstance().setNbNodes(nbNode + "");
+		ConfigurationManager.getInstance().setMargin(margin + "");
 
 		// ONGLET TARGET
 		String typeFile = view.getComboTypeFile().getText();
+		ConfigurationManager.getInstance().setTypeFile(view.getComboTypeFile().getSelectionIndex() + "");
+		
 		// on construit la factory des contraintes au passage
 		AbstractStructuralConstraintFactory factory = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
@@ -104,6 +112,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		// ONGLET ALGO GENETIQUE
 		// le nombre de population
 		int nbPopulation = view.getSpinnerNbPopulation().getSelection();
+		ConfigurationManager.getInstance().setPopulation(nbPopulation + "");
 		
 		// les process initiaux s'ils existent
 		BpmnProcess initialBpmnProcess = view.getInitialBpmnProcess();
@@ -112,9 +121,14 @@ public class SelectionStartExecution extends SelectionAdapter {
 		// le nombre d'elitism et la stratégie de sélection 
 		int elitism = view.getSpinnerElitism().getSelection();
 		String selectionStrategy = view.getComboStrategySelection().getText();
+		
+		ConfigurationManager.getInstance().setElitism(elitism + "");
+		ConfigurationManager.getInstance().setSelectionStrategy(view.getComboStrategySelection().getSelectionIndex() + "");
 
 		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
+		ConfigurationManager.getInstance().setCheckMutation(isCheckMutation + "");
+		
 		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
 			try {
@@ -127,6 +141,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		}
 		
 		boolean isCheckCrossover = view.getButtonCheckCrossover().getSelection();
+		ConfigurationManager.getInstance().setCheckCrossover(isCheckCrossover + "");
 		
 		// les conditions de terminaison
 		List<TerminationCondition> conditions = new ArrayList<TerminationCondition>();
@@ -147,11 +162,16 @@ public class SelectionStartExecution extends SelectionAdapter {
 			conditions.add(new Stagnation(view.getSpinnerUntilStagnation().getSelection(), true));
 		
 		// les poids fitness
-		int sizeWeight = view.getspinnerSizeWeight().getSelection();
+		int sizeWeight = view.getSpinnerSizeWeight().getSelection();
 		int elementWeight = view.getSpinnerElementWeight().getSelection();
 		int workflowWeight = view.getSpinnerWorkflowWeight().getSelection();
 		int manualOclWeight = view.getSpinnerManualOclWeight().getSelection();
 		FitnessWeightHelper weightHelper = new FitnessWeightHelper(sizeWeight, elementWeight, workflowWeight, manualOclWeight);
+		
+		ConfigurationManager.getInstance().setSizeWeight(sizeWeight + "");
+		ConfigurationManager.getInstance().setElementsWeight(elementWeight + "");
+		ConfigurationManager.getInstance().setWorkflowsWeight(workflowWeight + "");
+		ConfigurationManager.getInstance().setManualOCLWeight(manualOclWeight + "");
 		
 		// le bouton stop
 		final UserAbort userAbort = new UserAbort();
@@ -186,6 +206,13 @@ public class SelectionStartExecution extends SelectionAdapter {
 		executor.setWeightHelper(weightHelper);
 		
 		executor.start();
+		
+		// on enregistre les conf
+		try {
+			ConfigurationManager.getInstance().store();
+		} catch (IOException e1) {
+			System.err.println("Impossible to save the configuration.");
+		}
 	}
 
 	private List<IChangePattern> getChangePatterns(String typeFile) throws Exception {

@@ -52,7 +52,7 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 		process.removeFlowNode(ancienneTask);
 		process.removeSequenceFlow(arcOut);
 		
-		// on simplifie les fork et decision "vides"
+		// on simplifie les fork et decision "vides" si on vient d'en créer
 		ChangePatternHelper.getInstance().cleanProcess(process);
 		return process;
 	}
