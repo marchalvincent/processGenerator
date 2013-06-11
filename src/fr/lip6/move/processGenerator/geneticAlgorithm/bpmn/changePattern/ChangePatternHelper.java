@@ -47,7 +47,7 @@ public class ChangePatternHelper {
 		if (liste.isEmpty())
 			throw new GeneticException("The process does not contain any SequenceFlow.");
 
-		// on en prend un au hasard
+		// on en retourne un au hasard
 		return liste.get(rng.nextInt(liste.size()));
 	}
 
@@ -71,7 +71,31 @@ public class ChangePatternHelper {
 		if (liste.isEmpty())
 			throw new GeneticException("The process does not contain any Activity.");
 
-		// on en prend un au hasard
+		// on en retourne un au hasard
+		return liste.get(rng.nextInt(liste.size()));
+	}
+	
+	/**
+	 * Renvoie une {@link ParallelGateway} diverging tirée au hasard parmis celles du process passé en argument.
+	 * @param process le {@link BpmnProcess} à parcourir.
+	 * @param rng le {@link Random} utilisé.
+	 * @return la {@link ParallelGateway} aléatoire.
+	 * @throws GeneticException si le process ne contient aucune ParallelGateway.
+	 */
+	public ParallelGateway getRandomParallelGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
+
+		// on récupère la liste des ParallelGateway
+		List<ParallelGateway> liste = new ArrayList<ParallelGateway>();
+		for (FlowElement elem : process.getProcess().getFlowElements()) {
+			if (elem instanceof ParallelGateway && ((ParallelGateway) elem).getGatewayDirection().equals(GatewayDirection.DIVERGING))
+				liste.add((ParallelGateway) elem);
+		}
+
+		// s'il n'y a aucune ParallelGateway...
+		if (liste.isEmpty())
+			throw new GeneticException("The process does not contain any ParallelGateway.");
+
+		// on en retourne un au hasard
 		return liste.get(rng.nextInt(liste.size()));
 	}
 
@@ -85,6 +109,34 @@ public class ChangePatternHelper {
 	}
 
 	/**
+	 * Renvoie le nombre d'{@link Activity} contenues dans le process passé en paramètre.
+	 * @param process le {@link Bpmnprocess}.
+	 * @return int.
+	 */
+	public int countActivity(BpmnProcess process) {
+		int count = 0;
+		for (FlowElement element : process.getProcess().getFlowElements()) {
+			if (element instanceof Activity)
+				count ++;
+		}
+		return count;
+	}
+	
+	/**
+	 * Renvoie le nombre de {@link ParallelGateway} contenues dans le process passé en paramètre.
+	 * @param process le {@link Bpmnprocess}.
+	 * @return int.
+	 */
+	public int countParallelGateway(BpmnProcess process) {
+		int count = 0;
+		for (FlowElement element : process.getProcess().getFlowElements()) {
+			if (element instanceof ParallelGateway)
+				count ++;
+		}
+		return count;
+	}
+	
+	/**
 	 * Supprime les "ParallelGateway" inutiles du process.
 	 * @param process un {@link BpmnProcess}.
 	 */
@@ -92,15 +144,15 @@ public class ChangePatternHelper {
 
 		// on récupère la liste des ParallelGateway divergentes
 		ParallelGateway parallel = null;
-		List<ParallelGateway> liste = new ArrayList<ParallelGateway>();
+		List<ParallelGateway> listeDiverging = new ArrayList<ParallelGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			parallel = this.isParallelGateway(elem, GatewayDirection.DIVERGING);
 			if (parallel != null)
-				liste.add(parallel);
+				listeDiverging.add(parallel);
 		}
 
 		// pour chaque ParallelGateway divergentes
-		for (ParallelGateway parallelGateway : liste) {
+		for (ParallelGateway parallelGateway : listeDiverging) {
 
 			// si la parallelGateway possède plusieurs chemins
 			if (parallelGateway.getOutgoing().size() > 1) {
@@ -128,27 +180,8 @@ public class ChangePatternHelper {
 			// si la parallelGateway n'a qu'une seule sortie, on peut simplifier
 			if (parallelGateway.getOutgoing().size() == 1) {
 				// on cherche la parallelGateway converging qui referme le chemin
-				FlowNode nextNode = parallelGateway;
-				int cpt = 0, error = 0;
-				do {
-					nextNode = nextNode.getOutgoing().get(0).getTargetRef();
-					// si on a trouvé une gateway
-					if (nextNode instanceof ParallelGateway) {
-						// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
-						parallel = (ParallelGateway) nextNode;
-						if (parallel.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-							cpt++;
-						} else if (parallel.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
-							cpt--;
-						}
-						
-						// quand le compteur est a -1 c'est qu'on vient de passer la bonne gateway fermante
-						if (cpt == -1) {
-							break;
-						}
-					}
-					error++;
-				} while (error < 10000000);
+				SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
+				parallel = seseManager.getEndOfParallelGateway(parallelGateway);
 				
 				// petite vérification
 				if (parallel == null) 
@@ -193,40 +226,21 @@ public class ChangePatternHelper {
 
 		// on récupère la liste des ExclusiveGateway divergentes
 		ExclusiveGateway exclusive = null;
-		List<ExclusiveGateway> liste = new ArrayList<ExclusiveGateway>();
+		List<ExclusiveGateway> listeDivergente = new ArrayList<ExclusiveGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			exclusive = this.isExclusiveGateway(elem, GatewayDirection.DIVERGING);
 			if (exclusive != null)
-				liste.add(exclusive);
+				listeDivergente.add(exclusive);
 		}
 
 		// pour chaque ExclusiveGateway divergentes
-		for (ExclusiveGateway exclusiveGateway : liste) {
+		for (ExclusiveGateway exclusiveGateway : listeDivergente) {
 
 			// si l'ExclusiveGateway n'a qu'une seule sortie, on peut simplifier
 			if (exclusiveGateway.getOutgoing().size() == 1) {
 				// on cherche l'ExclusiveGateway converging qui referme le chemin
-				FlowNode nextNode = exclusiveGateway;
-				int cpt = 0, error = 0;
-				do {
-					nextNode = nextNode.getOutgoing().get(0).getTargetRef();
-					// si on a trouvé une ExclusiveGateway
-					if (nextNode instanceof ExclusiveGateway) {
-						// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
-						exclusive = (ExclusiveGateway) nextNode;
-						if (exclusive.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-							cpt++;
-						} else if (exclusive.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
-							cpt--;
-						}
-						
-						// quand le compteur est a -1 c'est qu'on vient de passer la bonne gateway fermante
-						if (cpt == -1) {
-							break;
-						}
-					}
-					error++;
-				} while (error < 10000000);
+				SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
+				exclusive = seseManager.getEndOfExclusiveGateway(exclusiveGateway);
 				
 				// petites vérifications
 				if (exclusive == null)

@@ -162,6 +162,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 			try {
 				this.runBpmn();
 			} catch (GeneticException | IOException | IllegalArgumentException e) {
+				e.printStackTrace();
 				view.printError(e.getMessage());
 			}
 		}

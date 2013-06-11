@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
+import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
@@ -15,13 +17,13 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 /**
  * Cette classe se charge de séparer un diagramme d'activité en plusieurs sous diagrammes
  * nommés SESE ({@link SingleEntrySingleExit}). Les diagrammes d'activités manipulés sont des 
- * diagramme représentés à l'aide de BPMN2.0.
+ * diagrammes représentés à l'aide de BPMN2.0.
  * @author Vincent
  *
  */
-public class SingleEntrySingleExitSplitter {
+public class SingleEntrySingleExitManager {
 
-	public SingleEntrySingleExitSplitter() {}
+	public SingleEntrySingleExitManager() {}
 
 	/**
 	 * Renvoie la liste des {@link SingleEntrySingleExit} contenus dans le process passé en paramètre.
@@ -71,7 +73,7 @@ public class SingleEntrySingleExitSplitter {
 				}
 				// si c'est une gateway, alors c'est un SESE complexe qui doit avoir un traitement particulier
 				else if (targetRef instanceof Gateway) {
-					SequenceFlow end = this.getEndOfGatewaySESE((Gateway) targetRef);
+					SequenceFlow end = this.getEndOfGateway((Gateway) targetRef).getOutgoing().get(0);
 					listeTemp.add(new SingleEntrySingleExit(arc, end));
 					arc = end;
 				}
@@ -91,23 +93,33 @@ public class SingleEntrySingleExitSplitter {
 				}
 			}
 			
-			// on vide la liste temporaire dans le cas on le for each à plusieurs arcs
+			// on vide la liste temporaire dans le cas où le for each a plusieurs arcs
 			listeTemp.clear();
 		}
 		
 		return listeFinale;
 	}
 
-	private SequenceFlow getEndOfGatewaySESE(Gateway targetRef) {
+	/**
+	 * Renvoie la Gateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
+	 * @param gatewayDiverging une {@link Gateway} divergente.
+	 * @return la {@link Gateway} convergente correspondante.
+	 */
+	private FlowNode getEndOfGateway(Gateway gatewayDiverging) {
 
+		if (gatewayDiverging.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
+			System.err.println("Error the gateway parameters is converging...");
+			return null;
+		}
+		
 		Gateway gateway = null;
 		// on cherche la gateway converging qui referme le chemin
-		FlowNode nextNode = targetRef;
+		FlowNode nextNode = gatewayDiverging;
 		int cpt = 0, error = 0;
 		do {
 			nextNode = nextNode.getOutgoing().get(0).getTargetRef();
 			// il faut vérifier que c'est le bon type de gateway
-			if (nextNode instanceof Gateway && nextNode.getClass().equals(targetRef.getClass())) {
+			if (nextNode instanceof Gateway && nextNode.getClass().equals(gatewayDiverging.getClass())) {
 				// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
 				gateway = (Gateway) nextNode;
 				if (gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
@@ -124,7 +136,30 @@ public class SingleEntrySingleExitSplitter {
 			error++;
 		} while (error < 10000000);
 		
-		// on peut enfin retourner l'arc fermant le SESE
-		return nextNode.getOutgoing().get(0);
+		if (error == 10000000) {
+			System.err.println("Error during the parsing of the model. The loop is probably infinite...");
+			return null;
+		}
+		
+		// on peut enfin retourner la gateway fermante
+		return nextNode;
+	}
+	
+	/**
+	 * Renvoie la ParallelGateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
+	 * @param gatewayDiverging une {@link ParallelGateway} divergente.
+	 * @return la {@link ParallelGateway} convergente correspondante.
+	 */
+	public ParallelGateway getEndOfParallelGateway(ParallelGateway gatewayDiverging) {
+		return (ParallelGateway) this.getEndOfGateway(gatewayDiverging);
+	}
+	
+	/**
+	 * Renvoie l'ExclusiveGateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
+	 * @param gatewayDiverging une {@link ExclusiveGateway} divergente.
+	 * @return l'{@link ExclusiveGateway} convergente correspondante.
+	 */
+	public ExclusiveGateway getEndOfExclusiveGateway(ExclusiveGateway gatewayDiverging) {
+		return (ExclusiveGateway) this.getEndOfGateway(gatewayDiverging);
 	}
 }

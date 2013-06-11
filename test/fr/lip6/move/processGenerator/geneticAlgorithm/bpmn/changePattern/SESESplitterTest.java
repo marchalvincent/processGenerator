@@ -13,7 +13,7 @@ public class SESESplitterTest {
 	@Test
 	public void test() throws IOException {
 
-		SingleEntrySingleExitSplitter splitter = new SingleEntrySingleExitSplitter();
+		SingleEntrySingleExitManager splitter = new SingleEntrySingleExitManager();
 		BpmnProcess process = BpmnBuilder.getExampleForSESE();
 //		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincent.bpmn");
 		

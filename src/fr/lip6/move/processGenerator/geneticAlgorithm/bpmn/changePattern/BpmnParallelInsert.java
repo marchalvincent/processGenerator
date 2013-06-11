@@ -27,13 +27,85 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 			return oldProcess;
 		}
 		
-		// on considère qu'une insertion parallèle ne peut arriver qu'autour d'une Activity
+		// on récupère toutes les Activities et le nombre de ParallelGateway
+		int nbActivity = ChangePatternHelper.getInstance().countActivity(process);
+		int nbParallel = ChangePatternHelper.getInstance().countParallelGateway(process);
+		if (nbParallel % 2 != 0) {
+			System.err.println("Error, the number of ParallelGateway is odd.");
+			return process;
+		}
+		// on divise par deux le nombre de parallelGateway car il y a une ouvrante et une fermante.
+		nbParallel = nbParallel / 2;
+		
+		if ((nbActivity + nbParallel) == 0)
+			return oldProcess;
+		
+		// on fait un random équitable pour savoir si on applique le parallel sur une Activity ou sur une parallelGateway deja existante
+		int[] tableau = new int[nbActivity + nbParallel];
+		for (int i = 0; i < nbActivity; i++) {
+			tableau[i] = 0;
+		}
+		for (int i = nbActivity; i < nbActivity + nbParallel; i++) {
+			tableau[i] = 1;
+		}
+
+		// on procède au tirage au sort. 0 pour une insertion sur une ativity, 1 pour une insertion sur une parallel.
+		int tirage = tableau[rng.nextInt(tableau.length)];
+		if (tirage == 0) {
+			return applyOnActivity(process, rng);
+		} else {
+			return applyOnParallel(process, rng);
+		}
+	}
+	
+	/**
+	 * Applique la modification génétique d'une insertion en parallèle sur une ParallelGateway déjà existente. 
+	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à la parallelGateway tirée au sort.
+	 * @param process le {@link BpmnProcess} à modifier.
+	 * @param rng une source de {@link Random}.
+	 * @return le {@link BpmnProcess} modifié.
+	 */
+	private BpmnProcess applyOnParallel(BpmnProcess process, Random rng) {
+
+		// on récupère une ParallelGateway diverging au hasard
+		ParallelGateway parallelDiverging = null;
+		try {
+			parallelDiverging = ChangePatternHelper.getInstance().getRandomParallelGatewayDiverging(process, rng);
+		} catch (GeneticException e) {
+			// si on n'a pas d'activity
+			return process;
+		}
+		
+		// on récupère la parallelConverging
+		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
+		ParallelGateway parallelConverging = seseManager.getEndOfParallelGateway(parallelDiverging);
+		
+		// on créé la nouvelle tache
+		Task newTask = process.buildTask();
+		
+		// et enfin les nouveaux arcs
+		process.buildSequenceFlow(parallelDiverging, newTask);
+		process.buildSequenceFlow(newTask, parallelConverging);
+		
+		return process;
+	}
+
+	/**
+	 * Applique la modification génétique d'une insertion en parallèle autour d'une activité. Cette modification va entrainer
+	 * une création de deux {@link ParallelGateway} qui seront fixées avant et après cette activité.
+	 * @param process le {@link BpmnProcess} à modifier.
+	 * @param rng une source de {@link Random}.
+	 * @return le {@link BpmnProcess} modifié.
+	 */
+	private BpmnProcess applyOnActivity(BpmnProcess process, Random rng) {
+
+		// on récupère une activité au hasard
 		Activity activity = null;
 		try {
 			activity = ChangePatternHelper.getInstance().getRandomActivity(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
-			return oldProcess;
+			return process;
 		}
 		
 		// on créé les nouveaux noeuds

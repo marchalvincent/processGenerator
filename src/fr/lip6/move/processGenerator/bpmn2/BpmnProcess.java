@@ -211,9 +211,11 @@ public class BpmnProcess {
 			f.createNewFile();
 			OutputStream outt = new FileOutputStream(f);
 			proc.save(outt, resource, options);
+			outt.close();
 		}
 		finally {
 			tempFile.delete();
+			
 		}
 	}
 }
