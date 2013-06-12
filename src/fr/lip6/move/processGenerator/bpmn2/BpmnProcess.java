@@ -199,6 +199,7 @@ public class BpmnProcess {
 	}
 
 	public void save(String nameFile) throws IOException {
+		
 		Bpmn2ResourceFactoryImpl resourceFactory = new Bpmn2ResourceFactoryImpl();
 		File tempFile = File.createTempFile("bpmn20convert", "tmp");
 		try {
@@ -206,7 +207,7 @@ public class BpmnProcess {
 			resource.getContents().add(this.documentRoot);
 			Bpmn2XMLProcessor proc = new Bpmn2XMLProcessor();
 			Map<Object, Object> options = new HashMap<Object, Object>();
-
+			
 			File f = new File(nameFile);
 			f.createNewFile();
 			OutputStream outt = new FileOutputStream(f);

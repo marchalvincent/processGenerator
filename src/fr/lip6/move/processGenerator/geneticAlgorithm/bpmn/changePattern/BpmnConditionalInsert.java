@@ -24,14 +24,87 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
+
+		// on récupère toutes le nombre de séquence et le nombre d'exclusive gateway
+		int nbSequence = ChangePatternHelper.getInstance().countSequenceFlow(process);
+		int nbExclusive = ChangePatternHelper.getInstance().countExclusiveGateway(process);
+		if (nbExclusive % 2 != 0) {
+			System.err.println("Error, the number of ExclusiveGateway is odd.");
+			return process;
+		}
 		
+		// on divise par deux le nombre d'ExclusiveGateway car il y a une ouvrante et une fermante.
+		nbExclusive = nbExclusive / 2;
+		
+		if ((nbSequence + nbExclusive) == 0)
+			return process;
+		
+		// on fait un random équitable pour savoir si on applique la condition sur un arc ou sur une ExclusiveGateway deja existante
+		int[] tableau = new int[nbSequence + nbExclusive];
+		for (int i = 0; i < nbSequence; i++) {
+			tableau[i] = 0;
+		}
+		for (int i = nbSequence; i < nbSequence + nbExclusive; i++) {
+			tableau[i] = 1;
+		}
+
+		// on procède au tirage au sort. 0 pour une insertion sur un arc, 1 pour une insertion sur une ExclusiveGateway.
+		int tirage = tableau[rng.nextInt(tableau.length)];
+		if (tirage == 0) {
+			return applyOnSequenceFlow(process, rng);
+		} else {
+			return applyOnExclusive(process, rng);
+		}
+	}
+	
+	/**
+	 * Applique la modification génétique d'une insertion conditionelle sur une ExclusiveGateway déjà existente. 
+	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à l'ExclusiveGateway tirée au sort.
+	 * @param process le {@link BpmnProcess} à modifier.
+	 * @param rng une source de {@link Random}.
+	 * @return le {@link BpmnProcess} modifié.
+	 */
+	private BpmnProcess applyOnExclusive(BpmnProcess process, Random rng) {
+
+		// on récupère une ExclusiveGateway diverging au hasard
+		ExclusiveGateway exclusiveDiverging = null;
+		try {
+			exclusiveDiverging = ChangePatternHelper.getInstance().getRandomExclusiveGatewayDiverging(process, rng);
+		} catch (GeneticException e) {
+			// si on n'a pas d'activity
+			return process;
+		}
+		
+		// on récupère l'exclusive converging
+		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
+		ExclusiveGateway exclusiveConverging = seseManager.getEndOfExclusiveGateway(exclusiveDiverging);
+		
+		// on créé la nouvelle tache
+		Task newTask = process.buildTask();
+		
+		// et enfin les nouveaux arcs
+		process.buildSequenceFlow(exclusiveDiverging, newTask);
+		process.buildSequenceFlow(newTask, exclusiveConverging);
+		
+		return process;
+	}
+
+	/**
+	 * Applique la modification génétique d'une insertion conditionelle autour d'un arc ({@link SequenceFlow}. Cette modification va entrainer
+	 * une création de deux {@link ExclusiveGateway} qui seront fixées avant et après cet arc.
+	 * @param process le {@link BpmnProcess} à modifier.
+	 * @param rng une source de {@link Random}.
+	 * @return le {@link BpmnProcess} modifié.
+	 */
+	private BpmnProcess applyOnSequenceFlow(BpmnProcess process, Random rng) {
+
 		SequenceFlow ancienArc = null;
 		try {
 			ancienArc = ChangePatternHelper.getInstance().getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
 			// ici on n'a trouvé aucun arc (ce n'est pas normal, il doit toujours en avoir)
 			System.err.println(getClass().getSimpleName() + e.getMessage());
-			return oldProcess;
+			return process;
 		}
 
 		// les nouveaux noeuds

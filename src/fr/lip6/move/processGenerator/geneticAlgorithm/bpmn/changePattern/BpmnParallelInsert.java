@@ -38,7 +38,7 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		nbParallel = nbParallel / 2;
 		
 		if ((nbActivity + nbParallel) == 0)
-			return oldProcess;
+			return process;
 		
 		// on fait un random équitable pour savoir si on applique le parallel sur une Activity ou sur une parallelGateway deja existante
 		int[] tableau = new int[nbActivity + nbParallel];

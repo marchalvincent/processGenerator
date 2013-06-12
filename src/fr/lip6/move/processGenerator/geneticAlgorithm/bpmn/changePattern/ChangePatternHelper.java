@@ -6,7 +6,6 @@ import java.util.Random;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
-import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
@@ -98,6 +97,30 @@ public class ChangePatternHelper {
 		// on en retourne un au hasard
 		return liste.get(rng.nextInt(liste.size()));
 	}
+	
+	/**
+	 * Renvoie une {@link ExclusiveGateway} diverging tirée au hasard parmis celles du process passé en argument.
+	 * @param process le {@link BpmnProcess} à parcourir.
+	 * @param rng le {@link Random} utilisé.
+	 * @return l'{@link ExclusiveGateway} aléatoire.
+	 * @throws GeneticException si le process ne contient aucune ExclusiveGateway.
+	 */
+	public ExclusiveGateway getRandomExclusiveGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
+
+		// on récupère la liste des ExclusiveGateway
+		List<ExclusiveGateway> liste = new ArrayList<ExclusiveGateway>();
+		for (FlowElement elem : process.getProcess().getFlowElements()) {
+			if (elem instanceof ExclusiveGateway && ((ExclusiveGateway) elem).getGatewayDirection().equals(GatewayDirection.DIVERGING))
+				liste.add((ExclusiveGateway) elem);
+		}
+
+		// s'il n'y a aucune ExclusiveGateway...
+		if (liste.isEmpty())
+			throw new GeneticException("The process does not contain any ParallelGateway.");
+
+		// on en retourne un au hasard
+		return liste.get(rng.nextInt(liste.size()));
+	}
 
 	/**
 	 * Supprime tous les noeuds et arcs inutiles. Typiquement : deux chemins parallèles vides.
@@ -123,6 +146,20 @@ public class ChangePatternHelper {
 	}
 	
 	/**
+	 * Renvoie le nombre de {@link SequenceFlow} contenues dans le process passé en paramètre.
+	 * @param process le {@link Bpmnprocess}.
+	 * @return int.
+	 */
+	public int countSequenceFlow(BpmnProcess process) {
+		int count = 0;
+		for (FlowElement element : process.getProcess().getFlowElements()) {
+			if (element instanceof SequenceFlow)
+				count ++;
+		}
+		return count;
+	}
+	
+	/**
 	 * Renvoie le nombre de {@link ParallelGateway} contenues dans le process passé en paramètre.
 	 * @param process le {@link Bpmnprocess}.
 	 * @return int.
@@ -137,23 +174,42 @@ public class ChangePatternHelper {
 	}
 	
 	/**
+	 * Renvoie le nombre d'{@link ExclusiveGateway} contenues dans le process passé en paramètre.
+	 * @param process le {@link Bpmnprocess}.
+	 * @return int.
+	 */
+	public int countExclusiveGateway(BpmnProcess process) {
+		int count = 0;
+		for (FlowElement element : process.getProcess().getFlowElements()) {
+			if (element instanceof ExclusiveGateway)
+				count ++;
+		}
+		return count;
+	}
+	
+	/**
 	 * Supprime les "ParallelGateway" inutiles du process.
 	 * @param process un {@link BpmnProcess}.
 	 */
 	private void removeUselessParallelGateway(BpmnProcess process) {
 
 		// on récupère la liste des ParallelGateway divergentes
-		ParallelGateway parallel = null;
+		ParallelGateway parallel = null, parallelConverging;
 		List<ParallelGateway> listeDiverging = new ArrayList<ParallelGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			parallel = this.isParallelGateway(elem, GatewayDirection.DIVERGING);
 			if (parallel != null)
 				listeDiverging.add(parallel);
 		}
+		
+		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
 
 		// pour chaque ParallelGateway divergentes
 		for (ParallelGateway parallelGateway : listeDiverging) {
 
+			// on cherche la parallelGateway converging qui referme le chemin
+			parallelConverging = seseManager.getEndOfParallelGateway(parallelGateway);
+			
 			// si la parallelGateway possède plusieurs chemins
 			if (parallelGateway.getOutgoing().size() > 1) {
 
@@ -161,9 +217,7 @@ public class ChangePatternHelper {
 				// on parcours chaque arc sortant et on regarde s'il n'arrive pas directement à la ParallelGateway converging
 				for (SequenceFlow sequenceFlow : parallelGateway.getOutgoing()) {
 
-					FlowNode target = sequenceFlow.getTargetRef();
-					parallel = this.isParallelGateway(target, GatewayDirection.CONVERGING);
-					if (parallel != null) {
+					if (parallelConverging != null && sequenceFlow.getTargetRef() == parallelConverging) {
 						// on ajoute l'arc dans la liste de ceux a supprimer
 						listeToRemove.add(sequenceFlow);
 						// ici on fait un break sinon on risque de supprimer trop d'arc et couper le process en deux...
@@ -178,15 +232,12 @@ public class ChangePatternHelper {
 			} // fin de : si la parallelGateway divergente a plusieurs sorties
 			
 			// si la parallelGateway n'a qu'une seule sortie, on peut simplifier
-			if (parallelGateway.getOutgoing().size() == 1) {
-				// on cherche la parallelGateway converging qui referme le chemin
-				SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
-				parallel = seseManager.getEndOfParallelGateway(parallelGateway);
+			else if (parallelGateway.getOutgoing().size() == 1) {
 				
 				// petite vérification
-				if (parallel == null) 
+				if (parallelConverging == null) 
 					return;
-				if (parallel.getIncoming().size() != 1) 
+				if (parallelConverging.getIncoming().size() != 1) 
 					System.err.println(this.getClass().getSimpleName() + " : The parallelGateway have more than 1 incoming sequence flow.");
 				
 				// ici on peut faire la suppression des 2 parallelGateway
@@ -194,9 +245,9 @@ public class ChangePatternHelper {
 				process.removeSequenceFlow(parallelGateway.getOutgoing().get(0));
 				process.removeFlowNode(parallelGateway);
 				
-				parallel.getIncoming().get(0).setTargetRef(parallel.getOutgoing().get(0).getTargetRef());
-				process.removeSequenceFlow(parallel.getOutgoing().get(0));
-				process.removeFlowNode(parallel);
+				parallelConverging.getIncoming().get(0).setTargetRef(parallelConverging.getOutgoing().get(0).getTargetRef());
+				process.removeSequenceFlow(parallelConverging.getOutgoing().get(0));
+				process.removeFlowNode(parallelConverging);
 				
 			} // fin de : si la parallelGateway divergente n'a qu'une sortie
 		} // fin de : pour chaque parallelGateway divergente
@@ -225,7 +276,7 @@ public class ChangePatternHelper {
 	private void removeUselessExclusiveGateway(BpmnProcess process) {
 
 		// on récupère la liste des ExclusiveGateway divergentes
-		ExclusiveGateway exclusive = null;
+		ExclusiveGateway exclusive = null, exclusiveConverging;
 		List<ExclusiveGateway> listeDivergente = new ArrayList<ExclusiveGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			exclusive = this.isExclusiveGateway(elem, GatewayDirection.DIVERGING);
@@ -233,19 +284,49 @@ public class ChangePatternHelper {
 				listeDivergente.add(exclusive);
 		}
 
+		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
+
 		// pour chaque ExclusiveGateway divergentes
 		for (ExclusiveGateway exclusiveGateway : listeDivergente) {
 
+			// on cherche l'ExclusiveGateway converging qui referme le chemin
+			exclusiveConverging = seseManager.getEndOfExclusiveGateway(exclusiveGateway);
+			
+
+			// on vérifie si on a plusieurs arc vide allant de la porte diverging à la porte converging
+			if (exclusiveGateway.getOutgoing().size() > 1) {
+				// on compte les arcs vides
+				int countEmptySequence = 0;
+				for (SequenceFlow sequenceFlow : exclusiveGateway.getOutgoing()) {
+					if (exclusiveConverging != null && sequenceFlow.getTargetRef() == exclusiveConverging)
+						countEmptySequence++;
+				}
+				// si on a au moins deux arcs vides, on peut en supprimer
+				if (countEmptySequence > 1) {
+					List<SequenceFlow> listeToRemove = new ArrayList<SequenceFlow>();
+					int cpt = countEmptySequence - 1;
+					for (SequenceFlow sequenceFlow : exclusiveGateway.getOutgoing()) {
+						if (exclusiveConverging != null && sequenceFlow.getTargetRef() == exclusiveConverging) {
+							listeToRemove.add(sequenceFlow);
+							cpt--;
+							// pour éviter d'en supprimer trop on break
+							if (cpt == 0)
+								break;
+						}
+					}
+					for (SequenceFlow sequenceFlow : listeToRemove) {
+						process.removeSequenceFlow(sequenceFlow);
+					}
+				}
+			} // fin de : si on a plusieurs arcs partant de l'exclusive gateway diverging
+			
 			// si l'ExclusiveGateway n'a qu'une seule sortie, on peut simplifier
-			if (exclusiveGateway.getOutgoing().size() == 1) {
-				// on cherche l'ExclusiveGateway converging qui referme le chemin
-				SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
-				exclusive = seseManager.getEndOfExclusiveGateway(exclusiveGateway);
+			else if (exclusiveGateway.getOutgoing().size() == 1) {
 				
 				// petites vérifications
-				if (exclusive == null)
+				if (exclusiveConverging == null)
 					return;
-				if (exclusive.getIncoming().size() != 1) 
+				if (exclusiveConverging.getIncoming().size() != 1) 
 					System.err.println(this.getClass().getSimpleName() + " : The ExclusiveGateway have more than 1 incoming sequence flow.");
 				
 				// ici on peut faire la suppression des 2 ExclusiveGateway
@@ -253,11 +334,13 @@ public class ChangePatternHelper {
 				process.removeSequenceFlow(exclusiveGateway.getOutgoing().get(0));
 				process.removeFlowNode(exclusiveGateway);
 				
-				exclusive.getIncoming().get(0).setTargetRef(exclusive.getOutgoing().get(0).getTargetRef());
-				process.removeSequenceFlow(exclusive.getOutgoing().get(0));
-				process.removeFlowNode(exclusive);
+				exclusiveConverging.getIncoming().get(0).setTargetRef(exclusiveConverging.getOutgoing().get(0).getTargetRef());
+				process.removeSequenceFlow(exclusiveConverging.getOutgoing().get(0));
+				process.removeFlowNode(exclusiveConverging);
 				
 			} // fin de : si l'ExclusiveGateway divergente n'a qu'une sortie
+			
+			
 		} // fin de : pour chaque ExclusiveGateway divergente
 	}
 	

@@ -29,7 +29,7 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 			ancienneTask = ChangePatternHelper.getInstance().getRandomActivity(process, rng);
 		} catch (Exception e) {
 			// on n'a pas trouvé d'activité à supprimer
-			return oldProcess;
+			return process;
 		}
 
 		// on récupère les arc arrivant et partant de cette activity
