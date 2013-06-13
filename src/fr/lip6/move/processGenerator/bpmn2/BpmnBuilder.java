@@ -2,6 +2,7 @@ package fr.lip6.move.processGenerator.bpmn2;
 
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
@@ -214,6 +215,60 @@ public class BpmnBuilder {
 		// init du process
 		StartEvent start = process.buildStartEvent();
 		ExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
+		Task b = process.buildTask();
+		Task c = process.buildTask();
+		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		EndEvent end = process.buildEndEvent();
+
+		process.buildSequenceFlow(start, choice);
+		process.buildSequenceFlow(choice, b);
+		process.buildSequenceFlow(choice, c);
+		process.buildSequenceFlow(b, merge);
+		process.buildSequenceFlow(c, merge);
+		process.buildSequenceFlow(merge, end);
+		
+		return process;
+	}
+	
+	/**
+	 * Construit un process avec : 
+	 *  init -> multiChoice -> (b & c) -> multiMerge -> final
+	 * @return
+	 */
+	public static BpmnProcess createExampleWithStructuredSynchronizingMerge() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		// init du process
+		StartEvent start = process.buildStartEvent();
+		InclusiveGateway choice = process.buildInclusiveGatewayDiverging();
+		Task b = process.buildTask();
+		Task c = process.buildTask();
+		InclusiveGateway merge = process.buildInclusiveGatewayConverging();
+		EndEvent end = process.buildEndEvent();
+
+		process.buildSequenceFlow(start, choice);
+		process.buildSequenceFlow(choice, b);
+		process.buildSequenceFlow(choice, c);
+		process.buildSequenceFlow(b, merge);
+		process.buildSequenceFlow(c, merge);
+		process.buildSequenceFlow(merge, end);
+		
+		return process;
+	}
+	
+	/**
+	 * Construit un process avec : 
+	 *  init -> multiChoice -> (b & c) -> simpleMerge -> final
+	 * @return
+	 */
+	public static BpmnProcess createExampleWithMultiChoiceSimpleMerge() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		// init du process
+		StartEvent start = process.buildStartEvent();
+		InclusiveGateway choice = process.buildInclusiveGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
 		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();

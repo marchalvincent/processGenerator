@@ -5,9 +5,12 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnFitnessEvaluatorTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ExclusiveChoiceTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.MultiChoiceTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.MultiMergeTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ParallelSplitTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SequenceTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SimpleMergeTest;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.StructuredSynchronizingMergeTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SynchronizationTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.QueryHelperTest;
 
@@ -19,6 +22,9 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.QueryHelper
 	ExclusiveChoiceTest.class,
 	SimpleMergeTest.class, 
 	QueryHelperTest.class,
-	BpmnFitnessEvaluatorTest.class})
+	BpmnFitnessEvaluatorTest.class,
+	StructuredSynchronizingMergeTest.class,
+	MultiChoiceTest.class,
+	MultiMergeTest.class})
 public class WholeTests {
 }

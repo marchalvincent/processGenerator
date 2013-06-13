@@ -6,13 +6,13 @@ import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralCons
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
 
-public class BpmnStructuralConstraintFactory extends AbstractStructuralConstraintFactory {
+public class StructuralConstraintFactory extends AbstractStructuralConstraintFactory {
 
-	private static BpmnStructuralConstraintFactory instance = new BpmnStructuralConstraintFactory();
+	private static StructuralConstraintFactory instance = new StructuralConstraintFactory();
 	
-	private BpmnStructuralConstraintFactory() {}
+	private StructuralConstraintFactory() {}
 	
-	public static BpmnStructuralConstraintFactory getInstance() {
+	public static StructuralConstraintFactory getInstance() {
 		return instance;
 	}
 	

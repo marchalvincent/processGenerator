@@ -13,6 +13,7 @@ import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.GatewayDirection;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.SequenceFlow;
@@ -168,6 +169,26 @@ public class BpmnProcess {
 		
 		process.getFlowElements().add(exclusive);
 		return exclusive;
+	}
+
+	public InclusiveGateway buildInclusiveGatewayDiverging() {
+		return this.buildInclusiveGateway(GatewayDirection.DIVERGING);
+	}
+	
+	public InclusiveGateway buildInclusiveGatewayConverging() {
+		return this.buildInclusiveGateway(GatewayDirection.CONVERGING);
+	}
+	
+	private InclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
+		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
+		inclusive.setGatewayDirection(direction);
+		
+		String name = BpmnNameManager.getInclusiveName(direction.toString());
+		inclusive.setId("id" + name);
+		inclusive.setName(name);
+		
+		process.getFlowElements().add(inclusive);
+		return inclusive;
 	}
 
 	public SequenceFlow buildSequenceFlow() {

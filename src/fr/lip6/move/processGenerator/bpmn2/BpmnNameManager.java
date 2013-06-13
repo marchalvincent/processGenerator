@@ -20,6 +20,11 @@ public class BpmnNameManager {
 		return "exclusive" + direction + "_" + count;
 	}
 
+	public static String getInclusiveName(String direction) {
+		count++;
+		return "inclusive" + direction + "_" + count;
+	}
+
 	public static String getSequenceName() {
 		count++;
 		return "sequence_" + count;

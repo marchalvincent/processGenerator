@@ -105,7 +105,7 @@ public class SingleEntrySingleExitManager {
 	 * @param gatewayDiverging une {@link Gateway} divergente.
 	 * @return la {@link Gateway} convergente correspondante.
 	 */
-	private FlowNode getEndOfGateway(Gateway gatewayDiverging) {
+	public FlowNode getEndOfGateway(Gateway gatewayDiverging) {
 
 		if (gatewayDiverging.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
 			System.err.println("Error the gateway parameters is converging...");
@@ -117,9 +117,13 @@ public class SingleEntrySingleExitManager {
 		FlowNode nextNode = gatewayDiverging;
 		int cpt = 0, error = 0;
 		do {
+			if (nextNode.getOutgoing() == null || nextNode.getOutgoing().size() == 0 || nextNode instanceof EndEvent) {
+				// si on a atteint la fin on renvoie null
+				return null;
+			}
 			nextNode = nextNode.getOutgoing().get(0).getTargetRef();
 			// il faut vérifier que c'est le bon type de gateway
-			if (nextNode instanceof Gateway && nextNode.getClass().equals(gatewayDiverging.getClass())) {
+			if (nextNode instanceof Gateway) {
 				// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
 				gateway = (Gateway) nextNode;
 				if (gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {

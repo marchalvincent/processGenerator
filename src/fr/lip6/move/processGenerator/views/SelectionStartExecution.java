@@ -26,7 +26,7 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnStructuralConstraintFactory;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.StructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.uml.UmlStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
 
@@ -78,7 +78,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		AbstractStructuralConstraintFactory factory = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
 			typeFile = "bpmn";
-			factory = BpmnStructuralConstraintFactory.getInstance();
+			factory = StructuralConstraintFactory.getInstance();
 		} else {
 			typeFile = "uml";
 			factory = UmlStructuralConstraintFactory.getInstance();
