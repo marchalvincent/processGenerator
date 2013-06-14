@@ -1,9 +1,12 @@
 package fr.lip6.move.processGenerator.views;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -37,7 +40,6 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPatt
 import fr.lip6.move.processGenerator.structuralConstraint.uml.EUmlWorkflowPattern;
 import fr.lip6.move.processGenerator.uml.EUmlElement;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
-import org.eclipse.swt.layout.FillLayout;
 
 
 public class ProcessGeneratorView extends ViewPart {
@@ -255,7 +257,7 @@ public class ProcessGeneratorView extends ViewPart {
 		tableColumn_7.setText("Quantity");
 
 		TableColumn tableColumn_8 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_8.setWidth(100);
+		tableColumn_8.setWidth(60);
 		tableColumn_8.setText("Number");
 		
 		TableColumn tblclmnWeight = new TableColumn(tableElements, SWT.NONE);
@@ -296,7 +298,7 @@ public class ProcessGeneratorView extends ViewPart {
 		tableColumnQuantity.setText("Quantity");
 
 		TableColumn tblclmnNumber = new TableColumn(tableWorkflow, SWT.NONE);
-		tblclmnNumber.setWidth(100);
+		tblclmnNumber.setWidth(60);
 		tblclmnNumber.setText("Number");
 		
 		TableColumn tblclmnWeight_1 = new TableColumn(tableWorkflow, SWT.NONE);
@@ -638,6 +640,16 @@ public class ProcessGeneratorView extends ViewPart {
 		bool = ConfigurationManager.getInstance().isCheckCrossover();
 		getButtonCheckCrossover().setSelection(bool);
 		
+		// les préférences sur les conditions de terminaisons
+		getButtonUntilSolutionFound().setSelection(ConfigurationManager.getInstance().isSolutionFound());
+		getButtonDuringSeconde().setSelection(ConfigurationManager.getInstance().isDuringSecondes());
+		getButtonUntilGeneration().setSelection(ConfigurationManager.getInstance().isUntilGenerations());
+		getButtonUntilStagnation().setSelection(ConfigurationManager.getInstance().isUntilStagnations());
+		
+		getSpinnerUntilSeconde().setSelection(ConfigurationManager.getInstance().getNbSecondes());
+		getSpinnerUntilGeneration().setSelection(ConfigurationManager.getInstance().getNbGenerations());
+		getSpinnerUntilStagnation().setSelection(ConfigurationManager.getInstance().getNbStagnations());
+		
 		// les préférences sur le custom fitness
 		getSpinnerSizeWeight().setSelection(ConfigurationManager.getInstance().getSizeWeight());
 		getSpinnerElementWeight().setSelection(ConfigurationManager.getInstance().getElementsWeight());
@@ -659,6 +671,23 @@ public class ProcessGeneratorView extends ViewPart {
 	 */
 	private void addElementToTable(Table table, Object[] elements) {
 
+		// les préférences utilisateurs
+		String lecturePref;
+		if (table == tableElements) {
+			lecturePref = ConfigurationManager.getInstance().getElementsAttributes();
+		} else {
+			lecturePref = ConfigurationManager.getInstance().getWorkflowsAttributes();
+		}
+		
+		String[] lignesPref = lecturePref.split("___");
+		Map<String, String[]> preferences = new HashMap<String, String[]>();
+		for (String string : lignesPref) {
+			if (!string.isEmpty()) {
+				String[] infos = string.split("%");
+				preferences.put(infos[0], infos);
+			}
+		}
+		
 		// on construit les lignes
 		for (int i = 0 ; i < elements.length; i++) {
 			new TableItem(table, SWT.NONE);
@@ -668,7 +697,21 @@ public class ProcessGeneratorView extends ViewPart {
 		TableItem[] lignes = table.getItems();
 		for (int i = 0 ; i < lignes.length ; i++) {
 
+			// on récupère les préférences utilisateurs
+			String[] infos = preferences.get(elements[i].toString());
+			// si infos est null, on met les valeurs par défaut
+			if (infos == null) {
+				infos = new String[5];
+				infos[0] = "";
+				infos[1] = "0";
+				infos[2] = "3";
+				infos[3] = "1";
+				infos[4] = "1";
+			}
+			
 			// empalcement 0 : la case a cocher est déjà intégrée par le tableau
+			if (infos[1].equals("1")) 
+				lignes[i].setChecked(true);
 
 			// emplacement 1 : le nom de l'élément
 			lignes[i].setText(1, elements[i].toString());
@@ -681,7 +724,12 @@ public class ProcessGeneratorView extends ViewPart {
 			for (EQuantity quantity : EQuantity.values()) {
 				combo.add(quantity.toString().toLowerCase());
 			}
-			combo.select(2);
+			// la préférence
+			try {
+				combo.select(Integer.parseInt(infos[2]));
+			} catch (Exception e) {
+				combo.select(3);
+			}
 			editor.grabHorizontal = true;
 			editor.setEditor(combo, lignes[i], 2);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction de la selection du combo
@@ -691,7 +739,7 @@ public class ProcessGeneratorView extends ViewPart {
 			// emplacement 3 : le nombre
 			editor = new TableEditor(table);
 			Text text = new Text(table, SWT.NONE);
-			text.setText("1");
+			text.setText(infos[3]);
 			editor.grabHorizontal = true;
 			editor.setEditor(text, lignes[i], 3);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
@@ -701,7 +749,7 @@ public class ProcessGeneratorView extends ViewPart {
 			// emplacement 4 : le poids associé
 			editor = new TableEditor(table);
 			text = new Text(table, SWT.NONE);
-			text.setText("1");
+			text.setText(infos[4]);
 			editor.grabHorizontal = true;
 			editor.setEditor(text, lignes[i], 4);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
@@ -712,6 +760,16 @@ public class ProcessGeneratorView extends ViewPart {
 
 	private void setChangePatternToTable(IEnumChangePattern[] eBpmnChangePatterns) {
 
+		// on récupère les préférences utilisateurs
+		String lecturePreferences = ConfigurationManager.getInstance().getChangePatternAttributes();
+		Map<String, String> preferences = new HashMap<String, String>();
+		for (String ligne : lecturePreferences.split("___")) {
+			if (!ligne.isEmpty()) {
+				String[] split = ligne.split("%");
+				preferences.put(split[0], split[1]);
+			}
+		}
+		
 		// on construit les lignes
 		for (int i = 0 ; i < eBpmnChangePatterns.length ; i++) {
 			new TableItem(tableMutationParameters, SWT.NONE);
@@ -720,6 +778,12 @@ public class ProcessGeneratorView extends ViewPart {
 		// pour chaque ligne...
 		TableItem[] lignes = tableMutationParameters.getItems();
 		for (int i = 0 ; i < lignes.length ; i++) {
+			
+			// la préférence utilisateur
+			String proba = preferences.get(eBpmnChangePatterns[i].toString());
+			if (proba == null)
+				proba = "1";
+			
 			// emplacement 0 : le nom
 			lignes[i].setText(0, eBpmnChangePatterns[i].toString());
 			lignes[i].setData("0", eBpmnChangePatterns[i]);
@@ -727,7 +791,7 @@ public class ProcessGeneratorView extends ViewPart {
 			// emplacement 1 : le nombre de proba
 			TableEditor editor = new TableEditor(tableMutationParameters);
 			Text text = new Text(tableMutationParameters, SWT.NONE);
-			text.setText("1");
+			text.setText(proba);
 			editor.grabHorizontal = true;
 			editor.setEditor(text, lignes[i], 1);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text

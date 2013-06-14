@@ -127,7 +127,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 
 		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
-		ConfigurationManager.getInstance().setCheckMutation(isCheckMutation + "");
+		ConfigurationManager.getInstance().setCheckMutation(isCheckMutation);
 		
 		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
@@ -141,25 +141,40 @@ public class SelectionStartExecution extends SelectionAdapter {
 		}
 		
 		boolean isCheckCrossover = view.getButtonCheckCrossover().getSelection();
-		ConfigurationManager.getInstance().setCheckCrossover(isCheckCrossover + "");
+		ConfigurationManager.getInstance().setCheckCrossover(isCheckCrossover);
 		
 		// les conditions de terminaison
 		List<TerminationCondition> conditions = new ArrayList<TerminationCondition>();
+		boolean bool;
 		// 1 solution trouvée
-		if (view.getButtonUntilSolutionFound().getSelection())
+		bool = view.getButtonUntilSolutionFound().getSelection();
+		if (bool)
 			conditions.add(new TargetFitness(GeneticAlgorithmData.totalFitness, true));
+		ConfigurationManager.getInstance().setSolutionFound(bool);
 		
 		// during x secondes
-		if (view.getButtonDuringSeconde().getSelection()) 
-			conditions.add(new ElapsedTime(view.getSpinnerUntilSeconde().getSelection() * 1000));
+		int secondes = view.getSpinnerUntilSeconde().getSelection();
+		bool = view.getButtonDuringSeconde().getSelection();
+		if (bool)
+			conditions.add(new ElapsedTime(secondes * 1000));
+		ConfigurationManager.getInstance().setDuringSecondes(bool);
+		ConfigurationManager.getInstance().setNbSecondes(secondes);
 		
 		// during x generation
-		if (view.getButtonUntilGeneration().getSelection())
-			conditions.add(new GenerationCount(view.getSpinnerUntilGeneration().getSelection()));
+		int generations = view.getSpinnerUntilGeneration().getSelection();
+		bool = view.getButtonUntilGeneration().getSelection();
+		if (bool)
+			conditions.add(new GenerationCount(generations));
+		ConfigurationManager.getInstance().setUntilGenerations(bool);
+		ConfigurationManager.getInstance().setNbGenerations(generations);
 		
 		// during x stagnation
-		if (view.getButtonUntilStagnation().getSelection())
-			conditions.add(new Stagnation(view.getSpinnerUntilStagnation().getSelection(), true));
+		int stagnations = view.getSpinnerUntilStagnation().getSelection();
+		bool = view.getButtonUntilStagnation().getSelection();
+		if (bool)
+			conditions.add(new Stagnation(stagnations, true));
+		ConfigurationManager.getInstance().setUntilStagnations(bool);
+		ConfigurationManager.getInstance().setNbStagnations(stagnations);
 		
 		// les poids fitness
 		int sizeWeight = view.getSpinnerSizeWeight().getSelection();
@@ -218,6 +233,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 	private List<IChangePattern> getChangePatterns(String typeFile) throws Exception {
 
 		List<IChangePattern> changePatterns = new ArrayList<IChangePattern>();
+		// le stringBuilder va servir à enregistrer les préférences utilisateurs
+		StringBuilder sb = new StringBuilder();
 		
 		// pour chaque ligne du tableau
 		for (TableItem item : view.getTableMutationParameters().getItems()) {
@@ -226,19 +243,33 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// si oui, on instancie dynamiquement la classe
 				IChangePattern cPattern = ((IEnumChangePattern) item.getData("0")).newInstance(item.getText(1));
 				changePatterns.add(cPattern);
+				
+				sb.append("___");
+				sb.append(item.getData("0").toString());
+				sb.append("%");
+				sb.append(item.getText(1));
 			} else {
 				System.err.println("Carreful, the item data is not a IEnumChangePattern.");
 			}
 		}
+		
+		ConfigurationManager.getInstance().setChangePatternAttributes(sb.toString());
 		return changePatterns;
 	}
 
 	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType, 
 			AbstractStructuralConstraintFactory factory) throws Exception {
 
+		// ce stringBuilder va permettre d'enregistrer les préférences utilisateurs
+		StringBuilder sb = new StringBuilder();
+		
 		List<StructuralConstraintChecker> liste = new ArrayList<StructuralConstraintChecker>();
 		// pour chaque ligne du tableau
 		for (TableItem item : table.getItems()) {
+			
+			sb.append("___");
+			sb.append(item.getText(1));
+			
 			// on n'ajoute la condition que lorsqu'elle est cochée
 			if (item.getChecked()) {
 				
@@ -254,7 +285,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 				EQuantity quantity = EQuantity.getQuantityByString(item.getText(2));
 				
 				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à la volée
-				int number, weight;
+				int number = 1, weight = 1;
 				try {
 					number = Integer.parseInt(item.getText(3));
 					
@@ -267,8 +298,32 @@ public class SelectionStartExecution extends SelectionAdapter {
 				} catch(Exception e) {
 					System.err.println("NumberFormatException : " + e.getMessage());
 				}
+				
+				// pour les préférences utilisateurs
+				// 1 car la case est cochée
+				sb.append("%1%");
+				// le numéro suivant représente la sélection de la quantité
+				sb.append(quantity.getPosition());
+				sb.append("%");
+				// ensuite le nombre 
+				sb.append(number);
+				sb.append("%");
+				// puis enfin le poids
+				sb.append(weight);
+				
+			} else {
+				// les valeurs par défaut sont mises lorsque l'utilisateur n'a pas coché la case
+				sb.append("%0%3%1%1");
 			}
 		}
+		
+		// enregistrement des préférences utilisateur
+		if (constraintType.equals(ConstraintType.Element)) {
+			ConfigurationManager.getInstance().setElementsAttributes(sb.toString());
+		} else {
+			ConfigurationManager.getInstance().setWorkflowsAttributes(sb.toString());
+		}
+		
 		return liste;
 	}
 	

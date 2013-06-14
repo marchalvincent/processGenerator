@@ -141,7 +141,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 				System.err.println(e.getMessage());
 			}
 		}
-		System.out.println("match " + constraintsMatches + " sur " + totalConstraints);
+
 		return (constraintsMatches / totalConstraints);
 	}
 }

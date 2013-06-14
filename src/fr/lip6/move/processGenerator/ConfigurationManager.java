@@ -15,14 +15,25 @@ public class ConfigurationManager {
 	private final String NODES = "30";
 	private final String MARGIN = "10";
 	private final String TYPE_FILE = "0";
-	// TODO workflow & elements
+	
+	private final String WORKFLOWS = "";
+	private final String ELEMENTS = "";
+	
 	private final String POPULATION = "50";
 	private final String ELITISM = "5";
 	private final String SELECTION_STRATEGY = "1";
 	private final String MUTATION = "true";
-	// TODO change patterns
+	private final String CHANGE_PATTERN = "";
 	private final String CROSSOVER = "false";
-	// TODO termination condition
+
+	private final String SOLUTION_FOUND = "false";
+	private final String DURING_SECONDES = "false";
+	private final String NB_SECONDES = "60";
+	private final String UNTIL_GENERATIONS = "false";
+	private final String NB_GENERATIONS = "100";
+	private final String UNTIL_STAGNATIONS = "false";
+	private final String NB_STAGNATIONS = "100";
+	
 	private final String SIZE_W = "1";
 	private final String ELEMENT_W = "1";
 	private final String WORKFLOW_W = "1";
@@ -56,11 +67,25 @@ public class ConfigurationManager {
 			this.checkProperty("NODES", NODES);
 			this.checkProperty("MARGIN", MARGIN);
 			this.checkProperty("TYPE_FILE", TYPE_FILE);
+
+			this.checkProperty("WORKFLOWS", WORKFLOWS);
+			this.checkProperty("ELEMENTS", ELEMENTS);
+			
 			this.checkProperty("POPULATION", POPULATION);
 			this.checkProperty("ELITISM", ELITISM);
 			this.checkProperty("SELECTION_STRATEGY", SELECTION_STRATEGY);
 			this.checkProperty("MUTATION", MUTATION);
+			this.checkProperty("CHANGE_PATTERN", CHANGE_PATTERN);
 			this.checkProperty("CROSSOVER", CROSSOVER);
+			
+			this.checkProperty("SOLUTION_FOUND", SOLUTION_FOUND);
+			this.checkProperty("DURING_SECONDES", DURING_SECONDES);
+			this.checkProperty("NB_SECONDES", NB_SECONDES);
+			this.checkProperty("UNTIL_GENERATIONS", UNTIL_GENERATIONS);
+			this.checkProperty("NB_GENERATIONS", NB_GENERATIONS);
+			this.checkProperty("UNTIL_STAGNATIONS", UNTIL_STAGNATIONS);
+			this.checkProperty("NB_STAGNATIONS", NB_STAGNATIONS);
+
 			this.checkProperty("SIZE_W", SIZE_W);
 			this.checkProperty("ELEMENT_W", ELEMENT_W);
 			this.checkProperty("WORKFLOW_W", WORKFLOW_W);
@@ -171,16 +196,16 @@ public class ConfigurationManager {
 		return getBoolean("MUTATION", true);
 	}
 
-	public void setCheckMutation(String value) {
-		properties.put("MUTATION", value);
+	public void setCheckMutation(boolean bool) {
+		properties.put("MUTATION", bool + "");
 	}
 
 	public boolean isCheckCrossover() {
 		return getBoolean("CROSSOVER", false);
 	}
 
-	public void setCheckCrossover(String value) {
-		properties.put("CROSSOVER", value);
+	public void setCheckCrossover(boolean bool) {
+		properties.put("CROSSOVER", bool + "");
 	}
 
 	public int getSizeWeight() {
@@ -214,5 +239,84 @@ public class ConfigurationManager {
 	public void setManualOCLWeight(String value) {
 		properties.put("MANUAL_OCL_W", value);
 	}
+	
+	public String getWorkflowsAttributes() {
+		return properties.getProperty("WORKFLOWS");
+	}
 
+	public void setWorkflowsAttributes(String value) {
+		properties.put("WORKFLOWS", value);
+	}
+	
+	public String getElementsAttributes() {
+		return properties.getProperty("ELEMENTS");
+	}
+
+	public void setElementsAttributes(String value) {
+		properties.put("ELEMENTS", value);
+	}
+	
+	public String getChangePatternAttributes() {
+		return properties.getProperty("CHANGE_PATTERN");
+	}
+
+	public void setChangePatternAttributes(String value) {
+		properties.put("CHANGE_PATTERN", value);
+	}
+	
+	public boolean isSolutionFound() {
+		return getBoolean("SOLUTION_FOUND", false);
+	}
+	
+	public void setSolutionFound(boolean bool) {
+		properties.put("SOLUTION_FOUND", bool + "");
+	}
+	
+	public boolean isDuringSecondes() {
+		return getBoolean("DURING_SECONDES", false);
+	}
+	
+	public void setDuringSecondes(boolean bool) {
+		properties.put("DURING_SECONDES", bool + "");
+	}
+	
+	public boolean isUntilGenerations() {
+		return getBoolean("UNTIL_GENERATIONS", false);
+	}
+	
+	public void setUntilGenerations(boolean bool) {
+		properties.put("UNTIL_GENERATIONS", bool + "");
+	}
+	
+	public boolean isUntilStagnations() {
+		return getBoolean("UNTIL_STAGNATIONS", false);
+	}
+	
+	public void setUntilStagnations(boolean bool) {
+		properties.put("UNTIL_STAGNATIONS", bool + "");
+	}
+	
+	public int getNbSecondes() {
+		return getInteger("NB_SECONDES", 60);
+	}
+	
+	public void setNbSecondes(int nb) {
+		properties.put("NB_SECONDES", nb + "");
+	}
+	
+	public int getNbGenerations() {
+		return getInteger("NB_GENERATIONS", 100);
+	}
+	
+	public void setNbGenerations(int nb) {
+		properties.put("NB_GENERATIONS", nb + "");
+	}
+	
+	public int getNbStagnations() {
+		return getInteger("NB_STAGNATIONS", 100);
+	}
+	
+	public void setNbStagnations(int nb) {
+		properties.put("NB_STAGNATIONS", nb + "");
+	}
 }

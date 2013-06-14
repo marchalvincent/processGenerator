@@ -2,11 +2,11 @@ package fr.lip6.move.processGenerator;
 
 
 public enum EQuantity {
-	MORE,
-	LESS,
-	EQUAL,
-	MORE_OR_EQUAL,
-	LESS_OR_EQUAL;
+	MORE(0),
+	LESS(1),
+	EQUAL(2),
+	MORE_OR_EQUAL(3),
+	LESS_OR_EQUAL(4);
 	
 	public static EQuantity getQuantityByString(String name) {
 		
@@ -24,5 +24,18 @@ public enum EQuantity {
 			default:
 				return null;
 		}
+	}
+	
+	/**
+	 * Cette variable va servir à stocker les informations utilisateurs dans un fichier de configuration.
+	 */
+	private int position;
+	
+	private EQuantity(int position) {
+		this.position = position;
+	}
+	
+	public int getPosition() {
+		return position;
 	}
 }

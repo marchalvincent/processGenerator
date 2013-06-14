@@ -235,7 +235,7 @@ public class ChangePatternHelper {
 			} // fin de : si la parallelGateway divergente a plusieurs sorties
 			
 			// si la parallelGateway n'a qu'une seule sortie, on peut simplifier
-			else if (parallelGateway.getOutgoing().size() == 1) {
+			if (parallelGateway.getOutgoing().size() == 1) {
 				
 				// petite vérification
 				if (parallelConverging == null) 
@@ -320,7 +320,7 @@ public class ChangePatternHelper {
 			} // fin de : si on a plusieurs arcs partant de l'exclusive gateway diverging
 			
 			// si la Gateway n'a qu'une seule sortie, on peut simplifier
-			else if (gatewayDiverging.getOutgoing().size() == 1) {
+			if (gatewayDiverging.getOutgoing().size() == 1) {
 				
 				// petites vérifications
 				if (gatewayConverging.getIncoming().size() != 1) 
