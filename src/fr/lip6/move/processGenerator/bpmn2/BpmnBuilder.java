@@ -259,10 +259,10 @@ public class BpmnBuilder {
 	
 	/**
 	 * Construit un process avec : 
-	 *  init -> multiChoice -> (b & c) -> simpleMerge -> final
+	 *  init -> multiChoice -> (b & c) -> multiMerge -> final
 	 * @return
 	 */
-	public static BpmnProcess createExampleWithMultiChoiceSimpleMerge() {
+	public static BpmnProcess createExampleWithMultiChoiceMultiMerge() {
 
 		BpmnProcess process = new BpmnProcess();
 		

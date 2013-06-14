@@ -105,7 +105,7 @@ public class SingleEntrySingleExitManager {
 	 * @param gatewayDiverging une {@link Gateway} divergente.
 	 * @return la {@link Gateway} convergente correspondante.
 	 */
-	public FlowNode getEndOfGateway(Gateway gatewayDiverging) {
+	public Gateway getEndOfGateway(Gateway gatewayDiverging) {
 
 		if (gatewayDiverging.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
 			System.err.println("Error the gateway parameters is converging...");
@@ -146,7 +146,9 @@ public class SingleEntrySingleExitManager {
 		}
 		
 		// on peut enfin retourner la gateway fermante
-		return nextNode;
+		if (nextNode instanceof Gateway)
+			return (Gateway) nextNode;
+		return null;
 	}
 	
 	/**

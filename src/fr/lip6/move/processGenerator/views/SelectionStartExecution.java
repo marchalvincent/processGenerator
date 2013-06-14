@@ -106,7 +106,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		StructuralConstraintChecker manualOclChecker = null;
 		if (!manualOcl.isEmpty()) {
 			contrainte = factory.newManualOclConstraint(manualOcl);
-			manualOclChecker = new StructuralConstraintChecker(contrainte, EQuantity.MORE_OR_EQUAL, 1);
+			manualOclChecker = new StructuralConstraintChecker(contrainte);
 		}
 		
 		// ONGLET ALGO GENETIQUE
@@ -254,12 +254,15 @@ public class SelectionStartExecution extends SelectionAdapter {
 				EQuantity quantity = EQuantity.getQuantityByString(item.getText(2));
 				
 				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à la volée
-				int number;
+				int number, weight;
 				try {
 					number = Integer.parseInt(item.getText(3));
 					
+					// ainsi que le poids
+					weight = Integer.parseInt(item.getText(4));
+					
 					// on construit le checker puis on l'ajoute à la liste
-					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number);
+					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
 					liste.add(checker);
 				} catch(Exception e) {
 					System.err.println("NumberFormatException : " + e.getMessage());

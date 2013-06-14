@@ -122,7 +122,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 	 * @param candidate {@link BpmnProcess}. Le candidat à évaluer.
 	 * @param population {@link List} de {@link BpmnProcess}. Le reste de la population.
 	 * @param constraints la liste des {@link StructuralConstraintChecker} à valider sur le candidat.
-	 * @return double la valeur defitness correspondant aux contraintes vérifiées sur le candidat.s
+	 * @return double la valeur defitness correspondant aux contraintes vérifiées sur le candidat. La valeur est entre 0 et 1.
 	 */
 	public double getconstraintFitness(BpmnProcess candidate, List<? extends BpmnProcess> population,
 			List<StructuralConstraintChecker> constraints) {
@@ -133,14 +133,15 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 		double totalConstraints = 0;
 		double constraintsMatches = 0;
 		for (StructuralConstraintChecker constr : constraints) {
-			totalConstraints++;
+			totalConstraints += constr.getWeight();
 			try {
 				if (constr.check(candidate.getProcess()))
-					constraintsMatches++;
+					constraintsMatches += constr.getWeight();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 			}
 		}
+		System.out.println("match " + constraintsMatches + " sur " + totalConstraints);
 		return (constraintsMatches / totalConstraints);
 	}
 }

@@ -2,6 +2,7 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
 import java.util.Random;
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
@@ -27,24 +28,24 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 
 		// on récupère toutes le nombre de séquence et le nombre d'exclusive gateway
 		int nbSequence = ChangePatternHelper.getInstance().countSequenceFlow(process);
-		int nbExclusive = ChangePatternHelper.getInstance().countExclusiveGateway(process);
-		if (nbExclusive % 2 != 0) {
+		int nbConditional = ChangePatternHelper.getInstance().countConditionalGateway(process);
+		if (nbConditional % 2 != 0) {
 			System.err.println("Error, the number of ExclusiveGateway is odd.");
 			return process;
 		}
 		
 		// on divise par deux le nombre d'ExclusiveGateway car il y a une ouvrante et une fermante.
-		nbExclusive = nbExclusive / 2;
+		nbConditional = nbConditional / 2;
 		
-		if ((nbSequence + nbExclusive) == 0)
+		if ((nbSequence + nbConditional) == 0)
 			return process;
 		
 		// on fait un random équitable pour savoir si on applique la condition sur un arc ou sur une ExclusiveGateway deja existante
-		int[] tableau = new int[nbSequence + nbExclusive];
+		int[] tableau = new int[nbSequence + nbConditional];
 		for (int i = 0; i < nbSequence; i++) {
 			tableau[i] = 0;
 		}
-		for (int i = nbSequence; i < nbSequence + nbExclusive; i++) {
+		for (int i = nbSequence; i < nbSequence + nbConditional; i++) {
 			tableau[i] = 1;
 		}
 
@@ -53,23 +54,23 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 		if (tirage == 0) {
 			return applyOnSequenceFlow(process, rng);
 		} else {
-			return applyOnExclusive(process, rng);
+			return applyOnConditional(process, rng);
 		}
 	}
 	
 	/**
-	 * Applique la modification génétique d'une insertion conditionelle sur une ExclusiveGateway déjà existente. 
-	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à l'ExclusiveGateway tirée au sort.
+	 * Applique la modification génétique d'une insertion conditionelle sur une ExclusiveGateway ou InclusiveGateway déjà existente. 
+	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à la Gateway tirée au sort.
 	 * @param process le {@link BpmnProcess} à modifier.
 	 * @param rng une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnExclusive(BpmnProcess process, Random rng) {
+	private BpmnProcess applyOnConditional(BpmnProcess process, Random rng) {
 
-		// on récupère une ExclusiveGateway diverging au hasard
-		ExclusiveGateway exclusiveDiverging = null;
+		// on récupère une Gateway diverging au hasard
+		Gateway gatewayDiverging = null;
 		try {
-			exclusiveDiverging = ChangePatternHelper.getInstance().getRandomExclusiveGatewayDiverging(process, rng);
+			gatewayDiverging = ChangePatternHelper.getInstance().getRandomConditionalGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;
@@ -77,14 +78,14 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 		
 		// on récupère l'exclusive converging
 		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
-		ExclusiveGateway exclusiveConverging = seseManager.getEndOfExclusiveGateway(exclusiveDiverging);
+		Gateway gatewayConverging = seseManager.getEndOfGateway(gatewayDiverging);
 		
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();
 		
 		// et enfin les nouveaux arcs
-		process.buildSequenceFlow(exclusiveDiverging, newTask);
-		process.buildSequenceFlow(newTask, exclusiveConverging);
+		process.buildSequenceFlow(gatewayDiverging, newTask);
+		process.buildSequenceFlow(newTask, gatewayConverging);
 		
 		return process;
 	}
@@ -107,19 +108,32 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 			return process;
 		}
 
-		// les nouveaux noeuds
-		ExclusiveGateway xorSplit = process.buildExclusiveGatewayDiverging();
-		ExclusiveGateway xorJoin = process.buildExclusiveGatewayConverging();
+		// les nouveaux noeuds on tire au hasard si on met exclusive ou inclusive
+		int rand = rng.nextInt(3);
+		Gateway choice, merge;
+		if (rand == 0) {
+			// le cas WP4 & WP5 - exclusiveChoice (XOR) - simpleMerge (XOR)
+			choice = process.buildExclusiveGatewayDiverging();
+			merge = process.buildExclusiveGatewayConverging();
+		} else if (rand == 1) {
+			// le cas WP6 & WP8 - multiChoice (OR) - multiMerge (XOR)
+			choice = process.buildInclusiveGatewayDiverging();
+			merge = process.buildExclusiveGatewayConverging();
+		} else {
+			// le cas WP7 - Structured Synchronizing Merge (multiChoice (OR) - synchronizingMerge (OR))
+			choice = process.buildInclusiveGatewayDiverging();
+			merge = process.buildInclusiveGatewayConverging();
+		}
 		Task task = process.buildTask();
 		
 		// les nouveaux arcs
-		process.buildSequenceFlow(xorSplit, task);
-		process.buildSequenceFlow(task, xorJoin);
-		process.buildSequenceFlow(xorSplit, xorJoin);
-		process.buildSequenceFlow(xorJoin, ancienArc.getTargetRef());
+		process.buildSequenceFlow(choice, task);
+		process.buildSequenceFlow(task, merge);
+		process.buildSequenceFlow(choice, merge);
+		process.buildSequenceFlow(merge, ancienArc.getTargetRef());
 		
 		// l'ancien arc a maintenant une nouvelle destination
-		ancienArc.setTargetRef(xorSplit);
+		ancienArc.setTargetRef(choice);
 		
 		return process;
 	}

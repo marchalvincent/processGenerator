@@ -57,7 +57,7 @@ public class StructuredSynchronizingMergeTest {
 	public void test3() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithMultiChoiceSimpleMerge();
+		process = BpmnBuilder.createExampleWithMultiChoiceMultiMerge();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 1);

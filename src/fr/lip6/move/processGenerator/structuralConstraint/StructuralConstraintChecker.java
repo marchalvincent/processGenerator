@@ -16,12 +16,34 @@ public class StructuralConstraintChecker {
 	private IStructuralConstraint constraint;
 	private EQuantity quantity;
 	private int number;
+	private int weight;
 	
+	/**
+	 * Construit la {@link StructuralConstraintChecker} avec les valeurs par défaut suivantes :
+	 * <li>quantité : "MORE_OR_EQUAL"</li>
+	 * <li>nombre : 1</li>
+	 * <li>poids : 1</li>
+	 * @param constraint
+	 */
+	public StructuralConstraintChecker(IStructuralConstraint constraint) {
+		this(constraint, EQuantity.MORE_OR_EQUAL, 1);
+	}
+	
+	/**
+	 * Construit la {@link StructuralConstraintChecker} avec la valeur par défaut suivante :
+	 * <li>poids : 1</li>
+	 * @param constraint
+	 */
 	public StructuralConstraintChecker(IStructuralConstraint constraint, EQuantity quantity, int number) {
+		this(constraint, quantity, number, 1);
+	}
+	
+	public StructuralConstraintChecker(IStructuralConstraint constraint, EQuantity quantity, int number, int weight) {
 		super();
 		this.constraint = constraint;
 		this.quantity = quantity;
 		this.number = number;
+		this.weight = weight;
 	}
 	
 	public boolean check(EObject process) throws Exception {
@@ -49,9 +71,12 @@ public class StructuralConstraintChecker {
 		}
 	}
 	
+	public int getWeight() {
+		return weight;
+	}
+	
 	@Override
 	public String toString() {
-
 		return "StructuralConstraintChecker [constraint=" + constraint + ", quantity=" + quantity
 				+ ", number=" + number + "]";
 	}

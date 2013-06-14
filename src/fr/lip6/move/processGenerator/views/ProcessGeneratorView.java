@@ -257,6 +257,10 @@ public class ProcessGeneratorView extends ViewPart {
 		TableColumn tableColumn_8 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_8.setWidth(100);
 		tableColumn_8.setText("Number");
+		
+		TableColumn tblclmnWeight = new TableColumn(tableElements, SWT.NONE);
+		tblclmnWeight.setWidth(50);
+		tblclmnWeight.setText("Weight");
 
 		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2));
@@ -284,7 +288,7 @@ public class ProcessGeneratorView extends ViewPart {
 		tableColumn_1_checkbox.setWidth(28);
 
 		TableColumn tableColumnName = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumnName.setWidth(148);
+		tableColumnName.setWidth(170);
 		tableColumnName.setText("Workflow name");
 
 		TableColumn tableColumnQuantity = new TableColumn(tableWorkflow, SWT.NONE);
@@ -294,6 +298,10 @@ public class ProcessGeneratorView extends ViewPart {
 		TableColumn tblclmnNumber = new TableColumn(tableWorkflow, SWT.NONE);
 		tblclmnNumber.setWidth(100);
 		tblclmnNumber.setText("Number");
+		
+		TableColumn tblclmnWeight_1 = new TableColumn(tableWorkflow, SWT.NONE);
+		tblclmnWeight_1.setWidth(50);
+		tblclmnWeight_1.setText("Weight");
 
 		Section sctnOclConstraints = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnOclConstraints.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -446,7 +454,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(tableMutationParameters);
 
 		TableColumn tableColumnChangePatternName = new TableColumn(tableMutationParameters, SWT.NONE);
-		tableColumnChangePatternName.setWidth(100);
+		tableColumnChangePatternName.setWidth(200);
 		tableColumnChangePatternName.setText("Change pattern");
 
 		TableColumn tableColumnProbability = new TableColumn(tableMutationParameters, SWT.NONE);
@@ -525,7 +533,7 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnCustomFitness.marginWidth = 0;
 		sctnCustomFitness.marginHeight = 0;
 		toolkit.paintBordersFor(sctnCustomFitness);
-		sctnCustomFitness.setText("Custom fitness function");
+		sctnCustomFitness.setText("Custom fitness function (globals weights)");
 		
 		Composite composite_4 = new Composite(sctnCustomFitness, SWT.NONE);
 		toolkit.adapt(composite_4);
@@ -689,6 +697,16 @@ public class ProcessGeneratorView extends ViewPart {
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
 			text.addModifyListener(new ModifyTextInTable(lignes[i], text, 3));
 			lignes[i].setText(3, text.getText());
+			
+			// emplacement 4 : le poids associé
+			editor = new TableEditor(table);
+			text = new Text(table, SWT.NONE);
+			text.setText("1");
+			editor.grabHorizontal = true;
+			editor.setEditor(text, lignes[i], 4);
+			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
+			text.addModifyListener(new ModifyTextInTable(lignes[i], text, 4));
+			lignes[i].setText(4, text.getText());
 		}
 	}
 

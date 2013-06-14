@@ -30,25 +30,25 @@ public class ChangePatternTest {
 		rng = null;
 	}
 
-	public void test(IBpmnChangePattern changePattern) throws IOException {
+	private void test(IBpmnChangePattern changePattern) throws IOException {
 
 		BpmnProcess process = BpmnBuilder.initialFinal();
-		changePattern.apply(process, rng);
-		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\test.bpmn");
-		changePattern.apply(process, rng);
-		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\test2.bpmn");
-		changePattern.apply(process, rng);
-		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\test3.bpmn");
+		process = changePattern.apply(process, rng);
+		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\test.bpmn");
+		process = changePattern.apply(process, rng);
+		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\test2.bpmn");
+		process = changePattern.apply(process, rng);
+		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\test3.bpmn");
 		assertTrue(true);
 	}
 	
 	@Test
 	public void test0() throws IOException {
 //		test(new BpmnSerialInsert());
-//		test(new BpmnConditionalInsert());
+		test(new BpmnConditionalInsert());
 	}
 	
-	@Test
+//	@Test
 	public void test1() throws IOException {
 //		IBpmnChangePattern parallel = new BpmnParallelInsert();
 //		IBpmnChangePattern serial = new BpmnSerialInsert();
@@ -62,7 +62,7 @@ public class ChangePatternTest {
 //		assertTrue(true);
 	}
 
-	@Test
+//	@Test
 	public void test2() throws Exception {
 		
 		List<IChangePattern> listeChangePattern = new ArrayList<IChangePattern>();
