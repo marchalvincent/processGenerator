@@ -1,9 +1,6 @@
 package fr.lip6.move.processGenerator.bpmn2;
 
 import org.eclipse.bpmn2.EndEvent;
-import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.InclusiveGateway;
-import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 
@@ -85,14 +82,16 @@ public class BpmnBuilder {
 		// les noeuds
 		StartEvent start = process.buildStartEvent();
 		Task a = process.buildTask();
-		ParallelGateway decision = process.buildParallelGatewayDiverging();
+		MyParallelGateway decision = process.buildParallelGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
-		ParallelGateway merge = process.buildParallelGatewayConverging();
+		MyParallelGateway merge = process.buildParallelGatewayConverging();
 		Task d = process.buildTask();
 		Task e = process.buildTask();
 		Task f = process.buildTask();
 		EndEvent end = process.buildEndEvent();
+
+		process.linkGateways(decision, merge);
 
 		// les arcs
 		process.buildSequenceFlow(start, a);
@@ -120,11 +119,13 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		ParallelGateway parallel = process.buildParallelGatewayDiverging();
+		MyParallelGateway parallel = process.buildParallelGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
-		ParallelGateway join = process.buildParallelGatewayConverging();
+		MyParallelGateway join = process.buildParallelGatewayConverging();
 		EndEvent end = process.buildEndEvent();
+
+		process.linkGateways(parallel, join);
 
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, b);
@@ -142,11 +143,13 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		ParallelGateway parallel = process.buildParallelGatewayDiverging();
+		MyParallelGateway parallel = process.buildParallelGatewayDiverging();
 		Task c = process.buildTask();
-		ParallelGateway join = process.buildParallelGatewayConverging();
+		MyParallelGateway join = process.buildParallelGatewayConverging();
 		EndEvent end = process.buildEndEvent();
 
+		process.linkGateways(parallel, join);
+		
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, c);
 		process.buildSequenceFlow(parallel, join);
@@ -162,10 +165,12 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		ExclusiveGateway parallel = process.buildExclusiveGatewayDiverging();
+		MyExclusiveGateway parallel = process.buildExclusiveGatewayDiverging();
 		Task c = process.buildTask();
-		ExclusiveGateway join = process.buildExclusiveGatewayConverging();
+		MyExclusiveGateway join = process.buildExclusiveGatewayConverging();
 		EndEvent end = process.buildEndEvent();
+		
+		process.linkGateways(parallel, join);
 
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, c);
@@ -182,14 +187,17 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		ParallelGateway parallel = process.buildParallelGatewayDiverging();
+		MyParallelGateway parallel = process.buildParallelGatewayDiverging();
 		Task c = process.buildTask();
-		ParallelGateway join = process.buildParallelGatewayConverging();
-		ExclusiveGateway exclusive = process.buildExclusiveGatewayDiverging();
+		MyParallelGateway join = process.buildParallelGatewayConverging();
+		MyExclusiveGateway exclusive = process.buildExclusiveGatewayDiverging();
 		Task d = process.buildTask();
-		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		MyExclusiveGateway merge = process.buildExclusiveGatewayConverging();
 		EndEvent end = process.buildEndEvent();
 
+		process.linkGateways(parallel, join);
+		process.linkGateways(exclusive, merge);
+		
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, c);
 		process.buildSequenceFlow(parallel, exclusive);
@@ -214,11 +222,13 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		ExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
+		MyExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
-		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		MyExclusiveGateway merge = process.buildExclusiveGatewayConverging();
 		EndEvent end = process.buildEndEvent();
+		
+		process.linkGateways(choice, merge);
 
 		process.buildSequenceFlow(start, choice);
 		process.buildSequenceFlow(choice, b);
@@ -241,11 +251,13 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		InclusiveGateway choice = process.buildInclusiveGatewayDiverging();
+		MyInclusiveGateway choice = process.buildInclusiveGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
-		InclusiveGateway merge = process.buildInclusiveGatewayConverging();
+		MyInclusiveGateway merge = process.buildInclusiveGatewayConverging();
 		EndEvent end = process.buildEndEvent();
+		
+		process.linkGateways(choice, merge);
 
 		process.buildSequenceFlow(start, choice);
 		process.buildSequenceFlow(choice, b);
@@ -268,11 +280,13 @@ public class BpmnBuilder {
 		
 		// init du process
 		StartEvent start = process.buildStartEvent();
-		InclusiveGateway choice = process.buildInclusiveGatewayDiverging();
+		MyInclusiveGateway choice = process.buildInclusiveGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
-		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		MyExclusiveGateway merge = process.buildExclusiveGatewayConverging();
 		EndEvent end = process.buildEndEvent();
+		
+		process.linkGateways(choice, merge);
 
 		process.buildSequenceFlow(start, choice);
 		process.buildSequenceFlow(choice, b);
@@ -300,15 +314,17 @@ public class BpmnBuilder {
 		// init du process
 		StartEvent start = process.buildStartEvent();
 		Task a = process.buildTask();
-		ExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
+		MyExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
 		Task d = process.buildTask();
 		Task e = process.buildTask();
-		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		MyExclusiveGateway merge = process.buildExclusiveGatewayConverging();
 		Task f = process.buildTask();
 		Task g = process.buildTask();
 		EndEvent end = process.buildEndEvent();
+		
+		process.linkGateways(choice, merge);
 
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, choice);

@@ -8,6 +8,7 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.MyParallelGateway;
 import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
@@ -68,7 +69,7 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 	private BpmnProcess applyOnParallel(BpmnProcess process, Random rng) {
 
 		// on récupère une ParallelGateway diverging au hasard
-		ParallelGateway parallelDiverging = null;
+		MyParallelGateway parallelDiverging = null;
 		try {
 			parallelDiverging = ChangePatternHelper.getInstance().getRandomParallelGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
@@ -109,9 +110,11 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		}
 		
 		// on créé les nouveaux noeuds
-		ParallelGateway fork = process.buildParallelGatewayDiverging();
-		ParallelGateway join = process.buildParallelGatewayConverging();
+		MyParallelGateway fork = process.buildParallelGatewayDiverging();
+		MyParallelGateway join = process.buildParallelGatewayConverging();
 		Task newTask = process.buildTask();
+
+		process.linkGateways(fork, join);
 		
 		// on récupère les arc arrivant et partant de cette activity
 		List<SequenceFlow> sequencesIn = activity.getIncoming();

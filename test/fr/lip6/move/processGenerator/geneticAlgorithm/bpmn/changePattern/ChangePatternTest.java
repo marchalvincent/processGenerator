@@ -32,7 +32,8 @@ public class ChangePatternTest {
 
 	private void test(IBpmnChangePattern changePattern) throws IOException {
 
-		BpmnProcess process = BpmnBuilder.initialFinal();
+		BpmnProcess process = BpmnBuilder.createExampleWithParallel();
+		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\vincent.bpmn");
 		process = changePattern.apply(process, rng);
 		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\test.bpmn");
 		process = changePattern.apply(process, rng);
@@ -45,7 +46,8 @@ public class ChangePatternTest {
 	@Test
 	public void test0() throws IOException {
 //		test(new BpmnSerialInsert());
-		test(new BpmnConditionalInsert());
+//		test(new BpmnConditionalInsert());
+		test(new BpmnParallelInsert());
 	}
 	
 //	@Test

@@ -1,12 +1,11 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
 import java.util.Random;
-import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.MyGateway;
 import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
@@ -59,7 +58,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 	}
 	
 	/**
-	 * Applique la modification génétique d'une insertion conditionelle sur une ExclusiveGateway ou InclusiveGateway déjà existente. 
+	 * Applique la modification génétique d'une insertion conditionelle sur une MyExclusiveGateway ou MyInclusiveGateway déjà existente. 
 	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à la Gateway tirée au sort.
 	 * @param process le {@link BpmnProcess} à modifier.
 	 * @param rng une source de {@link Random}.
@@ -68,7 +67,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 	private BpmnProcess applyOnConditional(BpmnProcess process, Random rng) {
 
 		// on récupère une Gateway diverging au hasard
-		Gateway gatewayDiverging = null;
+		MyGateway gatewayDiverging = null;
 		try {
 			gatewayDiverging = ChangePatternHelper.getInstance().getRandomConditionalGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
@@ -78,7 +77,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 		
 		// on récupère l'exclusive converging
 		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
-		Gateway gatewayConverging = seseManager.getEndOfGateway(gatewayDiverging);
+		MyGateway gatewayConverging = seseManager.getEndOfGateway(gatewayDiverging);
 		
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();
@@ -92,7 +91,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 
 	/**
 	 * Applique la modification génétique d'une insertion conditionelle autour d'un arc ({@link SequenceFlow}. Cette modification va entrainer
-	 * une création de deux {@link ExclusiveGateway} qui seront fixées avant et après cet arc.
+	 * une création de deux "conditional gateway" qui seront fixées avant et après cet arc.
 	 * @param process le {@link BpmnProcess} à modifier.
 	 * @param rng une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
@@ -110,7 +109,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 
 		// les nouveaux noeuds on tire au hasard si on met exclusive ou inclusive
 		int rand = rng.nextInt(3);
-		Gateway choice, merge;
+		MyGateway choice, merge;
 		if (rand == 0) {
 			// le cas WP4 & WP5 - exclusiveChoice (XOR) - simpleMerge (XOR)
 			choice = process.buildExclusiveGatewayDiverging();
@@ -125,6 +124,8 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 			merge = process.buildInclusiveGatewayConverging();
 		}
 		Task task = process.buildTask();
+		
+		process.linkGateways(choice, merge);
 		
 		// les nouveaux arcs
 		process.buildSequenceFlow(choice, task);

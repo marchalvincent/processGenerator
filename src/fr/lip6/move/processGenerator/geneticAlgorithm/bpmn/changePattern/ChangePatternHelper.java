@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.eclipse.bpmn2.Activity;
-import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
-import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
-import org.eclipse.bpmn2.InclusiveGateway;
-import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.MyExclusiveGateway;
+import fr.lip6.move.processGenerator.bpmn2.MyGateway;
+import fr.lip6.move.processGenerator.bpmn2.MyInclusiveGateway;
+import fr.lip6.move.processGenerator.bpmn2.MyParallelGateway;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 
 /**
@@ -77,19 +77,19 @@ public class ChangePatternHelper {
 	}
 	
 	/**
-	 * Renvoie une {@link ParallelGateway} diverging tirée au hasard parmis celles du process passé en argument.
+	 * Renvoie une {@link MyParallelGateway} diverging tirée au hasard parmis celles du process passé en argument.
 	 * @param process le {@link BpmnProcess} à parcourir.
 	 * @param rng le {@link Random} utilisé.
-	 * @return la {@link ParallelGateway} aléatoire.
+	 * @return la {@link MyParallelGateway} aléatoire.
 	 * @throws GeneticException si le process ne contient aucune ParallelGateway.
 	 */
-	public ParallelGateway getRandomParallelGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
+	public MyParallelGateway getRandomParallelGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
 
 		// on récupère la liste des ParallelGateway
-		List<ParallelGateway> liste = new ArrayList<ParallelGateway>();
+		List<MyParallelGateway> liste = new ArrayList<MyParallelGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
-			if (elem instanceof ParallelGateway && ((ParallelGateway) elem).getGatewayDirection().equals(GatewayDirection.DIVERGING))
-				liste.add((ParallelGateway) elem);
+			if (elem instanceof MyParallelGateway && ((MyParallelGateway) elem).getGatewayDirection().equals(GatewayDirection.DIVERGING))
+				liste.add((MyParallelGateway) elem);
 		}
 
 		// s'il n'y a aucune ParallelGateway...
@@ -101,20 +101,20 @@ public class ChangePatternHelper {
 	}
 	
 	/**
-	 * Renvoie une {@link ExclusiveGateway} ou une {@link InclusiveGateway} diverging tirée au hasard parmis celles du process passé en argument.
+	 * Renvoie une {@link MyExclusiveGateway} ou une {@link MyInclusiveGateway} diverging tirée au hasard parmis celles du process passé en argument.
 	 * @param process le {@link BpmnProcess} à parcourir.
 	 * @param rng le {@link Random} utilisé.
-	 * @return la {@link Gateway} aléatoire.
+	 * @return la {@link MyGateway} aléatoire.
 	 * @throws GeneticException si le process ne contient ni d'ExclusiveGateway, ni d'InclusiveGateway.
 	 */
-	public Gateway getRandomConditionalGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
+	public MyGateway getRandomConditionalGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
 
 		// on récupère la liste des Gateway de condition
-		List<Gateway> liste = new ArrayList<Gateway>();
+		List<MyGateway> liste = new ArrayList<MyGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
-			if (elem instanceof ExclusiveGateway || elem instanceof InclusiveGateway)
-				if (((Gateway) elem).getGatewayDirection().equals(GatewayDirection.DIVERGING))
-					liste.add((Gateway) elem);
+			if (elem instanceof MyExclusiveGateway || elem instanceof MyInclusiveGateway)
+				if (((MyGateway) elem).getGatewayDirection().equals(GatewayDirection.DIVERGING))
+					liste.add((MyGateway) elem);
 		}
 
 		// s'il n'y a aucune Gateway...
@@ -163,28 +163,28 @@ public class ChangePatternHelper {
 	}
 	
 	/**
-	 * Renvoie le nombre de {@link ParallelGateway} contenues dans le process passé en paramètre.
+	 * Renvoie le nombre de {@link MyParallelGateway} contenues dans le process passé en paramètre.
 	 * @param process le {@link Bpmnprocess}.
 	 * @return int.
 	 */
 	public int countParallelGateway(BpmnProcess process) {
 		int count = 0;
 		for (FlowElement element : process.getProcess().getFlowElements()) {
-			if (element instanceof ParallelGateway)
+			if (element instanceof MyParallelGateway)
 				count ++;
 		}
 		return count;
 	}
 	
 	/**
-	 * Renvoie le nombre d'{@link ExclusiveGateway} contenues dans le process passé en paramètre.
+	 * Renvoie le nombre de Conditional Gateways contenues dans le process passé en paramètre.
 	 * @param process le {@link Bpmnprocess}.
 	 * @return int.
 	 */
 	public int countConditionalGateway(BpmnProcess process) {
 		int count = 0;
 		for (FlowElement element : process.getProcess().getFlowElements()) {
-			if (element instanceof ExclusiveGateway || element instanceof InclusiveGateway)
+			if (element instanceof MyExclusiveGateway || element instanceof MyInclusiveGateway)
 				count ++;
 		}
 		return count;
@@ -197,8 +197,8 @@ public class ChangePatternHelper {
 	private void removeUselessParallelGateway(BpmnProcess process) {
 
 		// on récupère la liste des ParallelGateway divergentes
-		ParallelGateway parallel = null, parallelConverging;
-		List<ParallelGateway> listeDiverging = new ArrayList<ParallelGateway>();
+		MyParallelGateway parallel = null, parallelConverging;
+		List<MyParallelGateway> listeDiverging = new ArrayList<MyParallelGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			parallel = this.isParallelGateway(elem, GatewayDirection.DIVERGING);
 			if (parallel != null)
@@ -208,7 +208,7 @@ public class ChangePatternHelper {
 		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
 
 		// pour chaque ParallelGateway divergentes
-		for (ParallelGateway parallelGateway : listeDiverging) {
+		for (MyParallelGateway parallelGateway : listeDiverging) {
 
 			// on cherche la parallelGateway converging qui referme le chemin
 			parallelConverging = seseManager.getEndOfParallelGateway(parallelGateway);
@@ -257,18 +257,15 @@ public class ChangePatternHelper {
 	}
 
 	/**
-	 * Renvoie un {@link ParallelGateway} si le FlowElement est une instance de ParallelGateway avec 
+	 * Renvoie un {@link MyParallelGateway} si le FlowElement est une instance de MyParallelGateway avec 
 	 * la direction passée en paramètre. Renvoie null sinon.
 	 * @param elem le {@link FlowElement} l'élément à tester.
 	 * @param direction la {@link GatewayDirection}.
-	 * @return {@link ParallelGateway} ou null.
+	 * @return {@link MyParallelGateway} ou null.
 	 */
-	private ParallelGateway isParallelGateway(FlowElement elem, GatewayDirection direction) {
-		if (elem instanceof ParallelGateway) {
-			if (((ParallelGateway) elem).getGatewayDirection().equals(direction)) {
-				return (ParallelGateway) elem;
-			}
-		}
+	private MyParallelGateway isParallelGateway(FlowElement elem, GatewayDirection direction) {
+		if (elem instanceof MyParallelGateway && ((MyParallelGateway) elem).getGatewayDirection().equals(direction))
+				return (MyParallelGateway) elem;
 		return null;
 	}
 
@@ -279,8 +276,8 @@ public class ChangePatternHelper {
 	private void removeUselessConditionalGateway(BpmnProcess process) {
 
 		// on récupère la liste des ExclusiveGateway divergentes
-		Gateway conditionalDiverging = null, gatewayConverging = null;
-		List<Gateway> listeDivergente = new ArrayList<Gateway>();
+		MyGateway conditionalDiverging = null, gatewayConverging = null;
+		List<MyGateway> listeDivergente = new ArrayList<MyGateway>();
 		for (FlowElement elem : process.getProcess().getFlowElements()) {
 			conditionalDiverging = this.isConditionalGateway(elem, GatewayDirection.DIVERGING);
 			if (conditionalDiverging != null)
@@ -289,8 +286,8 @@ public class ChangePatternHelper {
 
 		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
 
-		// pour chaque ExclusiveGateway divergentes
-		for (Gateway gatewayDiverging : listeDivergente) {
+		// pour chaque conditional gateway divergentes
+		for (MyGateway gatewayDiverging : listeDivergente) {
 
 			// on cherche la Gateway converging qui referme le chemin
 			gatewayConverging = seseManager.getEndOfGateway(gatewayDiverging);
@@ -341,16 +338,16 @@ public class ChangePatternHelper {
 	}
 	
 	/**
-	 * Renvoie une {@link Gateway} si le FlowElement est une instance de ExclusiveGateway ou InclusiveGateway avec 
+	 * Renvoie une {@link MyGateway} si le FlowElement est une instance de MyExclusiveGateway ou MyInclusiveGateway avec 
 	 * la direction passée en paramètre. Renvoie null sinon.
 	 * @param elem le {@link FlowElement} l'élément à tester.
 	 * @param direction la {@link GatewayDirection}.
-	 * @return {@link Gateway} ou null.
+	 * @return {@link MyGateway} ou null.
 	 */
-	private Gateway isConditionalGateway(FlowElement elem, GatewayDirection direction) {
-		if (elem != null && (elem instanceof ExclusiveGateway || elem instanceof InclusiveGateway)) {
-			if (((Gateway) elem).getGatewayDirection().equals(direction)) {
-				return (Gateway) elem;
+	private MyGateway isConditionalGateway(FlowElement elem, GatewayDirection direction) {
+		if (elem != null && (elem instanceof MyExclusiveGateway || elem instanceof MyInclusiveGateway)) {
+			if (((MyGateway) elem).getGatewayDirection().equals(direction)) {
+				return (MyGateway) elem;
 			}
 		}
 		return null;

@@ -10,11 +10,8 @@ import java.util.Random;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.EndEvent;
-import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.GatewayDirection;
-import org.eclipse.bpmn2.InclusiveGateway;
-import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
@@ -131,16 +128,16 @@ public class BpmnProcess {
 		return Bpmn2Factory.eINSTANCE.createTask();
 	}
 
-	public ParallelGateway buildParallelGatewayDiverging() {
+	public MyParallelGateway buildParallelGatewayDiverging() {
 		return this.buildParallelGateway(GatewayDirection.DIVERGING);
 	}
 	
-	public ParallelGateway buildParallelGatewayConverging() {
+	public MyParallelGateway buildParallelGatewayConverging() {
 		return this.buildParallelGateway(GatewayDirection.CONVERGING);
 	}
 	
-	private ParallelGateway buildParallelGateway(GatewayDirection direction) {
-		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
+	private MyParallelGateway buildParallelGateway(GatewayDirection direction) {
+		MyParallelGateway parallel = MyBpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
 		String name = BpmnNameManager.getParallelName(direction.toString());
@@ -151,16 +148,16 @@ public class BpmnProcess {
 		return parallel;
 	}
 
-	public ExclusiveGateway buildExclusiveGatewayDiverging() {
+	public MyExclusiveGateway buildExclusiveGatewayDiverging() {
 		return this.buildExclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
-	public ExclusiveGateway buildExclusiveGatewayConverging() {
+	public MyExclusiveGateway buildExclusiveGatewayConverging() {
 		return this.buildExclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
-	private ExclusiveGateway buildExclusiveGateway(GatewayDirection direction) {
-		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
+	private MyExclusiveGateway buildExclusiveGateway(GatewayDirection direction) {
+		MyExclusiveGateway exclusive = MyBpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
 		String name = BpmnNameManager.getExclusiveName(direction.toString());
@@ -171,16 +168,16 @@ public class BpmnProcess {
 		return exclusive;
 	}
 
-	public InclusiveGateway buildInclusiveGatewayDiverging() {
+	public MyInclusiveGateway buildInclusiveGatewayDiverging() {
 		return this.buildInclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
-	public InclusiveGateway buildInclusiveGatewayConverging() {
+	public MyInclusiveGateway buildInclusiveGatewayConverging() {
 		return this.buildInclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
-	private InclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
-		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
+	private MyInclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
+		MyInclusiveGateway inclusive = MyBpmn2Factory.eINSTANCE.createInclusiveGateway();
 		inclusive.setGatewayDirection(direction);
 		
 		String name = BpmnNameManager.getInclusiveName(direction.toString());
@@ -239,5 +236,10 @@ public class BpmnProcess {
 			tempFile.delete();
 			
 		}
+	}
+
+	public void linkGateways(MyGateway diverging, MyGateway converging) {
+		diverging.setTwin(converging);
+		converging.setTwin(diverging);
 	}
 }
