@@ -5,7 +5,7 @@ import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryReaderHelper;
 
 /**
- * Ce workflow pattern représente deux tâches consécutives.
+ * Représente le WP1 - Sequence.
  * @author Vincent
  *
  */

@@ -17,4 +17,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  jar/google-collect-1.0.jar,
  jar/uncommons-maths-1.2.1.jar,
- jar/watchmaker-framework-0.7.1.jar
+ jar/watchmaker-framework-0.7.1.jar,
+ jar/jung-api-2.0.1.jar,
+ jar/jung-graph-impl-2.0.1.jar,
+ jar/jung-algorithms-2.0.1.jar,
+ jar/collections-generic-4.01.jar

@@ -8,7 +8,6 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.MyParallelGateway;
 import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
@@ -69,7 +68,7 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 	private BpmnProcess applyOnParallel(BpmnProcess process, Random rng) {
 
 		// on récupère une ParallelGateway diverging au hasard
-		MyParallelGateway parallelDiverging = null;
+		ParallelGateway parallelDiverging = null;
 		try {
 			parallelDiverging = ChangePatternHelper.getInstance().getRandomParallelGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
@@ -78,8 +77,7 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		}
 		
 		// on récupère la parallelConverging
-		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
-		ParallelGateway parallelConverging = seseManager.getEndOfParallelGateway(parallelDiverging);
+		ParallelGateway parallelConverging = SESEManager.instance.getEndOfParallelGateway(process, parallelDiverging);
 		
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();
@@ -110,8 +108,8 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		}
 		
 		// on créé les nouveaux noeuds
-		MyParallelGateway fork = process.buildParallelGatewayDiverging();
-		MyParallelGateway join = process.buildParallelGatewayConverging();
+		ParallelGateway fork = process.buildParallelGatewayDiverging();
+		ParallelGateway join = process.buildParallelGatewayConverging();
 		Task newTask = process.buildTask();
 
 		process.linkGateways(fork, join);

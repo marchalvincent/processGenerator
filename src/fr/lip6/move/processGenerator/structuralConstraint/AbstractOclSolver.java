@@ -11,6 +11,7 @@ import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
  * Cette classe valide une contrainte OCL à partir d'un {@link EObjet} représentant le process à vérifier.
@@ -31,10 +32,16 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 	}
 
 	@Override
-	public int matches(EObject process) throws BpmnException {
+	public int matches(Object object) throws BpmnException {
 
 		if (oclQuery.isEmpty()) 
 			return 0;
+		
+		if (object instanceof BpmnProcess) {
+			throw new BpmnException("Matches method : The object is not a Bpmn Process.");
+		}
+		
+		BpmnProcess process = (BpmnProcess) object;
 		
 		// create an OCL instance for Ecore
 		OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
@@ -44,7 +51,7 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
 
 		// set the OCL context classifier
-		helper.setContext(process.eClass());
+		helper.setContext(process.getProcess().eClass());
 
 		// create the ocl expression
 		OCLExpression<EClassifier> oclExpession = null;
@@ -58,12 +65,12 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		Query<EClassifier, EClass, EObject> query = ocl.createQuery(oclExpession);
 		
 		// evaluate
-		Object o = query.evaluate(process);
+		Object o = query.evaluate(process.getProcess());
 		if (o instanceof Integer) {
 			return ((Integer)o).intValue();
 		}
 		else {
-			System.err.println("Attention l'objet résultat de la requête n'est pas un Integer -> " + o.getClass().getSimpleName());
+			System.err.println("Warning, the query result is not an Integer -> " + o.getClass().getSimpleName());
 		}
 		return 0;
 	}

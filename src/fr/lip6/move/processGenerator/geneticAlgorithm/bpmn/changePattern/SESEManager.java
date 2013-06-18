@@ -6,12 +6,12 @@ import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
+import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.MyGateway;
-import fr.lip6.move.processGenerator.bpmn2.MyParallelGateway;
 
 /**
  * Cette classe se charge de séparer un diagramme d'activité en plusieurs sous diagrammes
@@ -20,9 +20,10 @@ import fr.lip6.move.processGenerator.bpmn2.MyParallelGateway;
  * @author Vincent
  *
  */
-public class SingleEntrySingleExitManager {
+public class SESEManager {
 
-	public SingleEntrySingleExitManager() {}
+	public static SESEManager instance = new SESEManager();
+	private SESEManager() {}
 
 	/**
 	 * Renvoie la liste des {@link SingleEntrySingleExit} contenus dans le process passé en paramètre.
@@ -44,17 +45,17 @@ public class SingleEntrySingleExitManager {
 			return null;
 		}
 
-		return getComplexSESEs(start, end);
+		return getComplexSESEs(process, start, end);
 	}
 
 	/**
-	 * 
 	 * Renvoie la liste des {@link SingleEntrySingleExit} contenus entre les deux arcs passés en paramètres.
-	 * @param arc
-	 * @param arcFinal
-	 * @return une liste de SESE.
+	 * @param process
+	 * @param noeudDepart
+	 * @param noeudArrivee
+	 * @return
 	 */
-	private List<SingleEntrySingleExit> getComplexSESEs(FlowNode noeudDepart, FlowNode noeudArrivee) {
+	private List<SingleEntrySingleExit> getComplexSESEs(BpmnProcess process, FlowNode noeudDepart, FlowNode noeudArrivee) {
 
 		List<SingleEntrySingleExit> listeFinale = new ArrayList<SingleEntrySingleExit>();
 		List<SingleEntrySingleExit> listeTemp = new ArrayList<SingleEntrySingleExit>();
@@ -71,8 +72,8 @@ public class SingleEntrySingleExitManager {
 					arc = end;
 				}
 				// si c'est une gateway, alors c'est un SESE complexe qui doit avoir un traitement particulier
-				else if (targetRef instanceof MyGateway) {
-					SequenceFlow end = this.getEndOfGateway((MyGateway) targetRef).getOutgoing().get(0);
+				else if (targetRef instanceof Gateway) {
+					SequenceFlow end = this.getEndOfGateway(process, (Gateway) targetRef).getOutgoing().get(0);
 					listeTemp.add(new SingleEntrySingleExit(arc, end));
 					arc = end;
 				}
@@ -88,7 +89,7 @@ public class SingleEntrySingleExitManager {
 			// et enfin on peut appliquer la récursivité sur les SESE complexes
 			for (SingleEntrySingleExit sese : listeTemp) {
 				if (sese.isComplexe()) {
-					listeFinale.addAll(this.getComplexSESEs(sese.getFirst().getTargetRef(), sese.getLast().getSourceRef()));
+					listeFinale.addAll(this.getComplexSESEs(process, sese.getFirst().getTargetRef(), sese.getLast().getSourceRef()));
 				}
 			}
 			
@@ -100,55 +101,55 @@ public class SingleEntrySingleExitManager {
 	}
 
 	/**
-	 * Renvoie la MyGateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
-	 * @param gatewayDiverging une {@link MyGateway} divergente.
-	 * @return la {@link MyGateway} convergente correspondante.
+	 * Renvoie la Gateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
+	 * @param process un {@link BpmnProcess}.
+	 * @param gatewayDiverging une {@link Gateway} divergente.
+	 * @return la {@link Gateway} convergente correspondante.
 	 */
-	public MyGateway getEndOfGateway(MyGateway gatewayDiverging) {
+	public Gateway getEndOfGateway(BpmnProcess process, Gateway gatewayDiverging) {
 
 		// si la gateway n'est pas diverging...
-		if (gatewayDiverging.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
+		if (!gatewayDiverging.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
 			System.err.println("Error the gateway parameters is converging...");
 			return null;
 		}
 		
 		// on tente de récupérer la twin
-		MyGateway twin = gatewayDiverging.getTwin();
+		Gateway twin = process.getTwin(gatewayDiverging.getId());
 		if (twin != null && twin.getGatewayDirection().equals(GatewayDirection.CONVERGING))
 			return twin;
 		
-		return tryToFindEndOfGateway(gatewayDiverging);
+		return tryToFindEndOfGateway(process, gatewayDiverging);
 	}
 	
 	/**
-	 * Essaie de parcourir le diagramme afin de retrouver la {@link MyGateway} correspondante.
+	 * Essaie de parcourir le diagramme afin de retrouver la {@link Gateway} correspondante.
 	 * @param gatewayDiverging
 	 * @return
 	 */
-	private MyGateway tryToFindEndOfGateway(MyGateway gatewayDiverging) {
+	private Gateway tryToFindEndOfGateway(BpmnProcess process, Gateway gatewayDiverging) {
 
-		MyGateway gateway = null;
+		Gateway gateway = null;
 		// on cherche la gateway converging qui referme le chemin
 		FlowNode nextNode = gatewayDiverging;
-		int cpt = 0, error = 0;
+		int error = 0;
 		do {
-			if (nextNode.getOutgoing() == null || nextNode.getOutgoing().size() == 0 || nextNode instanceof EndEvent) {
-				// si on a atteint la fin on renvoie null
+			// si on a atteint la fin on renvoie null
+			if (nextNode.getOutgoing() == null || nextNode.getOutgoing().size() == 0 || nextNode instanceof EndEvent)
 				return null;
-			}
+			
+			// sinon on poursuit le parcours
 			nextNode = nextNode.getOutgoing().get(0).getTargetRef();
+			
 			// il faut vérifier que c'est le bon type de gateway
-			if (nextNode instanceof MyGateway) {
+			if (nextNode instanceof Gateway) {
 				// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
-				gateway = (MyGateway) nextNode;
+				gateway = (Gateway) nextNode;
 				if (gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-					cpt++;
+					// on essaye de récupérer directement la fin de la gateway
+					nextNode = this.getNextNode(process, nextNode);
 				} else if (gateway.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
-					cpt--;
-				}
-
-				// quand le compteur est a -1 c'est qu'on vient de passer la bonne gateway fermante
-				if (cpt == -1) {
+					// ici on a trouvé notre bonne porte fermante
 					break;
 				}
 			}
@@ -161,17 +162,27 @@ public class SingleEntrySingleExitManager {
 		}
 		
 		// on peut enfin retourner la gateway fermante
-		if (nextNode instanceof MyGateway)
-			return (MyGateway) nextNode;
+		if (nextNode instanceof Gateway)
+			return (Gateway) nextNode;
 		return null;
 	}
 	
 	/**
 	 * Renvoie la ParallelGateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
-	 * @param gatewayDiverging une {@link MyParallelGateway} divergente.
-	 * @return la {@link MyParallelGateway} convergente correspondante.
+	 * @param process le {@link BpmnProcess} qu'on est en train d'évaluer.
+	 * @param gatewayDiverging une {@link ParallelGateway} divergente.
+	 * @return la {@link ParallelGateway} convergente correspondante.
 	 */
-	public MyParallelGateway getEndOfParallelGateway(MyParallelGateway gatewayDiverging) {
-		return (MyParallelGateway) this.getEndOfGateway(gatewayDiverging);
+	public ParallelGateway getEndOfParallelGateway(BpmnProcess process, ParallelGateway gatewayDiverging) {
+		return (ParallelGateway) this.getEndOfGateway(process, gatewayDiverging);
+	}
+	
+	private FlowNode getNextNode(BpmnProcess process, FlowNode node) {
+		if (node instanceof Gateway) {
+			Gateway twin = new SESEManager().getEndOfGateway(process, (Gateway) node);
+			if (twin != null)
+				return twin;
+		}
+		return node.getOutgoing().get(0).getTargetRef();
 	}
 }

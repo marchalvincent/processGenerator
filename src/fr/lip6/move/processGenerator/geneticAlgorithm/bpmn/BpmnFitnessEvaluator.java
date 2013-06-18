@@ -45,7 +45,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 
 		double consManual = 0;
 		try {
-			if (manualOclChecker != null && manualOclChecker.check(candidate.getProcess()))
+			if (manualOclChecker != null && manualOclChecker.check(candidate))
 				consManual = 1;
 			else if (manualOclChecker == null)
 				consManual = 1;
@@ -135,7 +135,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 		for (StructuralConstraintChecker constr : constraints) {
 			totalConstraints += constr.getWeight();
 			try {
-				if (constr.check(candidate.getProcess()))
+				if (constr.check(candidate))
 					constraintsMatches += constr.getWeight();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());

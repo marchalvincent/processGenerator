@@ -10,8 +10,13 @@ import java.util.Random;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
+import org.eclipse.bpmn2.InclusiveGateway;
+import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
@@ -26,9 +31,10 @@ import org.uncommons.maths.random.MersenneTwisterRNG;
 
 public class BpmnProcess {
 
+	private final static Random rng = new MersenneTwisterRNG();
 	private DocumentRoot documentRoot;
 	private Process process;
-	private final static Random rng = new MersenneTwisterRNG();
+	private Map<String, String> gatewaysLinked;
 
 	public BpmnProcess() {
 		super();
@@ -46,6 +52,9 @@ public class BpmnProcess {
 		// création du process
 		process = Bpmn2Factory.eINSTANCE.createProcess();
 		documentRoot.getDefinitions().getRootElements().add(process);
+		
+		// création de la map contenant les gateways linkées
+		gatewaysLinked = new HashMap<String, String>();
 	}
 	
 	public BpmnProcess(BpmnProcess processToCopy) throws BpmnException {
@@ -56,6 +65,11 @@ public class BpmnProcess {
 			throw new BpmnException("Impossible to copy the process of the bpmn document.");
 		else
 			process = (Process) documentRoot.getDefinitions().getRootElements().get(0);
+		
+		gatewaysLinked = new HashMap<String, String>();
+		for (String key : processToCopy.gatewaysLinked.keySet()) {
+			gatewaysLinked.put(new String(key), new String(processToCopy.gatewaysLinked.get(key)));
+		}
 	}
 	
 	public BpmnProcess(DocumentRoot documentRoot) {
@@ -128,60 +142,60 @@ public class BpmnProcess {
 		return Bpmn2Factory.eINSTANCE.createTask();
 	}
 
-	public MyParallelGateway buildParallelGatewayDiverging() {
+	public ParallelGateway buildParallelGatewayDiverging() {
 		return this.buildParallelGateway(GatewayDirection.DIVERGING);
 	}
 	
-	public MyParallelGateway buildParallelGatewayConverging() {
+	public ParallelGateway buildParallelGatewayConverging() {
 		return this.buildParallelGateway(GatewayDirection.CONVERGING);
 	}
 	
-	private MyParallelGateway buildParallelGateway(GatewayDirection direction) {
-		MyParallelGateway parallel = MyBpmn2Factory.eINSTANCE.createParallelGateway();
+	private ParallelGateway buildParallelGateway(GatewayDirection direction) {
+		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
 		String name = BpmnNameManager.getParallelName(direction.toString());
-		parallel.setId("id" + name);
+		parallel.setId("id_" + name);
 		parallel.setName(name);
 		
 		process.getFlowElements().add(parallel);
 		return parallel;
 	}
 
-	public MyExclusiveGateway buildExclusiveGatewayDiverging() {
+	public ExclusiveGateway buildExclusiveGatewayDiverging() {
 		return this.buildExclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
-	public MyExclusiveGateway buildExclusiveGatewayConverging() {
+	public ExclusiveGateway buildExclusiveGatewayConverging() {
 		return this.buildExclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
-	private MyExclusiveGateway buildExclusiveGateway(GatewayDirection direction) {
-		MyExclusiveGateway exclusive = MyBpmn2Factory.eINSTANCE.createExclusiveGateway();
+	private ExclusiveGateway buildExclusiveGateway(GatewayDirection direction) {
+		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
 		String name = BpmnNameManager.getExclusiveName(direction.toString());
-		exclusive.setId("id" + name);
+		exclusive.setId("id_" + name);
 		exclusive.setName(name);
 		
 		process.getFlowElements().add(exclusive);
 		return exclusive;
 	}
 
-	public MyInclusiveGateway buildInclusiveGatewayDiverging() {
+	public InclusiveGateway buildInclusiveGatewayDiverging() {
 		return this.buildInclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
-	public MyInclusiveGateway buildInclusiveGatewayConverging() {
+	public InclusiveGateway buildInclusiveGatewayConverging() {
 		return this.buildInclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
-	private MyInclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
-		MyInclusiveGateway inclusive = MyBpmn2Factory.eINSTANCE.createInclusiveGateway();
+	private InclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
+		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
 		inclusive.setGatewayDirection(direction);
 		
 		String name = BpmnNameManager.getInclusiveName(direction.toString());
-		inclusive.setId("id" + name);
+		inclusive.setId("id_" + name);
 		inclusive.setName(name);
 		
 		process.getFlowElements().add(inclusive);
@@ -238,8 +252,20 @@ public class BpmnProcess {
 		}
 	}
 
-	public void linkGateways(MyGateway diverging, MyGateway converging) {
-		diverging.setTwin(converging);
-		converging.setTwin(diverging);
+	public void linkGateways(Gateway diverging, Gateway converging) {
+		gatewaysLinked.put(diverging.getId(), converging.getId());
+		gatewaysLinked.put(converging.getId(), diverging.getId());
+	}
+	
+	public Gateway getTwin(String gatewayId) {
+		String twinId = gatewaysLinked.get(gatewayId);
+		if (twinId != null) {
+			// TODO faire une optimisation pour ne parcourir que les gateways
+			for (FlowElement element : getProcess().getFlowElements()) {
+				if (element.getId().equals(twinId))
+					return (Gateway) element;
+			}
+		}
+		return null;
 	}
 }

@@ -1,6 +1,6 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class MultiChoiceTest {
 	@Test(expected=BpmnException.class)
 	public void test0() throws Exception {
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnMultiChoice(), EQuantity.EQUAL, -1);
-		checker.check(process.getProcess());
+		checker.check(process);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class MultiChoiceTest {
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnMultiChoice(), EQuantity.EQUAL, 0);
-		assertTrue(checker.check(process.getProcess()));
+		assertTrue(checker.check(process));
 	}
 
 	@Test
@@ -50,6 +50,6 @@ public class MultiChoiceTest {
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnMultiChoice(), EQuantity.EQUAL, 1);
-		assertTrue(checker.check(process.getProcess()));
+		assertTrue(checker.check(process));
 	}
 }

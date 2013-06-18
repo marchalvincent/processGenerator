@@ -30,7 +30,7 @@ public class ChangePatternHelperTest {
 	
 	@Test
 	public void test3() throws IOException {
-		BpmnProcess process = BpmnBuilder.createExampleWithUselessParallelAndExclusive();
+		BpmnProcess process = BpmnBuilder.getUselessLoopExample();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
 		process = new BpmnRemove().apply(process, new MersenneTwisterRNG());
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentApres.bpmn");

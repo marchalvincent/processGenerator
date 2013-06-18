@@ -9,7 +9,6 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnExclusiveChoice;
 
 
 public class ExclusiveChoiceTest {
@@ -29,7 +28,7 @@ public class ExclusiveChoiceTest {
 	@Test(expected=BpmnException.class)
 	public void test0() throws Exception {
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExclusiveChoice(), EQuantity.EQUAL, -1);
-		checker.check(process.getProcess());
+		checker.check(process);
 	}
 
 	@Test
@@ -40,7 +39,7 @@ public class ExclusiveChoiceTest {
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExclusiveChoice(), EQuantity.EQUAL, 0);
-		assertTrue(checker.check(process.getProcess()));
+		assertTrue(checker.check(process));
 	}
 
 	@Test
@@ -51,6 +50,6 @@ public class ExclusiveChoiceTest {
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExclusiveChoice(), EQuantity.EQUAL, 1);
-		assertTrue(checker.check(process.getProcess()));
+		assertTrue(checker.check(process));
 	}
 }

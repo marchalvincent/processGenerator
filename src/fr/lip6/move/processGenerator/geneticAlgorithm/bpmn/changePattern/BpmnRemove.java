@@ -51,7 +51,7 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 		// puis on supprime l'activité et l'arc après cette activité
 		process.removeFlowNode(ancienneTask);
 		process.removeSequenceFlow(arcOut);
-		
+
 		// on simplifie les fork et decision "vides" si on vient d'en créer
 		ChangePatternHelper.getInstance().cleanProcess(process);
 		return process;

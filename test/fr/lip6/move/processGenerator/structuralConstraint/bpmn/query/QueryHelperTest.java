@@ -3,7 +3,6 @@ package fr.lip6.move.processGenerator.structuralConstraint.bpmn.query;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryReaderHelper;
 
 
 public class QueryHelperTest {

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="jar/jung-algorithms-2.0.1.jar" sourcepath="jar/jung-algorithms-2.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="jar/collections-generic-4.01.jar"/>
+	<classpathentry exported="true" kind="lib" path="jar/jung-graph-impl-2.0.1.jar" sourcepath="jar/jung-graph-impl-2.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="jar/jung-api-2.0.1.jar" sourcepath="jar/jung-api-2.0.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="jar/uncommons-maths-1.2.1.jar" sourcepath="jar/uncommons-maths-1.2.1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="jar/google-collect-1.0.jar" sourcepath="jar/google-collect-1.0-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="jar/watchmaker-framework-0.7.1.jar" sourcepath="jar/watchmaker-framework-0.7.1-src.jar"/>

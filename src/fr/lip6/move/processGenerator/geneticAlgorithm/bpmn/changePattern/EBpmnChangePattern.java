@@ -9,7 +9,8 @@ public enum EBpmnChangePattern implements IEnumChangePattern {
 	CONDITIONAL_INSERT(BpmnConditionalInsert.class),
 	PARALLEL_INSERT(BpmnParallelInsert.class),
 	SERIAL_INSERT(BpmnSerialInsert.class),
-	REMOVE(BpmnRemove.class);
+	REMOVE(BpmnRemove.class),
+	LOOP_INSERT(BpmnLoopInsert.class);
 	
 	private Class<? extends IChangePattern> clazz;
 	

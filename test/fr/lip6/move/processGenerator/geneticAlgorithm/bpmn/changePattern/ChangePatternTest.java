@@ -43,7 +43,7 @@ public class ChangePatternTest {
 		assertTrue(true);
 	}
 	
-	@Test
+//	@Test
 	public void test0() throws IOException {
 //		test(new BpmnSerialInsert());
 //		test(new BpmnConditionalInsert());
@@ -82,5 +82,15 @@ public class ChangePatternTest {
 		listeCandidat = mutation.apply(listeCandidat , rng);
 		
 		listeCandidat.get(0).save("C:\\Users\\Vincent\\workspace\\processGenerator\\test.bpmn");
+	}
+	
+	@Test
+	public void test3() throws IOException {
+		
+		BpmnProcess process = BpmnBuilder.initialABFinal();
+		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\test.bpmn");
+		process = new BpmnLoopInsert().apply(process, rng);
+		process.save("C:\\Users\\Vincent\\workspace\\processGenerator\\gen\\test2.bpmn");
+		assertTrue(true);
 	}
 }

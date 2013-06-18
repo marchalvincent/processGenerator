@@ -1,15 +1,18 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
 import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
-import org.eclipse.bpmn2.Process;
-import org.eclipse.emf.ecore.EObject;
-import fr.lip6.move.processGenerator.bpmn2.MyGateway;
-import fr.lip6.move.processGenerator.bpmn2.MyInclusiveGateway;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SingleEntrySingleExitManager;
+import org.eclipse.bpmn2.InclusiveGateway;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SESEManager;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractJavaSolver;
 
-
+/**
+ * Représente le WP7 - Structured Synchronizing Merge.
+ * @author Vincent
+ *
+ */
 public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 	
 	public BpmnStructuredSynchronizingMerge() {
@@ -17,23 +20,22 @@ public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 	}
 
 	@Override
-	public int matches(EObject eObject) throws Exception {
+	public int matches(Object object) throws Exception {
 
 		int countTotal = 0;
 		
-		if (!(eObject instanceof org.eclipse.bpmn2.Process)) 
+		if (!(object instanceof BpmnProcess)) 
 			return countTotal;
 		
-		Process process = (Process) eObject;
-		SingleEntrySingleExitManager seseManager = new SingleEntrySingleExitManager();
+		BpmnProcess process = (BpmnProcess) object;
 		
 		// on parcours chaque flowElement à la recherche des InclusiveGateway diverging
-		for (FlowElement element : process.getFlowElements()) {
-			if (element instanceof MyInclusiveGateway && ((MyInclusiveGateway) element).getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-				MyInclusiveGateway inclusive = (MyInclusiveGateway) element;
-				MyGateway gatewayConverging = seseManager.getEndOfGateway(inclusive);
+		for (FlowElement element : process.getProcess().getFlowElements()) {
+			if (element instanceof InclusiveGateway && ((InclusiveGateway) element).getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
+				InclusiveGateway inclusive = (InclusiveGateway) element;
+				Gateway gatewayConverging = SESEManager.instance.getEndOfGateway(process, inclusive);
 				// on a la porte fermante, maintenant il faut vérifier que c'est le bon type (dans ce workflow pattern on cherche une InclusiveGateway fermante)
-				if (gatewayConverging instanceof MyInclusiveGateway) 
+				if (gatewayConverging instanceof InclusiveGateway) 
 					countTotal++;
 			}
 		}
