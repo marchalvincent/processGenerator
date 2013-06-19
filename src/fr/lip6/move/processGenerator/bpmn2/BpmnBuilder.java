@@ -397,7 +397,39 @@ public class BpmnBuilder {
 		process.buildSequenceFlow(c, merge2);
 		process.buildSequenceFlow(merge2, choice1);
 		process.buildSequenceFlow(choice1, d);
+		process.buildSequenceFlow(choice1, merge1);
 		process.buildSequenceFlow(d, end);
+		
+		return process;
+	}
+
+	public static BpmnProcess getDoubleLoopExample() {
+		
+		BpmnProcess process = new BpmnProcess();
+		
+		StartEvent start = process.buildStartEvent();
+		ExclusiveGateway merge1 = process.buildExclusiveGatewayConverging();
+		Task a = process.buildTask();
+		ExclusiveGateway choice1 = process.buildExclusiveGatewayDiverging();
+		
+		ExclusiveGateway merge2 = process.buildExclusiveGatewayConverging();
+		Task b = process.buildTask();
+		ExclusiveGateway choice2 = process.buildExclusiveGatewayDiverging();
+		EndEvent end = process.buildEndEvent();
+		
+		process.linkGateways(choice1, merge1);
+		process.linkGateways(choice2, merge2);
+
+		process.buildSequenceFlow(start, merge1);
+		process.buildSequenceFlow(merge1, a);
+		process.buildSequenceFlow(a, choice1);
+		process.buildSequenceFlow(choice1, merge1);
+		
+		process.buildSequenceFlow(choice1, merge2);
+		process.buildSequenceFlow(merge2, b);
+		process.buildSequenceFlow(b, choice2);
+		process.buildSequenceFlow(choice2, merge2);
+		process.buildSequenceFlow(choice2, end);
 		
 		return process;
 	}
@@ -422,6 +454,43 @@ public class BpmnBuilder {
 		process.buildSequenceFlow(choice, merge);
 		process.buildSequenceFlow(choice, d);
 		process.buildSequenceFlow(d, end);
+		
+		return process;
+	}
+	
+	public static BpmnProcess getExampleForSESE2() {
+
+		BpmnProcess process = new BpmnProcess();
+		
+		StartEvent start = process.buildStartEvent();
+		ExclusiveGateway choice1 = process.buildExclusiveGatewayDiverging();
+		ExclusiveGateway merge1 = process.buildExclusiveGatewayConverging();
+		
+		ExclusiveGateway choice2 = process.buildExclusiveGatewayDiverging();
+		ExclusiveGateway merge2 = process.buildExclusiveGatewayConverging();
+
+		Task a = process.buildTask();
+		Task b = process.buildTask();
+		Task c = process.buildTask();
+		Task d = process.buildTask();
+		Task e = process.buildTask();
+		EndEvent end = process.buildEndEvent();
+		
+//		process.linkGateways(choice1, merge1);
+//		process.linkGateways(choice2, merge2);
+
+		process.buildSequenceFlow(start, choice1);
+		process.buildSequenceFlow(choice1, choice2);
+		process.buildSequenceFlow(choice1, c);
+		process.buildSequenceFlow(c, d);
+		process.buildSequenceFlow(d, e);
+		process.buildSequenceFlow(e, merge1);
+		process.buildSequenceFlow(choice2, a);
+		process.buildSequenceFlow(choice2, b);
+		process.buildSequenceFlow(a, merge2);
+		process.buildSequenceFlow(b, merge2);
+		process.buildSequenceFlow(merge2, merge1);
+		process.buildSequenceFlow(merge1, end);
 		
 		return process;
 	}

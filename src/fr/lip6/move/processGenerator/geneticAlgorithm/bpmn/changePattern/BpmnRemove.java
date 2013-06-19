@@ -45,6 +45,12 @@ public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePatt
 		SequenceFlow arcIn = sequencesIn.get(0);
 		SequenceFlow arcOut = sequencesOut.get(0);
 		
+		/*
+		 * Ici on a un cas assez particulier, pour éviter d'avoir des diagrammes n'ayant plus aucun sens,
+		 * si on supprime une activité entre deux "ExclusiveGateway", on supprime les arcs aussi
+		 */
+		// TODO suppression des gateways
+		
 		// on set la nouvelle cible de l'arc avant l'activité
 		arcIn.setTargetRef(arcOut.getTargetRef());
 		

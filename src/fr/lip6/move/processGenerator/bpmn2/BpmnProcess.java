@@ -248,7 +248,6 @@ public class BpmnProcess {
 		}
 		finally {
 			tempFile.delete();
-			
 		}
 	}
 
@@ -260,9 +259,8 @@ public class BpmnProcess {
 	public Gateway getTwin(String gatewayId) {
 		String twinId = gatewaysLinked.get(gatewayId);
 		if (twinId != null) {
-			// TODO faire une optimisation pour ne parcourir que les gateways
 			for (FlowElement element : getProcess().getFlowElements()) {
-				if (element.getId().equals(twinId))
+				if (element instanceof Gateway && element.getId().equals(twinId))
 					return (Gateway) element;
 			}
 		}

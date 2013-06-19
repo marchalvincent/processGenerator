@@ -77,7 +77,7 @@ public class BpmnParallelInsert extends AbstractChangePattern implements IBpmnCh
 		}
 		
 		// on récupère la parallelConverging
-		ParallelGateway parallelConverging = SESEManager.instance.getEndOfParallelGateway(process, parallelDiverging);
+		ParallelGateway parallelConverging = (ParallelGateway) SESEManager.instance.findTwinGateway(process, parallelDiverging);
 		
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();

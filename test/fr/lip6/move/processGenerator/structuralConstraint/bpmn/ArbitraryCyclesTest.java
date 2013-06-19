@@ -58,9 +58,22 @@ public class ArbitraryCyclesTest {
 
 		// init du process
 		process = BpmnBuilder.getComplexLoopExample();
+//		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincent.bpmn");
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 1);
+		assertTrue(checker.check(process));
+	}
+
+	@Test
+	public void test4() throws Exception {
+
+		// init du process
+		process = BpmnBuilder.getDoubleLoopExample();
+		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincent.bpmn");
+
+		// init du workflow checker
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 2);
 		assertTrue(checker.check(process));
 	}
 }

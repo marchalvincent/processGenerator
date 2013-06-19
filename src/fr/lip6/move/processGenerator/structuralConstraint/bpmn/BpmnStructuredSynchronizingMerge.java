@@ -1,10 +1,11 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
-import org.eclipse.bpmn2.FlowElement;
+import java.util.List;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.InclusiveGateway;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SESEManager;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractJavaSolver;
 
@@ -30,14 +31,12 @@ public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 		BpmnProcess process = (BpmnProcess) object;
 		
 		// on parcours chaque flowElement à la recherche des InclusiveGateway diverging
-		for (FlowElement element : process.getProcess().getFlowElements()) {
-			if (element instanceof InclusiveGateway && ((InclusiveGateway) element).getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-				InclusiveGateway inclusive = (InclusiveGateway) element;
-				Gateway gatewayConverging = SESEManager.instance.getEndOfGateway(process, inclusive);
+		List<InclusiveGateway> list = Filter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
+		for (InclusiveGateway gatewayDiverging : list) {
+				Gateway gatewayConverging = SESEManager.instance.findTwinGateway(process, gatewayDiverging);
 				// on a la porte fermante, maintenant il faut vérifier que c'est le bon type (dans ce workflow pattern on cherche une InclusiveGateway fermante)
 				if (gatewayConverging instanceof InclusiveGateway) 
 					countTotal++;
-			}
 		}
 		
 		return countTotal;

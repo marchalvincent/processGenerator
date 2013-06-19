@@ -1,17 +1,21 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import org.eclipse.bpmn2.Activity;
-import org.eclipse.bpmn2.EndEvent;
-import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.StartEvent;
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
+import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
+import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
+import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
 
 /**
  * Cette classe se charge de séparer un diagramme d'activité en plusieurs sous diagrammes
@@ -26,163 +30,130 @@ public class SESEManager {
 	private SESEManager() {}
 
 	/**
-	 * Renvoie la liste des {@link SingleEntrySingleExit} contenus dans le process passé en paramètre.
-	 * @param process le {@link BpmnProcess} à parcourir.
-	 * @return une liste de SESE.
+	 * Renvoie la {@link Gateway} jumelle correspondant à celle passée en paramètre.
+	 * @param process le {@link BpmnProcess} contenant les Gateway.
+	 * @param gateway la {@link Gateway} dont on cherche la jumelle.
+	 * @return {@link Gateway} la twin si trouvée, null sinon.
 	 */
-	public List<SingleEntrySingleExit> getAllSESEs(BpmnProcess process) {
+	public Gateway findTwinGateway(BpmnProcess process, Gateway gateway) {
 
-		StartEvent start = null;
-		EndEvent end = null;
-		for (FlowElement element : process.getProcess().getFlowElements()) {
-			if (element instanceof StartEvent)
-				start = (StartEvent) element;
-			else if (element instanceof EndEvent)
-				end = (EndEvent) element;
-		}
-		if (start == null || end == null) {
-			System.err.println("The process does not contains a StartEvent and a EndEvent.");
-			return null;
-		}
-
-		return getComplexSESEs(process, start, end);
-	}
-
-	/**
-	 * Renvoie la liste des {@link SingleEntrySingleExit} contenus entre les deux arcs passés en paramètres.
-	 * @param process
-	 * @param noeudDepart
-	 * @param noeudArrivee
-	 * @return
-	 */
-	private List<SingleEntrySingleExit> getComplexSESEs(BpmnProcess process, FlowNode noeudDepart, FlowNode noeudArrivee) {
-
-		List<SingleEntrySingleExit> listeFinale = new ArrayList<SingleEntrySingleExit>();
-		List<SingleEntrySingleExit> listeTemp = new ArrayList<SingleEntrySingleExit>();
-		
-		// pour chaque arc sortant
-		for (SequenceFlow arc : noeudDepart.getOutgoing()) {
-			// on fait un premier parcours simple pour avoir les SESE non imbriqués
-			while (arc.getTargetRef() != noeudArrivee) {
-				FlowNode targetRef = arc.getTargetRef();
-				// si on tombe sur une activité, alors c'est un SESE simple
-				if (targetRef instanceof Activity) {
-					SequenceFlow end = targetRef.getOutgoing().get(0);
-					listeTemp.add(new SingleEntrySingleExit(arc, end));
-					arc = end;
-				}
-				// si c'est une gateway, alors c'est un SESE complexe qui doit avoir un traitement particulier
-				else if (targetRef instanceof Gateway) {
-					SequenceFlow end = this.getEndOfGateway(process, (Gateway) targetRef).getOutgoing().get(0);
-					listeTemp.add(new SingleEntrySingleExit(arc, end));
-					arc = end;
-				}
+		// on tente de récupérer la twin par le process
+		Gateway twin = process.getTwin(gateway.getId());
+		if (twin != null) {
+			if (twin.getGatewayDirection().equals(gateway.getGatewayDirection())) {
+				System.err.println("Warning, the gateway and his twin have se same gateway direction.");
 			}
-			
-			// à partir de la listeTemp, pour une taille de n, on a n(n+1)/2 solutions, il faut combiner chaque SESE
-			for (int i = 0; i < listeTemp.size(); i++) {
-				for (int j = i; j < listeTemp.size(); j++) {
-					listeFinale.add(new SingleEntrySingleExit(listeTemp.get(i).getFirst(), listeTemp.get(j).getLast()));
-				}
-			}
-
-			// et enfin on peut appliquer la récursivité sur les SESE complexes
-			for (SingleEntrySingleExit sese : listeTemp) {
-				if (sese.isComplexe()) {
-					listeFinale.addAll(this.getComplexSESEs(process, sese.getFirst().getTargetRef(), sese.getLast().getSourceRef()));
-				}
-			}
-			
-			// on vide la liste temporaire dans le cas où le for each a plusieurs arcs
-			listeTemp.clear();
+			return twin;
 		}
 		
-		return listeFinale;
-	}
-
-	/**
-	 * Renvoie la Gateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
-	 * @param process un {@link BpmnProcess}.
-	 * @param gatewayDiverging une {@link Gateway} divergente.
-	 * @return la {@link Gateway} convergente correspondante.
-	 */
-	public Gateway getEndOfGateway(BpmnProcess process, Gateway gatewayDiverging) {
-
-		// si la gateway n'est pas diverging...
-		if (!gatewayDiverging.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-			System.err.println("Error the gateway parameters is converging...");
-			return null;
-		}
+		// sinon on récupère les gateways potentielles
+		List<Gateway> potentialsCandidats = this.getPotentialsCandidats(process, gateway);
 		
-		// on tente de récupérer la twin
-		Gateway twin = process.getTwin(gatewayDiverging.getId());
-		if (twin != null && twin.getGatewayDirection().equals(GatewayDirection.CONVERGING))
+		
+		// on cherche la gateway parmis les candidats
+		twin = searchBestCandidat(process, gateway, potentialsCandidats);
+		if (twin != null)
 			return twin;
 		
-		return tryToFindEndOfGateway(process, gatewayDiverging);
-	}
-	
-	/**
-	 * Essaie de parcourir le diagramme afin de retrouver la {@link Gateway} correspondante.
-	 * @param gatewayDiverging
-	 * @return
-	 */
-	private Gateway tryToFindEndOfGateway(BpmnProcess process, Gateway gatewayDiverging) {
-
-		Gateway gateway = null;
-		// on cherche la gateway converging qui referme le chemin
-		FlowNode nextNode = gatewayDiverging;
-		int error = 0;
-		do {
-			// si on a atteint la fin on renvoie null
-			if (nextNode.getOutgoing() == null || nextNode.getOutgoing().size() == 0 || nextNode instanceof EndEvent)
-				return null;
-			
-			// sinon on poursuit le parcours
-			nextNode = nextNode.getOutgoing().get(0).getTargetRef();
-			
-			// il faut vérifier que c'est le bon type de gateway
-			if (nextNode instanceof Gateway) {
-				// il faut faire attention à ce que ca ne soit pas une autre gateway diverging (dans le cas d'un fork dans un fork typiquement)
-				gateway = (Gateway) nextNode;
-				if (gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING)) {
-					// on essaye de récupérer directement la fin de la gateway
-					nextNode = this.getNextNode(process, nextNode);
-				} else if (gateway.getGatewayDirection().equals(GatewayDirection.CONVERGING)) {
-					// ici on a trouvé notre bonne porte fermante
-					break;
-				}
-			}
-			error++;
-		} while (error < 10000000);
-		
-		if (error == 10000000) {
-			System.err.println("Error during the parsing of the model. The loop is probably infinite...");
-			return null;
-		}
-		
-		// on peut enfin retourner la gateway fermante
-		if (nextNode instanceof Gateway)
-			return (Gateway) nextNode;
+		// attention, ce code ne détecte pas les boucles
+		//TODO détection des boucles
 		return null;
 	}
 	
+
 	/**
-	 * Renvoie la ParallelGateway convergente correspondant à celle passée en paramètre (qui doit être divergente).
-	 * @param process le {@link BpmnProcess} qu'on est en train d'évaluer.
-	 * @param gatewayDiverging une {@link ParallelGateway} divergente.
-	 * @return la {@link ParallelGateway} convergente correspondante.
+	 * Renvoie la liste des gateways succeptibles d'être la "twin" de la gateway passée en paramètre.
+	 * @param process
+	 * @param gateway
+	 * @return
 	 */
-	public ParallelGateway getEndOfParallelGateway(BpmnProcess process, ParallelGateway gatewayDiverging) {
-		return (ParallelGateway) this.getEndOfGateway(process, gatewayDiverging);
-	}
-	
-	private FlowNode getNextNode(BpmnProcess process, FlowNode node) {
-		if (node instanceof Gateway) {
-			Gateway twin = new SESEManager().getEndOfGateway(process, (Gateway) node);
-			if (twin != null)
-				return twin;
+	private List<Gateway> getPotentialsCandidats(BpmnProcess process, Gateway gateway) {
+
+		List<Gateway> candidats = new ArrayList<>();
+		
+		// on récupère la direction
+		GatewayDirection direction;
+		if (gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING))
+			direction = GatewayDirection.CONVERGING;
+		else 
+			direction = GatewayDirection.DIVERGING;
+		
+		// si c'est une parallel, on ne cherche que les parallel
+		List<? extends Gateway> list, list2;
+		if (gateway instanceof ParallelGateway) {
+			list = Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), direction);
+			list2 = Collections.emptyList();
+		} else {
+			// les exclusives gateways
+			list = Filter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), direction);
+			// et les inclusives gateways
+			list2 = Filter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), direction);
 		}
-		return node.getOutgoing().get(0).getTargetRef();
+
+		candidats.addAll(list);
+		candidats.addAll(list2);
+		return candidats;
+	}
+
+	/**
+	 * Cherche parmis les candidats la gateway correspondant à la "twin" de celle passée en paramètre.
+	 * @param process le {@link BpmnProcess}.
+	 * @param gateway la {@link Gateway} dont on cherche la twin.
+	 * @param potentialsCandidats une {@link List} de {@link Gateway} potentiellement twin.
+	 * @return {@link Gateway} la twin si elle est trouvée, null sinon.
+	 */
+	private Gateway searchBestCandidat(BpmnProcess process, Gateway gateway, List<Gateway> potentialsCandidats) {
+
+		boolean isDiverging = gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING);
+
+		Gateway twin = null;
+		int scoreTwin = Integer.MAX_VALUE;
+		
+		JungProcess jung = new JungProcess(process);
+		DijkstraShortestPath<JungVertex, JungEdge> algo = new DijkstraShortestPath<JungVertex, JungEdge>(jung.getGraph());
+		
+		// pour chaque candidat, on fait une évaluation
+		for (Gateway candidat : potentialsCandidats) {
+			boolean save = true;
+			int score = 0;
+
+			// on vérifie que pour chaque arc sortant/entrant (selon la direction de la gateway), on a un chemin
+			List<SequenceFlow> sequences = isDiverging ? gateway.getOutgoing() : gateway.getIncoming();
+			
+			for (SequenceFlow seq : sequences) {
+				// il est possible que l'arc soit directement lié au candidat
+				FlowNode node = isDiverging ? seq.getTargetRef() : seq.getSourceRef();
+				if (node == candidat) {
+					score++;
+				} 
+				// sinon on fait le plus court chemin avec Dijkstra
+				else {
+					JungVertex v1 = jung.getVertex(node.getId());
+					JungVertex v2 = jung.getVertex(candidat.getId());
+					
+					// si notre gateway est diverging, alors on cherche dans le sens v1 -> v2, sinon on cherche dans le sens v2 -> v1
+					List<JungEdge> path = isDiverging ? algo.getPath(v1, v2) : algo.getPath(v2, v1);
+					
+					// si un chemin n'arrive pas au candidat on abandonne
+					if (path.isEmpty()) {
+						save = false;
+						break;
+					} 
+					// sinon on peut ajouter le score
+					else {
+						score += path.size() + 1;
+					}
+				}
+			}
+			
+			// dans ce cas, on enregistre le candidat avec son score
+			if (save) {
+				if (scoreTwin > score) {
+					twin = candidat;
+					scoreTwin = score;
+				}
+			}
+		}
+		return twin;
 	}
 }

@@ -3,11 +3,11 @@ package fr.lip6.move.processGenerator.bpmn2.jung;
 import org.eclipse.bpmn2.FlowNode;
 
 
-public class JungNode {
+public class JungVertex {
 	
 	private String id;
 	
-	public JungNode(FlowNode node) {
+	public JungVertex(FlowNode node) {
 		super();
 		this.id = node.getId();
 	}

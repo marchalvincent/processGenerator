@@ -37,7 +37,7 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		if (oclQuery.isEmpty()) 
 			return 0;
 		
-		if (object instanceof BpmnProcess) {
+		if (!(object instanceof BpmnProcess)) {
 			throw new BpmnException("Matches method : The object is not a Bpmn Process.");
 		}
 		

@@ -15,8 +15,8 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 public class JungProcess {
 	
-	private Graph<JungNode, JungEdge> graph;
-	private Map<String, JungNode> allVertices;
+	private Graph<JungVertex, JungEdge> graph;
+	private Map<String, JungVertex> allVertices;
 	
 	public JungProcess(BpmnProcess bpmnProcess) {
 		this(bpmnProcess.getProcess());
@@ -24,13 +24,13 @@ public class JungProcess {
 	
 	public JungProcess(Process process) {
 		super();
-		graph = new SparseMultigraph<JungNode, JungEdge>();
-		allVertices = new HashMap<String, JungNode>();
+		graph = new SparseMultigraph<JungVertex, JungEdge>();
+		allVertices = new HashMap<String, JungVertex>();
 		
 		// on parcours chaque élément du process pour y mettre dans un premier temps les FlowNodes
 		for (FlowElement element : process.getFlowElements()) {
 			if (element instanceof FlowNode) {
-				JungNode vertex = new JungNode((FlowNode) element);
+				JungVertex vertex = new JungVertex((FlowNode) element);
 				allVertices.put(vertex.getId(), vertex);
 				graph.addVertex(vertex);
 			}
@@ -41,18 +41,18 @@ public class JungProcess {
 			if (element instanceof SequenceFlow) {
 				
 				SequenceFlow sequence = (SequenceFlow) element;
-				JungNode v1 = allVertices.get(sequence.getSourceRef().getId());
-				JungNode v2 = allVertices.get(sequence.getTargetRef().getId());
+				JungVertex v1 = allVertices.get(sequence.getSourceRef().getId());
+				JungVertex v2 = allVertices.get(sequence.getTargetRef().getId());
 				graph.addEdge(new JungEdge(sequence), v1, v2, EdgeType.DIRECTED);
 			}
 		}
 	}
 	
-	public Graph<JungNode, JungEdge> getGraph() {
+	public Graph<JungVertex, JungEdge> getGraph() {
 		return graph;
 	}
 	
-	public JungNode getVertex(String name) {
+	public JungVertex getVertex(String name) {
 		return allVertices.get(name);
 	}
 

@@ -76,7 +76,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern implements IBpm
 		}
 		
 		// on récupère l'exclusive converging
-		Gateway gatewayConverging = SESEManager.instance.getEndOfGateway(process, gatewayDiverging);
+		Gateway gatewayConverging = SESEManager.instance.findTwinGateway(process, gatewayDiverging);
 		
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();
