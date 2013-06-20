@@ -1,6 +1,5 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -175,6 +174,9 @@ public class ChangePatternHelper {
 
 			// on cherche la parallelGateway converging qui referme le chemin
 			parallelConverging = (ParallelGateway) SESEManager.instance.findTwinGateway(process, parallelGateway);
+			// petite vérification
+			if (parallelConverging == null) 
+				return;
 			
 			// si la parallelGateway possède plusieurs chemins
 			if (parallelGateway.getOutgoing().size() > 1) {
@@ -183,7 +185,7 @@ public class ChangePatternHelper {
 				// on parcours chaque arc sortant et on regarde s'il n'arrive pas directement à la ParallelGateway converging
 				for (SequenceFlow sequenceFlow : parallelGateway.getOutgoing()) {
 
-					if (parallelConverging != null && sequenceFlow.getTargetRef() == parallelConverging) {
+					if (sequenceFlow.getTargetRef() == parallelConverging) {
 						// on ajoute l'arc dans la liste de ceux a supprimer
 						listeToRemove.add(sequenceFlow);
 						// ici on fait un break sinon on risque de supprimer trop d'arc et couper le process en deux...
@@ -192,17 +194,13 @@ public class ChangePatternHelper {
 				}
 				
 				// puis on fait les removes nécessaires
-				for (SequenceFlow sequenceFlow : listeToRemove) {
+				for (SequenceFlow sequenceFlow : listeToRemove)
 					process.removeSequenceFlow(sequenceFlow);
-				}
 			} // fin de : si la parallelGateway divergente a plusieurs sorties
 			
 			// si la parallelGateway n'a qu'une seule sortie, on peut simplifier
 			if (parallelGateway.getOutgoing().size() == 1) {
 				
-				// petite vérification
-				if (parallelConverging == null) 
-					return;
 				if (parallelConverging.getIncoming().size() != 1) 
 					System.err.println(this.getClass().getSimpleName() + " : The parallelGateway have more than 1 incoming sequence flow.");
 				
@@ -270,7 +268,8 @@ public class ChangePatternHelper {
 
 				// petites vérifications
 				if (gatewayConverging.getIncoming().size() != 1) 
-					System.err.println(this.getClass().getSimpleName() + " : The Gateway have more than 1 incoming sequence flow.");
+					System.err.println(this.getClass().getSimpleName() + " : The Gateway does not contains only 1 incoming sequence flow. Number : " +
+							gatewayConverging.getIncoming().size() + ", id : " + gatewayConverging.getId());
 				
 				// ici on peut faire la suppression des 2 Gateway
 				gatewayDiverging.getIncoming().get(0).setTargetRef(gatewayDiverging.getOutgoing().get(0).getTargetRef());
@@ -284,7 +283,7 @@ public class ChangePatternHelper {
 				removed = true;
 			} // fin de : si l'ExclusiveGateway divergente n'a qu'une sortie
 			
-			// et on supprime les loop potentielles
+			// et on supprime les loop potentielles si on n'a encore rien supprimé
 			if (!removed)
 				this.cleanPotentialUselessLoop(process, gatewayDiverging, gatewayConverging);
 			
@@ -299,17 +298,28 @@ public class ChangePatternHelper {
 	 */
 	private void cleanPotentialUselessLoop(BpmnProcess process, Gateway gatewayDiverging, Gateway gatewayConverging) {
 
-		boolean isLoop = false;
+		List<SequenceFlow> listToRemove = new ArrayList<>();
 		
-		// on vérifie s'il y a un arc vide allant du merge vers la decision
+		// on récupère les arcs vides allant du merge vers la decision
 		for (SequenceFlow sequence : gatewayConverging.getOutgoing()) {
 			if (sequence.getTargetRef().equals(gatewayDiverging))
-				isLoop =  true;
+				listToRemove.add(sequence);
 		}
 		
-		if (isLoop) {
-			SequenceFlow decisionToMergeEmpty = null;
+		// si on en a n >= 2, alors on peut en supprimer n - 1
+		if (listToRemove.size() >= 2) {
+			for (int i = 0; i < (listToRemove.size() - 1); i++) {
+				process.removeSequenceFlow(listToRemove.get(i));
+			}
+		}
+		
+		// ici, soit il nous reste 1 arc vide (merge->decision), soit on n'en a pas.
+		if (!listToRemove.isEmpty()) {
+			// on récupère le dernier arc vide (merge->decision)
+			SequenceFlow mergeToDecisionEmpty = listToRemove.get(listToRemove.size() - 1);
 			
+			// et on cherche s'il n'y a pas d'arc vide (decision->merge)
+			SequenceFlow decisionToMergeEmpty = null;
 			for (SequenceFlow sequence : gatewayDiverging.getOutgoing()) {
 				if (sequence.getTargetRef().equals(gatewayConverging)) {
 					decisionToMergeEmpty = sequence;
@@ -318,46 +328,57 @@ public class ChangePatternHelper {
 			
 			// si on a trouvé un arc vide, alors on peut simplifier le tout
 			if (decisionToMergeEmpty != null) {
-				// on récupère les arcs avant et après la loop
-				List<SequenceFlow> liste = gatewayConverging.getIncoming();
-				if (liste.size() != 2){
-					System.err.println("Warning, the gateway converging does not contain 2 incoming edges." + gatewayConverging.getId()
-							);
-
-					try {
-						process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincent.bpmn");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				
+				// dans un premier temps on va compter le nombre de branche qu'a cette boucle
+				int nbBranches = gatewayConverging.getOutgoing().size() + gatewayDiverging.getOutgoing().size() - 1;
+				
+				if (nbBranches == 1)
+					System.err.println("Warning, the loop contains only " + nbBranches + " different path(s).");
+				// si on a 2 branches, on peut tout enlever car elles sont vides
+				else if (nbBranches == 2) {
+					
+					// on récupère les arcs avant et après la loop
+					List<SequenceFlow> liste = gatewayConverging.getIncoming();
+					if (liste.size() != 2) {
+						System.err.println("Warning, the gateway converging does not contain 2 incoming edges. Number : " + 
+								liste.size() + ", id : " + gatewayConverging.getId());
 					}
-				}
-				SequenceFlow edgeBefore = null;
-				for (SequenceFlow sequenceFlow : liste) {
-					if (sequenceFlow != decisionToMergeEmpty)
-						edgeBefore = sequenceFlow;
-				}
-				
-				liste = gatewayDiverging.getOutgoing();
-				if (liste.size() != 2)
-					System.err.println("Warning, the gateway diverging does not contain 2 outgoing edges.");
-				SequenceFlow edgeAfter = null;
-				for (SequenceFlow sequenceFlow : liste) {
-					if (sequenceFlow != decisionToMergeEmpty)
-						edgeAfter = sequenceFlow;
-				}
-				
-				// on peut faire la suppression si on a trouvé les arcs
-				if (edgeBefore != null && edgeAfter != null) {
-					edgeBefore.setTargetRef(edgeAfter.getTargetRef());
+					SequenceFlow edgeBefore = null;
+					for (SequenceFlow sequenceFlow : liste) {
+						if (sequenceFlow != decisionToMergeEmpty)
+							edgeBefore = sequenceFlow;
+					}
+					
+					liste = gatewayDiverging.getOutgoing();
+					if (liste.size() != 2)
+						System.err.println("Warning, the gateway diverging does not contain 2 outgoings edges. Number : " + 
+								liste.size() + ", id : " + gatewayDiverging.getId());
 
+					SequenceFlow edgeAfter = null;
+					for (SequenceFlow sequenceFlow : liste) {
+						if (sequenceFlow != decisionToMergeEmpty)
+							edgeAfter = sequenceFlow;
+					}
+					
+					// on peut faire la suppression si on a trouvé les arcs
+					if (edgeBefore != null && edgeAfter != null) {
+						edgeBefore.setTargetRef(edgeAfter.getTargetRef());
+
+						process.removeSequenceFlow(decisionToMergeEmpty);
+						process.removeSequenceFlow(mergeToDecisionEmpty);
+						process.removeSequenceFlow(edgeAfter);
+						process.removeFlowNode(gatewayConverging);
+						process.removeFlowNode(gatewayDiverging);
+					} else {
+						System.err.println("Warning, we can't remove the useless loop.");
+					}
+				} // fin de : si on a 2 branches
+				// si on a trois branches on ne supprime qu'un arc
+				else if (nbBranches == 3) {
+					// attention a bien supprimer l'arc (decision->merge) car l'autre pourrait générer un deadlock
 					process.removeSequenceFlow(decisionToMergeEmpty);
-					process.removeSequenceFlow(gatewayConverging.getOutgoing().get(0));
-					process.removeSequenceFlow(edgeAfter);
-					process.removeFlowNode(gatewayConverging);
-					process.removeFlowNode(gatewayDiverging);
-				} else {
-					System.err.println("Warning, we can't remove the useless loop.");
 				}
+				
 			}
 		}
 	}

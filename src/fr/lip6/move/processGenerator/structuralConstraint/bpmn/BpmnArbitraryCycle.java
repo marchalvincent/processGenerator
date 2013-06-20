@@ -39,10 +39,9 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 		List<ExclusiveGateway> list = Filter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING);
 		for (ExclusiveGateway converging : list) {
 			// on récupère l'activité juste après la converging
-			if (converging.getOutgoing().size() > 1)
-				System.err.println("Warning, the converging gateway has more than 1 outgoing sequence flow.");
-			if (converging.getOutgoing().size() == 0)
-				System.err.println("Warning, the converging gateway does not contains any outgoing sequence flow.");
+			if (converging.getOutgoing().size() != 1)
+				System.err.println("Warning, the converging gateway does not contains only 1 outgoing sequence flow. Number : " +
+						converging.getOutgoing().size() + ", id : " + converging.getId());
 			SequenceFlow sequence = converging.getOutgoing().get(0);
 			
 			if (sequence != null) {
