@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator;
+package fr.lip6.move.processGenerator.bpmn2.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class ConfigurationManager {
 
-	private final String LOCATION = System.getProperty("user.home") + File.separator + ".processGenerator" + File.separator;
+	private final String LOCATION = Utils.configurationFolder;
 	private final String NODES = "30";
 	private final String MARGIN = "10";
 	private final String TYPE_FILE = "0";

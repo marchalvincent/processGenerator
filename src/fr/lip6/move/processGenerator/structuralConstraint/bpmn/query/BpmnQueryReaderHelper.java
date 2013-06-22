@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.utils.Utils;
 
 /**
  * Classe helper permettant de lire facilement dans un fichier.
@@ -16,7 +17,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnException;
  */
 public class BpmnQueryReaderHelper {
 	
-	public static final String directory = "configuration/fr.lip6.move.processGenerator/bpmn.query";
+	public static final String directory = Utils.configurationFolder + "/bpmn.query";
 	
 	/**
 	 * Renvoie la requête lue dans le fichier dont le nom est passé en paramètre.

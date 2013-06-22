@@ -58,6 +58,7 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		try {
 			oclExpession = helper.createQuery(oclQuery);
 		} catch (ParserException e) {
+			e.printStackTrace();
 			throw new BpmnException("ParserException : " + e.getMessage());
 		}
 		
