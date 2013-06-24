@@ -92,6 +92,7 @@ public class ChangePatternTest {
 		listeCandidat = mutation.apply(listeCandidat, rng);
 		
 		listeCandidat.get(0).save("C:/Users/Vincent/workspace/processGenerator/test.bpmn");
+		
 	}
 	
 	@Test
