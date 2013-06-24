@@ -8,13 +8,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
 public class StructuralConstraintFactory extends AbstractStructuralConstraintFactory {
 
-	private static StructuralConstraintFactory instance = new StructuralConstraintFactory();
-	
+	public static final StructuralConstraintFactory instance = new StructuralConstraintFactory();
 	private StructuralConstraintFactory() {}
-	
-	public static StructuralConstraintFactory getInstance() {
-		return instance;
-	}
 	
 	@Override
 	public IStructuralConstraint newManualOclConstraint(String query) {

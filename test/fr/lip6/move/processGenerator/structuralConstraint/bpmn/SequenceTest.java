@@ -36,7 +36,7 @@ public class SequenceTest {
 	public void test1() throws Exception {
 		
 		// init du process
-		process = BpmnBuilder.initialFinal();
+		process = BpmnBuilder.instance.initialFinal();
 		
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSequence(), EQuantity.LESS, 1);
@@ -59,7 +59,7 @@ public class SequenceTest {
 	public void test2() throws Exception {
 		
 		// init du process
-		process = BpmnBuilder.initialABFinal();
+		process = BpmnBuilder.instance.initialABFinal();
 		
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSequence(), EQuantity.EQUAL, 1);
@@ -81,7 +81,7 @@ public class SequenceTest {
 	@Test
 	public void test3() throws Exception {
 
-		BpmnProcess process = BpmnBuilder.createExampleWithParallel();
+		BpmnProcess process = BpmnBuilder.instance.createExampleWithParallel();
 		
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSequence(), EQuantity.EQUAL, 2);

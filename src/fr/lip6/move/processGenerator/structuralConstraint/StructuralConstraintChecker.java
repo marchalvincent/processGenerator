@@ -75,6 +75,14 @@ public class StructuralConstraintChecker {
 		return weight;
 	}
 	
+	public boolean hasRepresentation() {
+		return this.constraint.getRepresentation() != null;
+	}
+	
+	public IConstraintRepresentation getRepresentation() {
+		return constraint.getRepresentation();
+	}
+	
 	@Override
 	public String toString() {
 		return "StructuralConstraintChecker [constraint=" + constraint + ", quantity=" + quantity

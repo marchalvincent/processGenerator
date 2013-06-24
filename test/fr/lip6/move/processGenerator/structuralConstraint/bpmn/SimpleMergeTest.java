@@ -35,7 +35,7 @@ public class SimpleMergeTest {
 	public void test1() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.initialFinal();
+		process = BpmnBuilder.instance.initialFinal();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSimpleMerge(), EQuantity.EQUAL, 0);
@@ -46,7 +46,7 @@ public class SimpleMergeTest {
 	public void test2() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithExclusiveChoice();
+		process = BpmnBuilder.instance.createExampleWithExclusiveChoice();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSimpleMerge(), EQuantity.EQUAL, 1);

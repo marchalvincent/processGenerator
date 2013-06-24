@@ -2,18 +2,21 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
 import java.util.List;
 import java.util.Random;
+
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.SequenceFlow;
+
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
+import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
 
-public class BpmnRemove extends AbstractChangePattern implements IBpmnChangePattern {
+public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
-	public BpmnProcess apply(BpmnProcess oldProcess, Random rng) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 
 		BpmnProcess process = null;
 		try {

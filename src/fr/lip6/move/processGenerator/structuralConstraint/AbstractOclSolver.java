@@ -75,6 +75,12 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		}
 		return 0;
 	}
+	
+	@Override
+	public IConstraintRepresentation getRepresentation() {
+		// par défaut les contraintes n'ont pas de représentation
+		return null;
+	}
 
 	@Override
 	public String toString() {

@@ -2,20 +2,23 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
 import java.util.List;
 import java.util.Random;
+
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.SequenceFlow;
+
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.geneticAlgorithm.AbstractChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
+import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
 
-public class BpmnLoopInsert extends AbstractChangePattern implements IBpmnChangePattern {
+public class BpmnLoopInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
-	public BpmnProcess apply(BpmnProcess oldProcess, Random rng) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 
 		BpmnProcess process = null;
 		try {
@@ -63,7 +66,6 @@ public class BpmnLoopInsert extends AbstractChangePattern implements IBpmnChange
 		arcIn.setTargetRef(merge);
 		arcOut.setSourceRef(choice);
 
-		//TODO faire le remove, voir avec ce qui existe déjà...
 		return process;
 	}
 }

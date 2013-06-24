@@ -78,10 +78,10 @@ public class SelectionStartExecution extends SelectionAdapter {
 		AbstractStructuralConstraintFactory factory = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
 			typeFile = "bpmn";
-			factory = StructuralConstraintFactory.getInstance();
+			factory = StructuralConstraintFactory.instance;
 		} else {
 			typeFile = "uml";
-			factory = UmlStructuralConstraintFactory.getInstance();
+			factory = UmlStructuralConstraintFactory.instance;
 		}
 		
 		// les elements et workflows sélectionnés

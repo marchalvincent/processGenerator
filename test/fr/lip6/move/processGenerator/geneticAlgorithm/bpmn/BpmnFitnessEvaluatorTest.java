@@ -17,7 +17,7 @@ public class BpmnFitnessEvaluatorTest {
 		BpmnFitnessEvaluator evaluator = new BpmnFitnessEvaluator(size, margin, null, null, null, null);
 		double precedentFitness = 0, fitness;
 		for (int i = 0; i < 202; i++) {
-			BpmnProcess process = BpmnBuilder.numberNodes(i);
+			BpmnProcess process = BpmnBuilder.instance.numberNodes(i);
 			fitness = evaluator.getSizeFitness(process, null);
 			
 			if (i < 100) {
@@ -43,7 +43,7 @@ public class BpmnFitnessEvaluatorTest {
 		BpmnFitnessEvaluator evaluator = new BpmnFitnessEvaluator(size, margin, null, null, null, null);
 		double precedentFitness = 0, fitness;
 		for (int i = 0; i < 35; i++) {
-			BpmnProcess process = BpmnBuilder.numberNodes(i);
+			BpmnProcess process = BpmnBuilder.instance.numberNodes(i);
 			fitness = evaluator.getSizeFitness(process, null);
 			
 			if (i < 10) {

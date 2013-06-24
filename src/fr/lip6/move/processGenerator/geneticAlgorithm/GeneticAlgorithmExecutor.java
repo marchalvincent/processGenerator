@@ -182,7 +182,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 		if (isCheckCrossover)
 			operations.add(new BpmnCrossoverOperation());
 		if (isCheckMutation && changePatterns != null)
-			operations.add(new BpmnMutationOperation(changePatterns));
+			operations.add(new BpmnMutationOperation(changePatterns, contraintesWorkflows));
 		
 		if (operations.isEmpty())
 			throw new GeneticException("You must select at least one evolutionary operator.");

@@ -35,7 +35,7 @@ public class SynchronizationTest {
 	public void test1() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.initialFinal();
+		process = BpmnBuilder.instance.initialFinal();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSynchronization(), EQuantity.EQUAL, 0);
@@ -46,7 +46,7 @@ public class SynchronizationTest {
 	public void test2() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithParallel();
+		process = BpmnBuilder.instance.createExampleWithParallel();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSynchronization(), EQuantity.EQUAL, 1);

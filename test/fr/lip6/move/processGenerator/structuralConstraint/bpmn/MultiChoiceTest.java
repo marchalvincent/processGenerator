@@ -35,7 +35,7 @@ public class MultiChoiceTest {
 	public void test1() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.initialFinal();
+		process = BpmnBuilder.instance.initialFinal();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnMultiChoice(), EQuantity.EQUAL, 0);
@@ -46,7 +46,7 @@ public class MultiChoiceTest {
 	public void test2() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithStructuredSynchronizingMerge();
+		process = BpmnBuilder.instance.createExampleWithStructuredSynchronizingMerge();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnMultiChoice(), EQuantity.EQUAL, 1);

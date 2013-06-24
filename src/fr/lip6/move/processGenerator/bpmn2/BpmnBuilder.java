@@ -9,13 +9,16 @@ import org.eclipse.bpmn2.Task;
 
 
 public class BpmnBuilder {
+	
+	public static final BpmnBuilder instance = new BpmnBuilder();
+	private BpmnBuilder() {}
 
 	/**
 	 * Construit un process simple : 
 	 * StartEvent -> EndEvent.
 	 * @return
 	 */
-	public static BpmnProcess initialFinal() {
+	public BpmnProcess initialFinal() {
 		BpmnProcess process = new BpmnProcess();
 
 		// les noeuds
@@ -33,7 +36,7 @@ public class BpmnBuilder {
 	 * StartEvent -> Task -> Task -> EndEvent.
 	 * @return
 	 */
-	public static BpmnProcess initialABFinal() {
+	public BpmnProcess initialABFinal() {
 		BpmnProcess process = new BpmnProcess();
 
 		// les noeuds
@@ -55,7 +58,7 @@ public class BpmnBuilder {
 	 * StartEvent -> Task -> Task -> Task -> EndEvent.
 	 * @return
 	 */
-	public static BpmnProcess initialABCFinal() {
+	public BpmnProcess initialABCFinal() {
 		BpmnProcess process = new BpmnProcess();
 
 		// les noeuds
@@ -79,7 +82,7 @@ public class BpmnBuilder {
 	 *  init -> a -> parallel -> (b & c) -> join -> d -> e -> f -> final
 	 *  @return
 	 */
-	public static BpmnProcess createExampleWithParallel() {
+	public BpmnProcess createExampleWithParallel() {
 		BpmnProcess process = new BpmnProcess();
 		
 		// les noeuds
@@ -116,7 +119,7 @@ public class BpmnBuilder {
 	 *  init -> parallel -> (b & c) -> join -> final
 	 * @return
 	 */
-	public static BpmnProcess createExampleWithParallel2() {
+	public BpmnProcess createExampleWithParallel2() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -140,7 +143,7 @@ public class BpmnBuilder {
 		return process;
 	}
 
-	public static BpmnProcess createExampleWithUselessParallel() {
+	public BpmnProcess createExampleWithUselessParallel() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -162,7 +165,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess createExampleWithUselessExclusive() {
+	public BpmnProcess createExampleWithUselessExclusive() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -184,7 +187,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess createExampleWithUselessParallelAndExclusive() {
+	public BpmnProcess createExampleWithUselessParallelAndExclusive() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -218,7 +221,7 @@ public class BpmnBuilder {
 	 *  init -> exclusiveChoice -> (b & c) -> merge -> final
 	 * @return
 	 */
-	public static BpmnProcess createExampleWithExclusiveChoice() {
+	public BpmnProcess createExampleWithExclusiveChoice() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -247,7 +250,7 @@ public class BpmnBuilder {
 	 *  init -> multiChoice -> (b & c) -> multiMerge -> final
 	 * @return
 	 */
-	public static BpmnProcess createExampleWithStructuredSynchronizingMerge() {
+	public BpmnProcess createExampleWithStructuredSynchronizingMerge() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -276,7 +279,7 @@ public class BpmnBuilder {
 	 *  init -> multiChoice -> (b & c) -> multiMerge -> final
 	 * @return
 	 */
-	public static BpmnProcess createExampleWithMultiChoiceMultiMerge() {
+	public BpmnProcess createExampleWithMultiChoiceMultiMerge() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -300,7 +303,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess numberNodes(int number) {
+	public BpmnProcess numberNodes(int number) {
 
 		BpmnProcess process = new BpmnProcess();
 		for (int i = 0; i < number; i++) {
@@ -309,7 +312,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess getExampleForSESE() {
+	public BpmnProcess getExampleForSESE() {
 
 		BpmnProcess process = new BpmnProcess();
 		
@@ -343,7 +346,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess getLoopExample() {
+	public BpmnProcess getLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -370,7 +373,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess getComplexLoopExample() {
+	public BpmnProcess getComplexLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -403,7 +406,7 @@ public class BpmnBuilder {
 		return process;
 	}
 
-	public static BpmnProcess getDoubleLoopExample() {
+	public BpmnProcess getDoubleLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -435,7 +438,7 @@ public class BpmnBuilder {
 	}
 	
 
-	public static BpmnProcess getUselessLoopExample() {
+	public BpmnProcess getUselessLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -458,7 +461,7 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-	public static BpmnProcess getExampleForSESE2() {
+	public BpmnProcess getExampleForSESE2() {
 
 		BpmnProcess process = new BpmnProcess();
 		

@@ -12,27 +12,27 @@ public class ChangePatternHelperTest {
 
 //	@Test
 	public void test() throws IOException {
-		BpmnProcess process = BpmnBuilder.createExampleWithUselessParallel();
+		BpmnProcess process = BpmnBuilder.instance.createExampleWithUselessParallel();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
-		process = new BpmnRemove().apply(process, new MersenneTwisterRNG());
+		process = new BpmnRemove().apply(process, new MersenneTwisterRNG(), null);
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentApres.bpmn");
 		assertTrue(true);
 	}
 	
 //	@Test
 	public void test2() throws IOException {
-		BpmnProcess process = BpmnBuilder.createExampleWithUselessExclusive();
+		BpmnProcess process = BpmnBuilder.instance.createExampleWithUselessExclusive();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
-		process = new BpmnRemove().apply(process, new MersenneTwisterRNG());
+		process = new BpmnRemove().apply(process, new MersenneTwisterRNG(), null);
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentApres.bpmn");
 		assertTrue(true);
 	}
 	
 	@Test
 	public void test3() throws IOException {
-		BpmnProcess process = BpmnBuilder.getUselessLoopExample();
+		BpmnProcess process = BpmnBuilder.instance.getUselessLoopExample();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
-		process = new BpmnRemove().apply(process, new MersenneTwisterRNG());
+		process = new BpmnRemove().apply(process, new MersenneTwisterRNG(), null);
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentApres.bpmn");
 		assertTrue(true);
 	}

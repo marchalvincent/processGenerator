@@ -266,4 +266,8 @@ public class BpmnProcess {
 		}
 		return null;
 	}
+
+	public void addLinksGateways(Map<String, String> links) {
+		gatewaysLinked.putAll(links);
+	}
 }

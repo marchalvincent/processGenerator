@@ -6,14 +6,9 @@ import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
 public class UmlStructuralConstraintFactory extends AbstractStructuralConstraintFactory {
 
-	private static UmlStructuralConstraintFactory instance = new UmlStructuralConstraintFactory();
-	
+	public static final UmlStructuralConstraintFactory instance = new UmlStructuralConstraintFactory();
 	private UmlStructuralConstraintFactory() {}
 	
-	public static UmlStructuralConstraintFactory getInstance() {
-		return instance;
-	}
-
 	@Override
 	public IStructuralConstraint newManualOclConstraint(String query) {
 		return null;

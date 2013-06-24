@@ -2,10 +2,13 @@ package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.Task;
+
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
@@ -13,6 +16,7 @@ import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
 import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractJavaSolver;
+import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
 
 public class BpmnArbitraryCycle extends AbstractJavaSolver {
@@ -61,8 +65,8 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 	}
 
 	/**
-	 * Cette méthode renvoie vrai si et seulement si il existe un {@link JungEdge} du paramètre {@code chemin} déjà existant 
-	 * parmis les {@link JungEdge} du paramètre {@code allPaths}.
+	 * Cette méthode renvoie vrai si et seulement si il existe un {@link JungEdge} du paramètre {@code path} déjà existant 
+	 * parmi les {@link JungEdge} du paramètre {@code allPaths}.
 	 * @param allPaths une liste de liste de JungEdge correspondant aux boucles déjà enregistrées.
 	 * @param path la liste de JungEdge à vérifier si elle n'existe pas dans l'autre paramètre. 
 	 * @return true si il y a une concordance de {@link JungEdge} entre les deux paramètres.
@@ -74,10 +78,31 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 			// pour chaque JungEdge
 			for (JungEdge jungEdgeList : list)
 				// on parcours le chemin à vérifier
-				for (JungEdge jungEdgePath : path)
-					// on renvoie vrai s'il existe déjà
-					if (jungEdgeList.equals(jungEdgePath))
-						return true;
+				if(path.contains(jungEdgeList)) 
+					return true;
 		return false;
+	}
+
+	@Override
+	public IConstraintRepresentation getRepresentation() {
+		ConstraintRepresentation representation = new ConstraintRepresentation();
+		
+		// on construit les noeuds
+		ExclusiveGateway converging = representation.buildExclusiveGatewayConverging();
+		Task task = representation.buildTask();
+		ExclusiveGateway diverging = representation.buildExclusiveGatewayDiverging();
+		
+		representation.linkGatewys(converging, diverging);
+		
+		// puis on construit les arcs
+		representation.buildSequenceFlow(converging, task);
+		representation.buildSequenceFlow(task, diverging);
+		representation.buildSequenceFlow(diverging, converging);
+		
+		// on définit le début et la fin de la représentation
+		representation.setBegin(converging);
+		representation.setEnd(diverging);
+		
+		return representation;
 	}
 }

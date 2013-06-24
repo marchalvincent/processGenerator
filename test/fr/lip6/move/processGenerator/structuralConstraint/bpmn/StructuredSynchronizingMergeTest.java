@@ -36,7 +36,7 @@ public class StructuredSynchronizingMergeTest {
 	public void test1() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.initialFinal();
+		process = BpmnBuilder.instance.initialFinal();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 0);
@@ -47,7 +47,7 @@ public class StructuredSynchronizingMergeTest {
 	public void test2() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithStructuredSynchronizingMerge();
+		process = BpmnBuilder.instance.createExampleWithStructuredSynchronizingMerge();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 1);
@@ -58,7 +58,7 @@ public class StructuredSynchronizingMergeTest {
 	public void test3() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.createExampleWithMultiChoiceMultiMerge();
+		process = BpmnBuilder.instance.createExampleWithMultiChoiceMultiMerge();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 1);

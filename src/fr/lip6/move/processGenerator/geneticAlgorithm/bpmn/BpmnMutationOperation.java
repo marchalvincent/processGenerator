@@ -8,14 +8,17 @@ import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
+import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
 
 public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> {
 
 	private List<IBpmnChangePattern> changePatterns;
+	private List<StructuralConstraintChecker> workflowsConstraints;
 	private Random rng;
 	
-	public BpmnMutationOperation(List<IChangePattern> changePatterns) throws GeneticException {
+	public BpmnMutationOperation(List<IChangePattern> changePatterns, List<StructuralConstraintChecker> contraintesWorkflows) 
+			throws GeneticException {
 		super();
 		this.changePatterns = new ArrayList<IBpmnChangePattern>();
 		for (IChangePattern iChangePattern : changePatterns) {
@@ -25,6 +28,7 @@ public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> 
 				throw new GeneticException("BpmnMutationOperation constructor : one change pattern is not implementing IBpmnChangePattern.");
 		}
 		this.rng = new MersenneTwisterRNG();
+		this.workflowsConstraints = contraintesWorkflows;
 	}
 	
 	@Override
@@ -36,7 +40,7 @@ public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> 
 			// on prend un changePattern au hasard
 			IBpmnChangePattern changePattern = this.getRandomChangePattern();
 			// et on applique la mutation
-			newGeneration.add(changePattern.apply(bpmnProcess, rng));
+			newGeneration.add(changePattern.apply(bpmnProcess, rng, workflowsConstraints));
 		}
 		return newGeneration;
 	}

@@ -50,7 +50,7 @@ public class BpmnParser {
 			return new BpmnProcess(documentRoot);
 		}
 		
-		return BpmnBuilder.initialFinal();
+		return BpmnBuilder.instance.initialFinal();
 	}
 
 	/**
@@ -63,6 +63,6 @@ public class BpmnParser {
 		if (ifile != null) {
 			return this.getBpmnProcess(ifile.getRawLocationURI().getPath());
 		}
-		return BpmnBuilder.initialFinal();
+		return BpmnBuilder.instance.initialFinal();
 	}
 }

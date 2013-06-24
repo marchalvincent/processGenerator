@@ -1,6 +1,9 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
 import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +38,7 @@ public class ArbitraryCyclesTest {
 	public void test1() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.initialFinal();
+		process = BpmnBuilder.instance.initialFinal();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 0);
@@ -46,7 +49,7 @@ public class ArbitraryCyclesTest {
 	public void test2() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.getLoopExample();
+		process = BpmnBuilder.instance.getLoopExample();
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 1);
@@ -57,8 +60,8 @@ public class ArbitraryCyclesTest {
 	public void test3() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.getComplexLoopExample();
-//		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincent.bpmn");
+		process = BpmnBuilder.instance.getComplexLoopExample();
+//		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 1);
@@ -69,8 +72,8 @@ public class ArbitraryCyclesTest {
 	public void test4() throws Exception {
 
 		// init du process
-		process = BpmnBuilder.getDoubleLoopExample();
-		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincent.bpmn");
+		process = BpmnBuilder.instance.getDoubleLoopExample();
+		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
 
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 2);

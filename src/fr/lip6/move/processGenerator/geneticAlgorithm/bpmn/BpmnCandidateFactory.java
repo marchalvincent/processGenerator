@@ -27,6 +27,6 @@ public class BpmnCandidateFactory extends AbstractCandidateFactory<BpmnProcess> 
 	public BpmnProcess generateRandomCandidate(Random rng) {
 		if (process != null)
 			return process;
-		return BpmnBuilder.initialFinal();
+		return BpmnBuilder.instance.initialFinal();
 	}
 }

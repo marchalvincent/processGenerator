@@ -10,7 +10,8 @@ public enum EBpmnChangePattern implements IEnumChangePattern {
 	PARALLEL_INSERT(BpmnParallelInsert.class),
 	SERIAL_INSERT(BpmnSerialInsert.class),
 	REMOVE(BpmnRemove.class),
-	LOOP_INSERT(BpmnLoopInsert.class);
+	LOOP_INSERT(BpmnLoopInsert.class),
+	WORKFLOW_INSERT(BpmnWorkflowInsert.class);
 	
 	private Class<? extends IChangePattern> clazz;
 	
