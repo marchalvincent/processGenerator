@@ -39,9 +39,8 @@ public class ConfigurationManager {
 	private final String WORKFLOW_W = "1";
 	private final String MANUAL_OCL_W = "1";
 
-
 	private Properties properties;
-	private String path = Utils.configurationFolder + ".properties";
+	private String path = Utils.configurationFolder + ".processGeneratorProperties";
 
 	private static final ConfigurationManager instance = new ConfigurationManager();
 	private ConfigurationManager() {
@@ -50,7 +49,7 @@ public class ConfigurationManager {
 			this.properties = new Properties();
 
 			// on créé le répertoire d'arrivée s'il n'existe pas
-			File file = new File(Utils.configurationFolder);
+			File file = new File(LOCATION);
 			if (!file.exists())
 				file.mkdir();
 			file = new File(path);
@@ -94,7 +93,7 @@ public class ConfigurationManager {
 			this.store();
 
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

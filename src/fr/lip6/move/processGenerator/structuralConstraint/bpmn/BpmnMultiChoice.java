@@ -7,7 +7,6 @@ import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryReaderHelper;
 
 /**
  * Représente le WP6 - Multi Choice.
@@ -18,7 +17,11 @@ public class BpmnMultiChoice extends AbstractOclSolver {
 
 	public BpmnMultiChoice() throws BpmnException {
 		super();
-		super.setOclQuery(BpmnQueryReaderHelper.read("multiChoice"));
+		StringBuilder sb = new StringBuilder();
+		sb.append("InclusiveGateway.allInstances()->select(");
+		sb.append(	"gate : InclusiveGateway | gate.gatewayDirection = GatewayDirection::Diverging");
+		sb.append(")->size()");
+		super.setOclQuery(sb.toString());
 	}
 
 	@Override

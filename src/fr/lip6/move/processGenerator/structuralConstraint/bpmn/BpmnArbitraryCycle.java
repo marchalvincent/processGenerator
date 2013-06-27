@@ -15,6 +15,7 @@ import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
 import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
+import fr.lip6.move.processGenerator.bpmn2.utils.Utils;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
@@ -43,9 +44,14 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 		List<ExclusiveGateway> list = Filter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING);
 		for (ExclusiveGateway converging : list) {
 			// on récupère l'activité juste après la converging
-			if (converging.getOutgoing().size() != 1)
+			if (converging.getOutgoing().size() > 1) {
 				System.err.println("Warning, the converging gateway does not contains only 1 outgoing sequence flow. Number : " +
 						converging.getOutgoing().size() + ", id : " + converging.getId());
+				
+				if (Utils.DEBUG)
+					process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
+			}
+						
 			SequenceFlow sequence = converging.getOutgoing().get(0);
 			
 			if (sequence != null) {

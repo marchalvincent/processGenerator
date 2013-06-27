@@ -6,7 +6,6 @@ import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryReaderHelper;
 
 /**
  * Représente le WP3 - Synchronisation.
@@ -17,7 +16,11 @@ public class BpmnSynchronization extends AbstractOclSolver {
 
 	public BpmnSynchronization() throws BpmnException {
 		super();
-		super.setOclQuery(BpmnQueryReaderHelper.read("synchronization"));
+		StringBuilder sb = new StringBuilder();
+		sb.append("ParallelGateway.allInstances()->select(");
+		sb.append("gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Converging");
+		sb.append(")->size()");
+		super.setOclQuery(sb.toString());
 	}
 
 	@Override

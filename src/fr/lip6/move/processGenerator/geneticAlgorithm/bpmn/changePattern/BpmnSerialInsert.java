@@ -29,7 +29,7 @@ public class BpmnSerialInsert extends AbstractBpmnChangePattern implements IBpmn
 			process = new BpmnProcess(oldProcess);
 		} catch (BpmnException e) {
 			// impossible de copier...
-			System.err.println(getClass().getSimpleName() + e.getMessage());
+			System.err.println(getClass().getSimpleName() + ". " + e.getMessage());
 			return oldProcess;
 		}
 		

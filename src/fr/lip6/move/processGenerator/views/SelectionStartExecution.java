@@ -95,7 +95,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 			contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element, factory);
 			contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow, factory);
 		} catch(Exception ex) {
-			view.print(ex.getMessage());
+			view.printError(ex.getMessage());
 			System.err.println(ex.getMessage());
 			return;
 		}
@@ -134,7 +134,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 			try {
 				changePatterns = this.getChangePatterns(typeFile);
 			} catch (Exception ex) {
-				view.print(ex.getMessage());
+				view.printError(ex.getMessage());
 				System.err.println(ex.getMessage());
 				return;
 			}
@@ -209,7 +209,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 			else if (initialUmlProcess != null)
 				executor.setInitialProcess(initialUmlProcess);
 		} catch (GeneticException ex) {
-			view.print(ex.getMessage());
+			view.printError(ex.getMessage());
 			System.err.println(ex.getMessage());
 			return;
 		}

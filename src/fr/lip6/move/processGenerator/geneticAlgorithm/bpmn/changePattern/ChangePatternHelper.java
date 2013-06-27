@@ -1,17 +1,22 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import org.eclipse.bpmn2.Activity;
+import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
+
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
+import fr.lip6.move.processGenerator.bpmn2.utils.Utils;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 
 /**
@@ -144,7 +149,12 @@ public class ChangePatternHelper {
 	 * @return int.
 	 */
 	public int countParallelGateway(BpmnProcess process) {
-		return Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements()).size();
+		int count = 0;
+		List<ParallelGateway> list = Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
+		for (ParallelGateway parallelGateway : list)
+			if (process.getTwin(parallelGateway.getId()) != null)
+				count ++;
+		return count;
 	}
 	
 	/**
@@ -174,9 +184,11 @@ public class ChangePatternHelper {
 
 			// on cherche la parallelGateway converging qui referme le chemin
 			parallelConverging = (ParallelGateway) SESEManager.instance.findTwinGateway(process, parallelGateway);
-			// petite vérification
-			if (parallelConverging == null) 
-				return;
+			// petite vérification, si on a une parallel sans twin, cela peut être un nouveau thread dans le process
+			if (parallelConverging == null) {
+				this.cleanNewThread(process, parallelGateway);
+				continue;
+			}
 			
 			// si la parallelGateway possède plusieurs chemins
 			if (parallelGateway.getOutgoing().size() > 1) {
@@ -209,14 +221,61 @@ public class ChangePatternHelper {
 				process.removeSequenceFlow(parallelGateway.getOutgoing().get(0));
 				process.removeFlowNode(parallelGateway);
 				
-				parallelConverging.getIncoming().get(0).setTargetRef(parallelConverging.getOutgoing().get(0).getTargetRef());
-				process.removeSequenceFlow(parallelConverging.getOutgoing().get(0));
+				// si notre parallel gateway est en fin de processus
+				if (parallelConverging.getOutgoing().size() == 0) {
+					process.removeSequenceFlow(parallelConverging.getIncoming().get(0));
+				} else {
+					parallelConverging.getIncoming().get(0).setTargetRef(parallelConverging.getOutgoing().get(0).getTargetRef());
+					process.removeSequenceFlow(parallelConverging.getOutgoing().get(0));
+				}
 				process.removeFlowNode(parallelConverging);
 				
 			} // fin de : si la parallelGateway divergente n'a qu'une sortie
 		} // fin de : pour chaque parallelGateway divergente
 	}
 
+	/**
+	 * Cette méthode se charge de supprimer les parallel gateway de nouveaux threads qui ne servent 
+	 * à rien ou qui ne sont pas logiques.
+	 * @param process le {@link BpmnProcess} à nettoyer.
+	 * @param parallelGateway la {@link ParallelGateway} du nouveau thread.
+	 */
+	private void cleanNewThread(BpmnProcess process, ParallelGateway parallelGateway) {
+		
+		// si la gateway a plusieurs arcs sortants
+		if (parallelGateway.getOutgoing().size() > 1) {
+			
+			/*
+			 * on vérifie le cas où un des arcs arrive directement à un EndEvent.
+			 * C'est illogique, car le process se finira automatiquement. Il faut dont le supprimer.
+			 */
+			List<SequenceFlow> listToRemove = new ArrayList<>();
+			for (SequenceFlow sequenceAfter : parallelGateway.getOutgoing()) {
+				if (sequenceAfter.getTargetRef() instanceof EndEvent)
+					listToRemove.add(sequenceAfter);
+			}
+			
+			// on supprime tous les arcs et EndEvent
+			for (SequenceFlow sequenceFlow : listToRemove) {
+				process.removeFlowNode(sequenceFlow.getTargetRef());
+				process.removeSequenceFlow(sequenceFlow);
+			}
+		}
+		
+		// si la gateway n'a qu'une seule sortie, on peut la supprimer
+		if (parallelGateway.getOutgoing().size() == 1) {
+			
+			if (parallelGateway.getIncoming().size() != 1)
+				System.err.println("Error, the parallel gateway has not only 1 incoming edge : " + parallelGateway.getIncoming().size());
+			
+			SequenceFlow sequenceBefore = parallelGateway.getIncoming().get(0);
+			SequenceFlow sequenceAfter = parallelGateway.getOutgoing().get(0);
+			
+			sequenceBefore.setTargetRef(sequenceAfter.getTargetRef());
+			process.removeSequenceFlow(sequenceAfter);
+			process.removeFlowNode(parallelGateway);
+		}
+	}
 	/**
 	 * Supprime les "ConditionalGateway" inutiles du process.
 	 * @param process un {@link BpmnProcess}.
@@ -238,10 +297,8 @@ public class ChangePatternHelper {
 
 			// on cherche la Gateway converging qui referme le chemin
 			gatewayConverging = SESEManager.instance.findTwinGateway(process, gatewayDiverging);
-			if (gatewayConverging == null) {
-				System.err.println("Error, the gateway diverging does not contains any gate converging.");
+			if (gatewayConverging == null)
 				continue;
-			}
 			
 			// on vérifie si on a plusieurs arc vide allant de la porte diverging à la porte converging
 			if (gatewayDiverging.getOutgoing().size() > 1) {
@@ -267,17 +324,29 @@ public class ChangePatternHelper {
 			if (gatewayDiverging.getOutgoing().size() == 1) {
 
 				// petites vérifications
-				if (gatewayConverging.getIncoming().size() != 1) 
-					System.err.println(this.getClass().getSimpleName() + " : The Gateway does not contains only 1 incoming sequence flow. Number : " +
+				if (gatewayConverging.getIncoming().size() != 1) {
+					System.err.println(this.getClass().getSimpleName() + " : The Gateway converging does not contains only 1 incoming sequence flow. Number : " +
 							gatewayConverging.getIncoming().size() + ", id : " + gatewayConverging.getId());
+					try {
+						if (Utils.DEBUG)
+							process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				
 				// ici on peut faire la suppression des 2 Gateway
 				gatewayDiverging.getIncoming().get(0).setTargetRef(gatewayDiverging.getOutgoing().get(0).getTargetRef());
 				process.removeSequenceFlow(gatewayDiverging.getOutgoing().get(0));
 				process.removeFlowNode(gatewayDiverging);
 				
-				gatewayConverging.getIncoming().get(0).setTargetRef(gatewayConverging.getOutgoing().get(0).getTargetRef());
-				process.removeSequenceFlow(gatewayConverging.getOutgoing().get(0));
+				// si la gateway est en fin de processus
+				if (gatewayConverging.getOutgoing().size() == 0) {
+					process.removeSequenceFlow(gatewayConverging.getIncoming().get(0));
+				} else {
+					gatewayConverging.getIncoming().get(0).setTargetRef(gatewayConverging.getOutgoing().get(0).getTargetRef());
+					process.removeSequenceFlow(gatewayConverging.getOutgoing().get(0));
+				}
 				process.removeFlowNode(gatewayConverging);
 				
 				removed = true;

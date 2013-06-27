@@ -29,7 +29,7 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 			return oldProcess;
 		}
 
-		// on récupère toutes le nombre de séquence et le nombre d'exclusive gateway
+		// on récupère le nombre de séquence et le nombre d'exclusive gateway
 		int nbSequence = ChangePatternHelper.getInstance().countSequenceFlow(process);
 		int nbConditional = ChangePatternHelper.getInstance().countConditionalGateway(process);
 		if (nbConditional % 2 != 0) {
@@ -81,6 +81,8 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		
 		// on récupère l'exclusive converging
 		Gateway gatewayConverging = SESEManager.instance.findTwinGateway(process, gatewayDiverging);
+		if (gatewayConverging == null)
+			return process;
 		
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();

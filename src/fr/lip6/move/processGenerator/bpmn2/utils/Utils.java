@@ -5,6 +5,6 @@ import java.io.File;
 
 public class Utils {
 
-	public static final String configurationFolder = System.getProperty("user.home") + File.separator + 
-			".processGenerator" + File.separator;
+	public static final String configurationFolder = System.getProperty("user.home") + File.separator;
+	public static final boolean DEBUG = true;
 }

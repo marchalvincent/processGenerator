@@ -6,12 +6,13 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 
 public enum EBpmnChangePattern implements IEnumChangePattern {
 	
+	WORKFLOW_INSERT(BpmnWorkflowInsert.class),
 	CONDITIONAL_INSERT(BpmnConditionalInsert.class),
 	PARALLEL_INSERT(BpmnParallelInsert.class),
 	SERIAL_INSERT(BpmnSerialInsert.class),
 	REMOVE(BpmnRemove.class),
 	LOOP_INSERT(BpmnLoopInsert.class),
-	WORKFLOW_INSERT(BpmnWorkflowInsert.class);
+	THREAD_INSERT(BpmnThreadInsert.class);
 	
 	private Class<? extends IChangePattern> clazz;
 	

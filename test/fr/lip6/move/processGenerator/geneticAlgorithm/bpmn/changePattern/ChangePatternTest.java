@@ -54,24 +54,26 @@ public class ChangePatternTest {
 	}
 	
 //	@Test
-	public void test0() throws IOException {
+	public void Appliquer3fois() throws IOException {
 //		test(new BpmnSerialInsert());
 //		test(new BpmnConditionalInsert());
 		test(new BpmnParallelInsert());
 	}
 	
-//	@Test
+	@Test
 	public void test1() throws IOException {
-//		IBpmnChangePattern parallel = new BpmnParallelInsert();
-//		IBpmnChangePattern serial = new BpmnSerialInsert();
-//		BpmnProcess process = BpmnBuilder.instance.initialFinal();
-//		serial.apply(process, rng, null);
-//		process.save("C:/Users/Vincent/workspace/processGenerator/test.bpmn");
-//		parallel.apply(process, rng, null);
-//		process.save("C:/Users/Vincent/workspace/processGenerator/test2.bpmn");
-//		parallel.apply(process, rng, null);
-//		process.save("C:/Users/Vincent/workspace/processGenerator/test3.bpmn");
-//		assertTrue(true);
+		IBpmnChangePattern parallel = new BpmnParallelInsert();
+		IBpmnChangePattern serial = new BpmnSerialInsert();
+		IBpmnChangePattern thread = new BpmnThreadInsert();
+		
+		BpmnProcess process = BpmnBuilder.instance.initialFinal();
+		process = serial.apply(process, rng, null);
+		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test1.bpmn");
+		process = parallel.apply(process, rng, null);
+		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test2.bpmn");
+		process = thread.apply(process, rng, null);
+		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test3.bpmn");
+		assertTrue(true);
 	}
 
 //	@Test
@@ -91,12 +93,11 @@ public class ChangePatternTest {
 		listeCandidat = mutation.apply(listeCandidat, rng);
 		listeCandidat = mutation.apply(listeCandidat, rng);
 		
-		listeCandidat.get(0).save("C:/Users/Vincent/workspace/processGenerator/test.bpmn");
-		
+		listeCandidat.get(0).save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test.bpmn");
 	}
 	
-	@Test
-	public void test3() throws IOException, BpmnException {
+//	@Test
+	public void testWorkflowInsert() throws IOException, BpmnException {
 		
 		BpmnProcess process = BpmnBuilder.instance.initialABFinal();
 		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test.bpmn");

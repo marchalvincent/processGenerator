@@ -6,7 +6,6 @@ import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.BpmnQueryReaderHelper;
 
 /**
  * Représente le WP2 - Parallel Split.
@@ -18,7 +17,11 @@ public class BpmnParallelSplit extends AbstractOclSolver {
 	
 	public BpmnParallelSplit() throws BpmnException {
 		super();
-		super.setOclQuery(BpmnQueryReaderHelper.read("parallelSplit"));
+		StringBuilder sb = new StringBuilder();
+		sb.append("ParallelGateway.allInstances()->select(");
+		sb.append(	"gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Diverging");
+		sb.append(")->size()");
+		super.setOclQuery(sb.toString());
 	}
 
 	@Override

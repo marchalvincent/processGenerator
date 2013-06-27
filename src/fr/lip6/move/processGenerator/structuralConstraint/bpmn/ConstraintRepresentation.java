@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.eclipse.bpmn2.Bpmn2Factory;
+import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
@@ -43,6 +44,17 @@ public class ConstraintRepresentation implements IConstraintRepresentation {
 	
 	public Map<String, String> getLinks() {
 		return gatewaysTwins;
+	}
+	
+	public EndEvent buildEndEvent() {
+		EndEvent end = Bpmn2Factory.eINSTANCE.createEndEvent();
+		
+		String name = BpmnNameManager.getEndName();
+		end.setId("id_" + name);
+		end.setName(name);
+		
+		getFlowElements().add(end);
+		return end;
 	}
 
 	public Task buildTask() {
@@ -154,6 +166,8 @@ public class ConstraintRepresentation implements IConstraintRepresentation {
 		SequenceFlow sequence = this.buildSequenceFlow();
 		sequence.setSourceRef(source);
 		sequence.setTargetRef(target);
+		source.getOutgoing().add(sequence);
+		target.getIncoming().add(sequence);
 		return sequence;
 	}
 	

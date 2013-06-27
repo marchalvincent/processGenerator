@@ -20,7 +20,9 @@ public enum EBpmnWorkflowPattern implements IEnumWorkflowPattern {
 	MULTI_CHOICE(BpmnMultiChoice.class),
 	MULTI_MERGE(BpmnMultiMerge.class),
 	STRUCTURED_SYNCHRONIZING_MERGE(BpmnStructuredSynchronizingMerge.class),
-	ARBITRARY_CYCLE(BpmnArbitraryCycle.class);
+	ARBITRARY_CYCLE(BpmnArbitraryCycle.class),
+	IMPLICITE_TERMINATION(BpmnImplicitTermination.class),
+	EXPLICITE_TERMINATION(BpmnExpliciteTermination.class);
 	
 	private Class<? extends IStructuralConstraint> clazz;
 	

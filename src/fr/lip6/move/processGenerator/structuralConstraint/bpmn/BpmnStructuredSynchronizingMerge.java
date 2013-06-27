@@ -39,7 +39,7 @@ public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 		for (InclusiveGateway gatewayDiverging : list) {
 				Gateway gatewayConverging = SESEManager.instance.findTwinGateway(process, gatewayDiverging);
 				// on a la porte fermante, maintenant il faut vérifier que c'est le bon type (dans ce workflow pattern on cherche une InclusiveGateway fermante)
-				if (gatewayConverging instanceof InclusiveGateway) 
+				if (gatewayConverging != null && gatewayConverging instanceof InclusiveGateway) 
 					countTotal++;
 		}
 		

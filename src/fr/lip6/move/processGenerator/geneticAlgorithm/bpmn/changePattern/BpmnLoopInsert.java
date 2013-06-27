@@ -38,30 +38,37 @@ public class BpmnLoopInsert extends AbstractBpmnChangePattern implements IBpmnCh
 			return process;
 		}
 
-		// on créé les nouveaux noeuds (XOR split et XOR merge)
-		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
-		ExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
-
-		process.linkGateways(merge, choice);
-
 		// on récupère les arc arrivant et partant de cette activity
 		List<SequenceFlow> sequencesIn = activity.getIncoming();
 		List<SequenceFlow> sequencesOut = activity.getOutgoing();
 		if (sequencesIn.size() != 1)
 			System.err.println(getClass().getSimpleName() + " : The number of incoming sequenceFlows is not correct : " 
 					+ sequencesIn.size() + ". " + activity.getClass());
-		if (sequencesOut.size() != 1)
+		if (sequencesOut.size() > 1)
 			System.err.println(getClass().getSimpleName() + " : The number of outgoing sequenceFlows is not correct : " 
 					+ sequencesIn.size() + ". " + activity.getClass());
 
+		/*
+		 * pour des raisons de simplicité dans les diagrammes, on ne faire pas l'insertion de 
+		 * boucle lorsque l'activité est en fin de process (sans arc sortant)
+		 */
+		if (sequencesOut.size() == 0)
+			return process;
+
 		SequenceFlow arcIn = sequencesIn.get(0);
 		SequenceFlow arcOut = sequencesOut.get(0);
+
+		// on créé les nouveaux noeuds (XOR split et XOR merge)
+		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
+		ExclusiveGateway choice = process.buildExclusiveGatewayDiverging();
+
+		process.linkGateways(merge, choice);
 
 		// puis on créé les arcs
 		process.buildSequenceFlow(merge, activity);
 		process.buildSequenceFlow(activity, choice);
 		process.buildSequenceFlow(choice, merge);
-		
+
 		// et on modifie les anciens arcs
 		arcIn.setTargetRef(merge);
 		arcOut.setSourceRef(choice);

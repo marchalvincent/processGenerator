@@ -29,7 +29,7 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
-		
+
 		// on récupère toutes les Activities et le nombre de ParallelGateway
 		int nbActivity = ChangePatternHelper.getInstance().countActivity(process);
 		int nbParallel = ChangePatternHelper.getInstance().countParallelGateway(process);
@@ -39,10 +39,10 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		}
 		// on divise par deux le nombre de parallelGateway car il y a une ouvrante et une fermante.
 		nbParallel = nbParallel / 2;
-		
+
 		if ((nbActivity + nbParallel) == 0)
 			return process;
-		
+
 		// on fait un random équitable pour savoir si on applique le parallel sur une Activity ou sur une parallelGateway deja existante
 		int[] tableau = new int[nbActivity + nbParallel];
 		for (int i = 0; i < nbActivity; i++) {
@@ -60,7 +60,7 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 			return applyOnParallel(process, rng);
 		}
 	}
-	
+
 	/**
 	 * Applique la modification génétique d'une insertion en parallèle sur une ParallelGateway déjà existente. 
 	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à la parallelGateway tirée au sort.
@@ -78,17 +78,19 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 			// si on n'a pas d'activity
 			return process;
 		}
-		
+
 		// on récupère la parallelConverging
 		ParallelGateway parallelConverging = (ParallelGateway) SESEManager.instance.findTwinGateway(process, parallelDiverging);
-		
+		if (parallelConverging == null)
+			return process;
+
 		// on créé la nouvelle tache
 		Task newTask = process.buildTask();
-		
+
 		// et enfin les nouveaux arcs
 		process.buildSequenceFlow(parallelDiverging, newTask);
 		process.buildSequenceFlow(newTask, parallelConverging);
-		
+
 		return process;
 	}
 
@@ -109,27 +111,34 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 			// si on n'a pas d'activity
 			return process;
 		}
-		
-		// on créé les nouveaux noeuds
-		ParallelGateway fork = process.buildParallelGatewayDiverging();
-		ParallelGateway join = process.buildParallelGatewayConverging();
-		Task newTask = process.buildTask();
 
-		process.linkGateways(fork, join);
-		
 		// on récupère les arc arrivant et partant de cette activity
 		List<SequenceFlow> sequencesIn = activity.getIncoming();
 		List<SequenceFlow> sequencesOut = activity.getOutgoing();
 		if (sequencesIn.size() != 1)
 			System.err.println(getClass().getSimpleName() + " : The number of incoming sequenceFlows is not correct : " 
 					+ sequencesIn.size() + ". " + activity.getClass());
-		if (sequencesOut.size() != 1)
+		if (sequencesOut.size() > 1)
 			System.err.println(getClass().getSimpleName() + " : The number of outgoing sequenceFlows is not correct : " 
-					+ sequencesIn.size() + ". " + activity.getClass());
+					+ sequencesOut.size() + ". " + activity.getClass());
+
+		/*
+		 * pour des raisons de simplicité dans les diagrammes, on ne faire pas l'insertion de 
+		 * boucle lorsque l'activité est en fin de process (sans arc sortant)
+		 */
+		if (sequencesOut.size() == 0)
+			return process;
 
 		SequenceFlow arcIn = sequencesIn.get(0);
 		SequenceFlow arcOut = sequencesOut.get(0);
-		
+
+		// on créé les nouveaux noeuds
+		ParallelGateway fork = process.buildParallelGatewayDiverging();
+		ParallelGateway join = process.buildParallelGatewayConverging();
+		Task newTask = process.buildTask();
+
+		process.linkGateways(fork, join);
+
 		// modification des arcs
 		arcIn.setTargetRef(fork);
 		process.buildSequenceFlow(fork, activity);
@@ -137,7 +146,7 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		process.buildSequenceFlow(newTask, join);
 		process.buildSequenceFlow(activity, join);
 		arcOut.setSourceRef(join);
-		
+
 		return process;
 	}
 }

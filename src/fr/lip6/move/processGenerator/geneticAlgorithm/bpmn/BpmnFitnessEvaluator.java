@@ -50,7 +50,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 			else if (manualOclChecker == null)
 				consManual = 1;
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		if (debug) {

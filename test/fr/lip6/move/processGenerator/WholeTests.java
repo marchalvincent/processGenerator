@@ -3,6 +3,7 @@ package fr.lip6.move.processGenerator;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
 import fr.lip6.move.processGenerator.bpmn2.jung.JungManagerTest;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnFitnessEvaluatorTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ArbitraryCyclesTest;
@@ -14,7 +15,6 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SequenceTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SimpleMergeTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.StructuredSynchronizingMergeTest;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SynchronizationTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.QueryHelperTest;
 
 
 @RunWith(Suite.class)
@@ -23,7 +23,6 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.query.QueryHelper
 	SynchronizationTest.class, 
 	ExclusiveChoiceTest.class,
 	SimpleMergeTest.class, 
-	QueryHelperTest.class,
 	BpmnFitnessEvaluatorTest.class,
 	StructuredSynchronizingMergeTest.class,
 	MultiChoiceTest.class,

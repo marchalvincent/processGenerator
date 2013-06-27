@@ -46,9 +46,14 @@ public class SESEManager {
 			return twin;
 		}
 		
+		// pour l'instant on ne fait pas la recherche... voir plus tard
+		// TODO faire la recherche des twins manuellement 
+		boolean bool = true;
+		if (bool)
+			return null;
+		
 		// sinon on récupère les gateways potentielles
 		List<Gateway> potentialsCandidats = this.getPotentialsCandidats(process, gateway);
-		
 		
 		// on cherche la gateway parmis les candidats
 		twin = searchBestCandidat(process, gateway, potentialsCandidats);
@@ -56,7 +61,7 @@ public class SESEManager {
 			return twin;
 		
 		// attention, ce code ne détecte pas les boucles
-		//TODO détection des boucles
+		// TODO détection des boucles
 		return null;
 	}
 	
