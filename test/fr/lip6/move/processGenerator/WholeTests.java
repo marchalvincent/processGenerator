@@ -30,4 +30,5 @@ import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SynchronizationTe
 	ArbitraryCyclesTest.class,
 	JungManagerTest.class})
 public class WholeTests {
+	
 }
