@@ -107,8 +107,8 @@ public class GeneticAlgorithmExecutor extends Thread {
 				this.initialProcess = initialProcess;
 			else 
 				throw new GeneticException("The initial process is not matching to the type file selected.");
-		}
-		throw new GeneticException("The type of initial process is not known : " + initialProcess + ".");
+		} else
+			throw new GeneticException("The type of initial process is not known : " + initialProcess + ".");
 	}
 
 	public void setGeneticSelection(int elitism, String selectionStrategy) {

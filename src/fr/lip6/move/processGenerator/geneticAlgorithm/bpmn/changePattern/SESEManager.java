@@ -46,9 +46,8 @@ public class SESEManager {
 			return twin;
 		}
 		
-		// pour l'instant on ne fait pas la recherche... voir plus tard
-		// TODO faire la recherche des twins manuellement 
-		boolean bool = true;
+		// ces 3 lignes de code peuvent etre supprimées, elles étaient temporaires
+		boolean bool = false;
 		if (bool)
 			return null;
 		
@@ -94,7 +93,24 @@ public class SESEManager {
 			// et les inclusives gateways
 			list2 = Filter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), direction);
 		}
-
+		
+		// on peut enlever celles qui sont déjà liées
+		// clean de la premiere liste
+		List<Gateway> listToRemove = new ArrayList<>();
+		for (Gateway g : list)
+			if (process.getTwin(g.getId()) != null)
+				listToRemove.add(g);
+		for (Gateway remove : listToRemove)
+			list.remove(remove);
+		
+		// clean de la deuxieme liste
+		listToRemove.clear();
+		for (Gateway g : list2)
+			if (process.getTwin(g.getId()) != null)
+				listToRemove.add(g);
+		for (Gateway remove : listToRemove)
+			list2.remove(remove);
+		
 		candidats.addAll(list);
 		candidats.addAll(list2);
 		return candidats;

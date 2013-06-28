@@ -14,13 +14,8 @@ import org.eclipse.uml2.uml.Activity;
  */
 public class UmlParser {
 
-	private static final UmlParser instance = new UmlParser();
-	
+	public static final UmlParser instance = new UmlParser();
 	private UmlParser() {}
-
-	public static UmlParser getInstance() {
-		return instance;
-	}
 	
 	public UmlProcess getUmlProcess(IFile ifile) {
 		

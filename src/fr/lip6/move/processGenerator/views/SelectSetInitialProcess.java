@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.views;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
@@ -9,13 +10,17 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Shell;
 import fr.lip6.move.processGenerator.bpmn2.BpmnParser;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.uml.UmlParser;
 
-
+/**
+ * Cet évènement est déclenché lorsque l'utilisateur à sélectionné le process initial de l'algo génétique.
+ * @author Vincent
+ *
+ */
 public class SelectSetInitialProcess extends SelectionAdapter {
 
 	private ProcessGeneratorView view;
-
 	public SelectSetInitialProcess(ProcessGeneratorView view) {
 		super();
 		this.view = view;
@@ -29,9 +34,8 @@ public class SelectSetInitialProcess extends SelectionAdapter {
 
 		// en fonction, on adapte le filtre de fichier pour la popup
 		String extension = "bpmn";
-		if (typeFile.toLowerCase().contains("uml")) {
+		if (typeFile.toLowerCase().contains("uml"))
 			extension = "uml";
-		}
 		
 		// on créé le filtre
 		List<ViewerFilter> filters = new ArrayList<ViewerFilter>();
@@ -43,9 +47,15 @@ public class SelectSetInitialProcess extends SelectionAdapter {
 		// puis on fait appel au setter
 		if (files.length > 0) {
 			if (typeFile.toLowerCase().contains("bpmn")) {
-				view.setBpmnInitialProcess(BpmnParser.getInstance().getBpmnProcess(files[0]));
+				BpmnProcess process = BpmnParser.instance.getBpmnProcess(files[0]);
+				view.setBpmnInitialProcess(process);
+				try {
+					process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/initial.bpmn");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			} else if (typeFile.toLowerCase().contains("uml")) {
-				view.setUmlInitialProcess(UmlParser.getInstance().getUmlProcess(files[0]));
+				view.setUmlInitialProcess(UmlParser.instance.getUmlProcess(files[0]));
 			}
 		}
 	}

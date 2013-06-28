@@ -2,6 +2,7 @@ package fr.lip6.move.processGenerator.bpmn2.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
 

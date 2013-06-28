@@ -9,7 +9,6 @@ public enum EQuantity {
 	LESS_OR_EQUAL(4);
 	
 	public static EQuantity getQuantityByString(String name) {
-		
 		switch (name.toUpperCase()) {
 			case "MORE":
 				return MORE;

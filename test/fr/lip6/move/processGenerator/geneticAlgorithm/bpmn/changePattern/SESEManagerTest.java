@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.algorithms.tarjan;
+package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 
 import static org.junit.Assert.assertTrue;
 
