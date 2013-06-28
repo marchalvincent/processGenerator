@@ -14,7 +14,12 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePat
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
-
+/**
+ * Ce change pattern est chargé d'ajouter une boucle au candidat donné. La boucle 
+ * est implémentée avec des gateways exclusives.
+ * @author Vincent
+ *
+ */
 public class BpmnLoopInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
@@ -32,7 +37,7 @@ public class BpmnLoopInsert extends AbstractBpmnChangePattern implements IBpmnCh
 		// on récupère une activité au hasard
 		Activity activity = null;
 		try {
-			activity = ChangePatternHelper.getInstance().getRandomActivity(process, rng);
+			activity = ChangePatternHelper.instance.getRandomActivity(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;

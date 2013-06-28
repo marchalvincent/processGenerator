@@ -3,7 +3,12 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 
-
+/**
+ * Cette énumération représente les change pattern que peut sélectionner l'utilisateur
+ * sur l'interface graphique. Chaque énumération est associée à un {@link IEnumChangePattern}.
+ * @author Vincent
+ *
+ */
 public enum EBpmnChangePattern implements IEnumChangePattern {
 	
 	WORKFLOW_INSERT(BpmnWorkflowInsert.class),

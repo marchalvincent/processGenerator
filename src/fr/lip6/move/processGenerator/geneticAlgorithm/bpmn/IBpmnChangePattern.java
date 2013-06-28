@@ -6,7 +6,12 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
-
+/**
+ * Cette interface définit le comportement des change pattern implémentés pour 
+ * fonctionner sur les fichiers bpmn.
+ * @author Vincent
+ *
+ */
 public interface IBpmnChangePattern extends IChangePattern {
 
 	/**

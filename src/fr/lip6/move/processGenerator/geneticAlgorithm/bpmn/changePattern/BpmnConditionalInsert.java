@@ -14,7 +14,13 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePat
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
-
+/**
+ * Ce change pattern représente l'insertion conditionnelle d'une activité. Elle peut s'appliquer
+ * sur une activité et entrainer la création de gateways de condition, ou tout simplement s'appliquer
+ * sur des gateways déjà existantes et ajouter une branche seulement.
+ * @author Vincent
+ *
+ */
 public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
@@ -30,8 +36,8 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		}
 
 		// on récupère le nombre de séquence et le nombre d'exclusive gateway
-		int nbSequence = ChangePatternHelper.getInstance().countSequenceFlow(process);
-		int nbConditional = ChangePatternHelper.getInstance().countConditionalGateway(process);
+		int nbSequence = ChangePatternHelper.instance.countSequenceFlow(process);
+		int nbConditional = ChangePatternHelper.instance.countConditionalGateway(process);
 		if (nbConditional % 2 != 0) {
 			System.err.println("Error, the number of ExclusiveGateway is odd.");
 			return process;
@@ -73,7 +79,7 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		// on récupère une Gateway diverging au hasard
 		Gateway gatewayDiverging = null;
 		try {
-			gatewayDiverging = ChangePatternHelper.getInstance().getRandomConditionalGatewayDiverging(process, rng);
+			gatewayDiverging = ChangePatternHelper.instance.getRandomConditionalGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;
@@ -105,7 +111,7 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 
 		SequenceFlow ancienArc = null;
 		try {
-			ancienArc = ChangePatternHelper.getInstance().getRandomSequenceFlow(process, rng);
+			ancienArc = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
 			// ici on n'a trouvé aucun arc (ce n'est pas normal, il doit toujours en avoir)
 			System.err.println(getClass().getSimpleName() + e.getMessage());

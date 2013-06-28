@@ -3,7 +3,11 @@ package fr.lip6.move.processGenerator.bpmn2;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Cette classe contient quelques informations XML pour l'enregistrement des fichiers BPMN.
+ * @author Vincent
+ *
+ */
 public class BpmnDefinition {
 
 	public static final String expressionLanguage = "http://www.mvel.org/2.0";

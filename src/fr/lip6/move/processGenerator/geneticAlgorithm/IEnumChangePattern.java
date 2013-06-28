@@ -1,7 +1,19 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm;
 
-
+/**
+ * Cette interface permet de définir le comportement que doit avoir chaque énumération
+ * représentant un {@link IChangePattern}.
+ * @author Vincent
+ *
+ */
 public interface IEnumChangePattern {
 	
+	/**
+	 * A chaque énumération est associé un {@link IChangePattern}. C'est pourquoi cette énumération
+	 * doit être capable d'instancier le {@link IChangePattern} qui lui est associé.
+	 * @param proba la probabilité que ce pattern soit appliqué sur un candidat à l'algo génétique.
+	 * @return un {@link IChangePattern}.
+	 * @throws Exception une erreur peut survenir lors de l'instanciation dynamique du change pattern.
+	 */
 	public IChangePattern newInstance(String proba) throws Exception;
 }

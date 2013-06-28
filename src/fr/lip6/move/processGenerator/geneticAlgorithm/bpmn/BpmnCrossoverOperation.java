@@ -5,7 +5,12 @@ import java.util.Random;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
-
+/**
+ * Cette opération permet de croiser deux candidats entre eux pour donner lieu
+ * à une nouvelle génération de candidat.
+ * @author Vincent
+ *
+ */
 public class BpmnCrossoverOperation implements EvolutionaryOperator<BpmnProcess> {
 
 	@Override

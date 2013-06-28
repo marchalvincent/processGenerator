@@ -6,7 +6,12 @@ import org.uncommons.watchmaker.framework.PopulationData;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
 
-
+/**
+ * Cet observeur permet d'afficher des informations sur l'interface graphique
+ * pendant l'éxecution de l'algorithme génétique.
+ * @author Vincent
+ *
+ */
 public class BpmnEvolutionObserver implements EvolutionObserver<BpmnProcess> {
 
 	private ProcessGeneratorView view;

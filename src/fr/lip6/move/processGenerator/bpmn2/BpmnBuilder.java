@@ -7,7 +7,14 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.ChangePatternHelper;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SESEManager;
 
+/**
+ * Cette classe permet de construire rapidement des {@link BpmnProcess}.
+ * @author Vincent
+ *
+ */
 public class BpmnBuilder {
 	
 	public static final BpmnBuilder instance = new BpmnBuilder();
@@ -143,6 +150,10 @@ public class BpmnBuilder {
 		return process;
 	}
 
+	/**
+	 * Créé un exemple avec une parallel gateway qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * @return
+	 */
 	public BpmnProcess createExampleWithUselessParallel() {
 
 		BpmnProcess process = new BpmnProcess();
@@ -165,6 +176,10 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un exemple avec une exclusive gateway qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * @return
+	 */
 	public BpmnProcess createExampleWithUselessExclusive() {
 
 		BpmnProcess process = new BpmnProcess();
@@ -187,6 +202,11 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un exemple avec une parallel gateway et une exclusive gateway qui peut être simplifiée et 
+	 * supprimée par le {@link ChangePatternHelper}.
+	 * @return
+	 */
 	public BpmnProcess createExampleWithUselessParallelAndExclusive() {
 
 		BpmnProcess process = new BpmnProcess();
@@ -303,6 +323,11 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un process avec un certains nombre de noeud.
+	 * @param number
+	 * @return
+	 */
 	public BpmnProcess numberNodes(int number) {
 
 		BpmnProcess process = new BpmnProcess();
@@ -312,6 +337,10 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un exemple pour les tests du SESE.
+	 * @return
+	 */
 	public BpmnProcess getExampleForSESE() {
 
 		BpmnProcess process = new BpmnProcess();
@@ -346,6 +375,10 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un exemple avec une boucle.
+	 * @return
+	 */
 	public BpmnProcess getLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
@@ -373,6 +406,10 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un exemple avec une boucle complexe.
+	 * @return
+	 */
 	public BpmnProcess getComplexLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
@@ -406,6 +443,10 @@ public class BpmnBuilder {
 		return process;
 	}
 
+	/**
+	 * Créé un exemple avec deux boucles, l'une a la suite de l'autre.
+	 * @return
+	 */
 	public BpmnProcess getDoubleLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
@@ -437,7 +478,10 @@ public class BpmnBuilder {
 		return process;
 	}
 	
-
+	/**
+	 * Créé un exemple avec une boucle qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * @return
+	 */
 	public BpmnProcess getUselessLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
@@ -461,6 +505,10 @@ public class BpmnBuilder {
 		return process;
 	}
 	
+	/**
+	 * Créé un exemple pour les tests sur le {@link SESEManager}.
+	 * @return
+	 */
 	public BpmnProcess getExampleForSESE2() {
 
 		BpmnProcess process = new BpmnProcess();

@@ -36,7 +36,7 @@ public class BpmnSerialInsert extends AbstractBpmnChangePattern implements IBpmn
 		// on en prend un au hasard
 		SequenceFlow ancienArc = null;
 		try {
-			ancienArc = ChangePatternHelper.getInstance().getRandomSequenceFlow(process, rng);
+			ancienArc = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
 			// ici on n'a trouvé aucun arc (ce n'est pas normal, il doit toujours en avoir)
 			System.err.println(getClass().getSimpleName() + e.getMessage());

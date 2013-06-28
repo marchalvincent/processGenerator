@@ -15,6 +15,12 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePat
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
+/**
+ * Ce change pattern applique l'insertion d'un nouveau thread au process. Ce nouveau thread
+ * s'aboutira soit explicitement (sur un EndEvent) soir implicitement (sans arc sortant).
+ * @author Vincent
+ *
+ */
 public class BpmnThreadInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
@@ -31,7 +37,7 @@ public class BpmnThreadInsert extends AbstractBpmnChangePattern implements IBpmn
 
 		// on récupère une séquence au hasard
 		try {
-			SequenceFlow sequence = ChangePatternHelper.getInstance().getRandomSequenceFlow(process, rng);
+			SequenceFlow sequence = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 			
 			// on créé la parallel ainsi que la task (correspondant au nouveau thread)
 			ParallelGateway fork = process.buildParallelGatewayDiverging();

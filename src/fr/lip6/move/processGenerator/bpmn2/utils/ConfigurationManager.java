@@ -8,7 +8,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
-
+/**
+ * Cette classe se charge d'enregistrer chaque données sélectionnées par l'utilisateur sur l'interface 
+ * graphique.
+ * @author Vincent
+ *
+ */
 public class ConfigurationManager {
 
 	private final String LOCATION = Utils.configurationFolder;
@@ -42,7 +47,12 @@ public class ConfigurationManager {
 	private Properties properties;
 	private String path = Utils.configurationFolder + ".processGeneratorProperties";
 
-	private static final ConfigurationManager instance = new ConfigurationManager();
+	public static final ConfigurationManager instance = new ConfigurationManager();
+	
+	/**
+	 * Construit le ConfigurationManager et met les valeurs par défaut si elle ne sont pas 
+	 * trouvée dans le fichier de configuration.
+	 */
 	private ConfigurationManager() {
 		super();
 		try {
@@ -97,10 +107,10 @@ public class ConfigurationManager {
 		}
 	}
 
-	public static ConfigurationManager getInstance() {
-		return instance;
-	}
-
+	/**
+	 * Enregistre les données dans un fichier de configuration.
+	 * @throws IOException
+	 */
 	public void store() throws IOException {
 		OutputStream out = null;
 		try {
@@ -112,6 +122,11 @@ public class ConfigurationManager {
 		}
 	}
 
+	/**
+	 * Initialise la clé {@code key} avec la valeur {@code value} si elle n'existe pas.
+	 * @param key la clé.
+	 * @param value la valeur associée à la clé.
+	 */
 	private void checkProperty(String key, String value) {
 		if (this.properties.getProperty(key) == null)
 			this.properties.put(key, value);

@@ -16,6 +16,11 @@ import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentat
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ConstraintRepresentation;
 
+/**
+ * Ce change pattern se charge d'insérer un workflow entier au process.
+ * @author Vincent
+ *
+ */
 public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
@@ -67,7 +72,7 @@ public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBp
 		
 		// ici, on a notre représentation. Maintenant, on va pouvoir l'insérer au candidat.
 		try {
-			SequenceFlow arcBefore = ChangePatternHelper.getInstance().getRandomSequenceFlow(process, rng);
+			SequenceFlow arcBefore = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 			FlowNode cible = arcBefore.getTargetRef();
 			
 			// 1. on ajoute chaque flow Element au process
@@ -85,7 +90,7 @@ public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBp
 			process.buildSequenceFlow(representation.getEnd(), cible);
 			
 		} catch (GeneticException e) {
-			System.err.println("Impossible to get a random sequence flow from the process");
+			System.err.println(getClass().getSimpleName() + " : Impossible to get a random sequence flow from the process.");
 			e.printStackTrace();
 			return process;
 		}

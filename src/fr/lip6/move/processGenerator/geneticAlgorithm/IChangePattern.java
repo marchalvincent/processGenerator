@@ -1,6 +1,10 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm;
 
-
+/**
+ * Cette interface définie le comportement que doit avoir chaque change pattern.
+ * @author Vincent
+ *
+ */
 public interface IChangePattern {
 
 	/**

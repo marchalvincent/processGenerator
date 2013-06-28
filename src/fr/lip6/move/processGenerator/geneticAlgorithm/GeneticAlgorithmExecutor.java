@@ -168,6 +168,11 @@ public class GeneticAlgorithmExecutor extends Thread {
 		}
 	}
 
+	/**
+	 * Lance l'algorithme génétique pour le cas d'une exécution en mode BPMN.
+	 * @throws GeneticException
+	 * @throws IOException
+	 */
 	private void runBpmn() throws GeneticException, IOException {
 
 		// la factory des candidats de départ

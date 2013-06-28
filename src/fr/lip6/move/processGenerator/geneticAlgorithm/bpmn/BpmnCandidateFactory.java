@@ -14,10 +14,18 @@ public class BpmnCandidateFactory extends AbstractCandidateFactory<BpmnProcess> 
 
 	private BpmnProcess process;
 	
+	/**
+	 * Construit la factory sans process prédéfinit. Le candidat initial sera 
+	 * un simple process StartEvent -> EndEvent.
+	 */
 	public BpmnCandidateFactory() {
 		this(null);
 	}
 	
+	/**
+	 * Construit la factory avec un process prédéfinit.
+	 * @param process
+	 */
 	public BpmnCandidateFactory(BpmnProcess process) {
 		super();
 		this.process = process;

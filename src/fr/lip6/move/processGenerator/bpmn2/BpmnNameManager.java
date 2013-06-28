@@ -1,6 +1,11 @@
 package fr.lip6.move.processGenerator.bpmn2;
 
-
+/**
+ * Cette classe s'assure que chaque identifiant attribué aux éléments d'un process
+ * BPMN sera différent.
+ * @author Vincent
+ *
+ */
 public class BpmnNameManager {
 	
 	private static int count = 0;

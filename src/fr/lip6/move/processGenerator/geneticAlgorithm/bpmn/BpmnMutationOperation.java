@@ -10,7 +10,12 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
-
+/**
+ * Cette classe se charge de la mutation des candidats entre chaque génération.
+ * Elle appliquera un change pattern selon leurs probabilités.
+ * @author Vincent
+ *
+ */
 public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> {
 
 	private List<IBpmnChangePattern> changePatterns;
@@ -45,6 +50,12 @@ public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> 
 		return newGeneration;
 	}
 	
+	/**
+	 * Sélectionne un {@link IBpmnChangePattern} au hasard selon leurs poids. Plus le poids d'un change pattern
+	 * est élevé, plus il a de chance d'être sélectionné. En revanche, la sélection se fait quand même à l'aide 
+	 * d'un objet Random.
+	 * @return {@link IBpmnChangePattern}.
+	 */
 	private IBpmnChangePattern getRandomChangePattern() {
 		
 		// on initialise un tableau d'entier pour donner un poids à chaque probabilité

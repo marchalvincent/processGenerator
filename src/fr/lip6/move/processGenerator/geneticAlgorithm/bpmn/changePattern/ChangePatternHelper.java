@@ -27,10 +27,7 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
  */
 public class ChangePatternHelper {
 
-	private final static ChangePatternHelper instance = new ChangePatternHelper();
-	public static ChangePatternHelper getInstance() {
-		return instance;
-	}
+	public final static ChangePatternHelper instance = new ChangePatternHelper();
 	private ChangePatternHelper() {}
 
 	/**

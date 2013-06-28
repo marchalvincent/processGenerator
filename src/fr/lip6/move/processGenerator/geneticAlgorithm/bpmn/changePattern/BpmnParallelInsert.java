@@ -15,7 +15,13 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePat
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
-
+/**
+ * Ce change pattern est chargé d'appliquer une insertion d'activité en parallèle. L'insertion peut se faire
+ * sur une activité et donc entrainer la création de parallel gateway, ou tout simplement s'appliquer sur 
+ * des parallel gateways déjà existantes et ajouter une branche supplémentaire.
+ * @author Vincent
+ *
+ */
 public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
@@ -31,8 +37,8 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		}
 
 		// on récupère toutes les Activities et le nombre de ParallelGateway
-		int nbActivity = ChangePatternHelper.getInstance().countActivity(process);
-		int nbParallel = ChangePatternHelper.getInstance().countParallelGateway(process);
+		int nbActivity = ChangePatternHelper.instance.countActivity(process);
+		int nbParallel = ChangePatternHelper.instance.countParallelGateway(process);
 		if (nbParallel % 2 != 0) {
 			System.err.println("Error, the number of ParallelGateway is odd.");
 			return process;
@@ -73,7 +79,7 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		// on récupère une ParallelGateway diverging au hasard
 		ParallelGateway parallelDiverging = null;
 		try {
-			parallelDiverging = ChangePatternHelper.getInstance().getRandomParallelGatewayDiverging(process, rng);
+			parallelDiverging = ChangePatternHelper.instance.getRandomParallelGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;
@@ -106,7 +112,7 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		// on récupère une activité au hasard
 		Activity activity = null;
 		try {
-			activity = ChangePatternHelper.getInstance().getRandomActivity(process, rng);
+			activity = ChangePatternHelper.instance.getRandomActivity(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;

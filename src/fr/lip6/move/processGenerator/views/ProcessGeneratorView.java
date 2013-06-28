@@ -605,10 +605,10 @@ public class ProcessGeneratorView extends ViewPart {
 	private void manualCode() {
 
 		// les préférences utilisateur pour la partie run
-		setPathDirectory(ConfigurationManager.getInstance().getLocation());
-		getSpinnerNbNode().setSelection(ConfigurationManager.getInstance().getNbNodes());
-		getSpinnerMargin().setSelection(ConfigurationManager.getInstance().getMargin());
-		getComboTypeFile().select(ConfigurationManager.getInstance().getTypeFile());
+		setPathDirectory(ConfigurationManager.instance.getLocation());
+		getSpinnerNbNode().setSelection(ConfigurationManager.instance.getNbNodes());
+		getSpinnerMargin().setSelection(ConfigurationManager.instance.getMargin());
+		getComboTypeFile().select(ConfigurationManager.instance.getTypeFile());
 		
 		// on remplit les tableaux d'éléments, de workflows et de change pattern par défaut
 		String typeFile = getComboTypeFile().getText();
@@ -623,38 +623,38 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 		
 		// le nombre de population, elitism et stratégie de séléction
-		getSpinnerNbPopulation().setSelection(ConfigurationManager.getInstance().getPopulation());
-		getSpinnerElitism().setSelection(ConfigurationManager.getInstance().getElitism());
+		getSpinnerNbPopulation().setSelection(ConfigurationManager.instance.getPopulation());
+		getSpinnerElitism().setSelection(ConfigurationManager.instance.getElitism());
 
 		// on remplit le combo box de la stratégie de sélection 
 		for (ESelectionStrategy strat : ESelectionStrategy.values()) {
 			getComboStrategySelection().add(strat.toString());
 		}
-		getComboStrategySelection().select(ConfigurationManager.getInstance().getSelectionStrategy());
+		getComboStrategySelection().select(ConfigurationManager.instance.getSelectionStrategy());
 		
 		// les préférences des checkbox des opérations d'évolutions
-		boolean bool = ConfigurationManager.getInstance().isCheckMutation();
+		boolean bool = ConfigurationManager.instance.isCheckMutation();
 		getButtonCheckMutation().setSelection(bool);
 		groupMutationParameters.setVisible(bool);
 		
-		bool = ConfigurationManager.getInstance().isCheckCrossover();
+		bool = ConfigurationManager.instance.isCheckCrossover();
 		getButtonCheckCrossover().setSelection(bool);
 		
 		// les préférences sur les conditions de terminaisons
-		getButtonUntilSolutionFound().setSelection(ConfigurationManager.getInstance().isSolutionFound());
-		getButtonDuringSeconde().setSelection(ConfigurationManager.getInstance().isDuringSecondes());
-		getButtonUntilGeneration().setSelection(ConfigurationManager.getInstance().isUntilGenerations());
-		getButtonUntilStagnation().setSelection(ConfigurationManager.getInstance().isUntilStagnations());
+		getButtonUntilSolutionFound().setSelection(ConfigurationManager.instance.isSolutionFound());
+		getButtonDuringSeconde().setSelection(ConfigurationManager.instance.isDuringSecondes());
+		getButtonUntilGeneration().setSelection(ConfigurationManager.instance.isUntilGenerations());
+		getButtonUntilStagnation().setSelection(ConfigurationManager.instance.isUntilStagnations());
 		
-		getSpinnerUntilSeconde().setSelection(ConfigurationManager.getInstance().getNbSecondes());
-		getSpinnerUntilGeneration().setSelection(ConfigurationManager.getInstance().getNbGenerations());
-		getSpinnerUntilStagnation().setSelection(ConfigurationManager.getInstance().getNbStagnations());
+		getSpinnerUntilSeconde().setSelection(ConfigurationManager.instance.getNbSecondes());
+		getSpinnerUntilGeneration().setSelection(ConfigurationManager.instance.getNbGenerations());
+		getSpinnerUntilStagnation().setSelection(ConfigurationManager.instance.getNbStagnations());
 		
 		// les préférences sur le custom fitness
-		getSpinnerSizeWeight().setSelection(ConfigurationManager.getInstance().getSizeWeight());
-		getSpinnerElementWeight().setSelection(ConfigurationManager.getInstance().getElementsWeight());
-		getSpinnerWorkflowWeight().setSelection(ConfigurationManager.getInstance().getWorkflowsWeight());
-		getSpinnerManualOclWeight().setSelection(ConfigurationManager.getInstance().getManualOCLWeight());
+		getSpinnerSizeWeight().setSelection(ConfigurationManager.instance.getSizeWeight());
+		getSpinnerElementWeight().setSelection(ConfigurationManager.instance.getElementsWeight());
+		getSpinnerWorkflowWeight().setSelection(ConfigurationManager.instance.getWorkflowsWeight());
+		getSpinnerManualOclWeight().setSelection(ConfigurationManager.instance.getManualOCLWeight());
 
 		// les listeners
 		// selection du type de fichier de sortie (bpmn, uml, etc.)
@@ -674,9 +674,9 @@ public class ProcessGeneratorView extends ViewPart {
 		// les préférences utilisateurs
 		String lecturePref;
 		if (table == tableElements) {
-			lecturePref = ConfigurationManager.getInstance().getElementsAttributes();
+			lecturePref = ConfigurationManager.instance.getElementsAttributes();
 		} else {
-			lecturePref = ConfigurationManager.getInstance().getWorkflowsAttributes();
+			lecturePref = ConfigurationManager.instance.getWorkflowsAttributes();
 		}
 		
 		String[] lignesPref = lecturePref.split("___");
@@ -761,7 +761,7 @@ public class ProcessGeneratorView extends ViewPart {
 	private void setChangePatternToTable(IEnumChangePattern[] eBpmnChangePatterns) {
 
 		// on récupère les préférences utilisateurs
-		String lecturePreferences = ConfigurationManager.getInstance().getChangePatternAttributes();
+		String lecturePreferences = ConfigurationManager.instance.getChangePatternAttributes();
 		Map<String, String> preferences = new HashMap<String, String>();
 		for (String ligne : lecturePreferences.split("___")) {
 			if (!ligne.isEmpty()) {

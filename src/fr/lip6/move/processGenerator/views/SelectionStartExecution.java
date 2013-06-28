@@ -66,13 +66,13 @@ public class SelectionStartExecution extends SelectionAdapter {
 		int nbNode = view.getSpinnerNbNode().getSelection();
 		int margin = view.getSpinnerMargin().getSelection();
 		
-		ConfigurationManager.getInstance().setLocation(location);
-		ConfigurationManager.getInstance().setNbNodes(nbNode + "");
-		ConfigurationManager.getInstance().setMargin(margin + "");
+		ConfigurationManager.instance.setLocation(location);
+		ConfigurationManager.instance.setNbNodes(nbNode + "");
+		ConfigurationManager.instance.setMargin(margin + "");
 
 		// ONGLET TARGET
 		String typeFile = view.getComboTypeFile().getText();
-		ConfigurationManager.getInstance().setTypeFile(view.getComboTypeFile().getSelectionIndex() + "");
+		ConfigurationManager.instance.setTypeFile(view.getComboTypeFile().getSelectionIndex() + "");
 		
 		// on construit la factory des contraintes au passage
 		AbstractStructuralConstraintFactory factory = null;
@@ -112,7 +112,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		// ONGLET ALGO GENETIQUE
 		// le nombre de population
 		int nbPopulation = view.getSpinnerNbPopulation().getSelection();
-		ConfigurationManager.getInstance().setPopulation(nbPopulation + "");
+		ConfigurationManager.instance.setPopulation(nbPopulation + "");
 		
 		// les process initiaux s'ils existent
 		BpmnProcess initialBpmnProcess = view.getInitialBpmnProcess();
@@ -122,12 +122,12 @@ public class SelectionStartExecution extends SelectionAdapter {
 		int elitism = view.getSpinnerElitism().getSelection();
 		String selectionStrategy = view.getComboStrategySelection().getText();
 		
-		ConfigurationManager.getInstance().setElitism(elitism + "");
-		ConfigurationManager.getInstance().setSelectionStrategy(view.getComboStrategySelection().getSelectionIndex() + "");
+		ConfigurationManager.instance.setElitism(elitism + "");
+		ConfigurationManager.instance.setSelectionStrategy(view.getComboStrategySelection().getSelectionIndex() + "");
 
 		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
-		ConfigurationManager.getInstance().setCheckMutation(isCheckMutation);
+		ConfigurationManager.instance.setCheckMutation(isCheckMutation);
 		
 		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
@@ -141,7 +141,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		}
 		
 		boolean isCheckCrossover = view.getButtonCheckCrossover().getSelection();
-		ConfigurationManager.getInstance().setCheckCrossover(isCheckCrossover);
+		ConfigurationManager.instance.setCheckCrossover(isCheckCrossover);
 		
 		// les conditions de terminaison
 		List<TerminationCondition> conditions = new ArrayList<TerminationCondition>();
@@ -150,31 +150,31 @@ public class SelectionStartExecution extends SelectionAdapter {
 		bool = view.getButtonUntilSolutionFound().getSelection();
 		if (bool)
 			conditions.add(new TargetFitness(GeneticAlgorithmData.totalFitness, true));
-		ConfigurationManager.getInstance().setSolutionFound(bool);
+		ConfigurationManager.instance.setSolutionFound(bool);
 		
 		// during x secondes
 		int secondes = view.getSpinnerUntilSeconde().getSelection();
 		bool = view.getButtonDuringSeconde().getSelection();
 		if (bool)
 			conditions.add(new ElapsedTime(secondes * 1000));
-		ConfigurationManager.getInstance().setDuringSecondes(bool);
-		ConfigurationManager.getInstance().setNbSecondes(secondes);
+		ConfigurationManager.instance.setDuringSecondes(bool);
+		ConfigurationManager.instance.setNbSecondes(secondes);
 		
 		// during x generation
 		int generations = view.getSpinnerUntilGeneration().getSelection();
 		bool = view.getButtonUntilGeneration().getSelection();
 		if (bool)
 			conditions.add(new GenerationCount(generations));
-		ConfigurationManager.getInstance().setUntilGenerations(bool);
-		ConfigurationManager.getInstance().setNbGenerations(generations);
+		ConfigurationManager.instance.setUntilGenerations(bool);
+		ConfigurationManager.instance.setNbGenerations(generations);
 		
 		// during x stagnation
 		int stagnations = view.getSpinnerUntilStagnation().getSelection();
 		bool = view.getButtonUntilStagnation().getSelection();
 		if (bool)
 			conditions.add(new Stagnation(stagnations, true));
-		ConfigurationManager.getInstance().setUntilStagnations(bool);
-		ConfigurationManager.getInstance().setNbStagnations(stagnations);
+		ConfigurationManager.instance.setUntilStagnations(bool);
+		ConfigurationManager.instance.setNbStagnations(stagnations);
 		
 		// les poids fitness
 		int sizeWeight = view.getSpinnerSizeWeight().getSelection();
@@ -183,10 +183,10 @@ public class SelectionStartExecution extends SelectionAdapter {
 		int manualOclWeight = view.getSpinnerManualOclWeight().getSelection();
 		FitnessWeightHelper weightHelper = new FitnessWeightHelper(sizeWeight, elementWeight, workflowWeight, manualOclWeight);
 		
-		ConfigurationManager.getInstance().setSizeWeight(sizeWeight + "");
-		ConfigurationManager.getInstance().setElementsWeight(elementWeight + "");
-		ConfigurationManager.getInstance().setWorkflowsWeight(workflowWeight + "");
-		ConfigurationManager.getInstance().setManualOCLWeight(manualOclWeight + "");
+		ConfigurationManager.instance.setSizeWeight(sizeWeight + "");
+		ConfigurationManager.instance.setElementsWeight(elementWeight + "");
+		ConfigurationManager.instance.setWorkflowsWeight(workflowWeight + "");
+		ConfigurationManager.instance.setManualOCLWeight(manualOclWeight + "");
 		
 		// le bouton stop
 		final UserAbort userAbort = new UserAbort();
@@ -224,7 +224,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		
 		// on enregistre les conf
 		try {
-			ConfigurationManager.getInstance().store();
+			ConfigurationManager.instance.store();
 		} catch (IOException e1) {
 			System.err.println("Impossible to save the configuration.");
 		}
@@ -253,7 +253,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 			}
 		}
 		
-		ConfigurationManager.getInstance().setChangePatternAttributes(sb.toString());
+		ConfigurationManager.instance.setChangePatternAttributes(sb.toString());
 		return changePatterns;
 	}
 
@@ -319,9 +319,9 @@ public class SelectionStartExecution extends SelectionAdapter {
 		
 		// enregistrement des préférences utilisateur
 		if (constraintType.equals(ConstraintType.Element)) {
-			ConfigurationManager.getInstance().setElementsAttributes(sb.toString());
+			ConfigurationManager.instance.setElementsAttributes(sb.toString());
 		} else {
-			ConfigurationManager.getInstance().setWorkflowsAttributes(sb.toString());
+			ConfigurationManager.instance.setWorkflowsAttributes(sb.toString());
 		}
 		
 		return liste;

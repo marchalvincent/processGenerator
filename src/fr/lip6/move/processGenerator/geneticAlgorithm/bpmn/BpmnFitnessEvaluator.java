@@ -5,6 +5,7 @@ import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.utils.Utils;
 import fr.lip6.move.processGenerator.geneticAlgorithm.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
@@ -21,8 +22,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 	private List<StructuralConstraintChecker> contraintesElements, contraintesWorkflows;
 	private StructuralConstraintChecker manualOclChecker;
 	private FitnessWeightHelper weightHelper;
-	private final boolean debug = false;
-
+	
 	public BpmnFitnessEvaluator(Integer nbNodes, Integer margin,
 			List<StructuralConstraintChecker> contraintesElements,
 			List<StructuralConstraintChecker> contraintesWorkflows,
@@ -53,7 +53,7 @@ public class BpmnFitnessEvaluator implements FitnessEvaluator<BpmnProcess> {
 			e.printStackTrace();
 		}
 		
-		if (debug) {
+		if (Utils.DEBUG) {
 			System.out.println("sizeFitness : " + sizeFitness);
 			System.out.println("constElements : " + constElements);
 			System.out.println("constWorkflow : " + constWorkflow);

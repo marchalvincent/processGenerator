@@ -6,9 +6,19 @@ import java.util.List;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
 
+/**
+ * Cette classe permet de simplifier les filtres de liste par rapport aux classes contenues. 
+ * @author Vincent
+ *
+ */
+public class Filter {
 
-public class Filter<T> {
-
+	/**
+	 * Filtre la liste selon la classe passée en paramètre.
+	 * @param clazz la classe dont on veut garder les éléments.
+	 * @param elements la liste à filtrer.
+	 * @return {@link List}.
+	 */
 	public static <T> List<T> byType(Class<T> clazz, List<?> elements) {
 		List<T> results = new ArrayList<T>();
 		for (Object o : elements)
@@ -17,6 +27,14 @@ public class Filter<T> {
 		return results;
 	}
 	
+	/**
+	 * File la liste selon la classe mais aussi selon une {@link GatewayDirection}. Cette méthode n'est valable
+	 * que lorsqu'on lui spécifie une classe héritant de {@link Gateway}.
+	 * @param clazz la classe dont on veut garder les éléments.
+	 * @param elements les éléments à filtrer.
+	 * @param direction la {@link GatewayDirection} que doit avoir les éléments à garder.
+	 * @return {@link List}.
+	 */
 	public static <T> List<T> byType(Class<T> clazz, List<?> elements, GatewayDirection direction) {
 		List<T> results = new ArrayList<T>();
 		for (Object o: elements)
@@ -25,6 +43,12 @@ public class Filter<T> {
 		return results;
 	}
 	
+	/**
+	 * Filtre des éléments en ne gardant que ceux qui sont d'au moins une des classes passées en paramètre.
+	 * @param classes une liste de classe.
+	 * @param elements les éléments à filter.
+	 * @return {@link List}.
+	 */
 	public static List<Gateway> gatewayByType(List<Class<? extends Gateway>> classes, List<?> elements) {
 		List<Gateway> results = new ArrayList<Gateway>();
 		for (Object o: elements) {
@@ -36,10 +60,17 @@ public class Filter<T> {
 				}
 			}
 		}
-			
 		return results;
 	}
 	
+	/**
+	 * Filtre des éléments en ne gardant que ceux qui héritent d'au moins une des classes passées en paramètre et dont
+	 * la direction est également passée en paramètre.
+	 * @param classes une liste de classe.
+	 * @param elements les éléments à filter.
+	 * @param direction la {@link GatewayDirection} que doivent respecter les candidats.
+	 * @return {@link List}.
+	 */
 	public static List<Gateway> gatewayByType(List<Class<? extends Gateway>> classes, List<?> elements, GatewayDirection direction) {
 		List<Gateway> results = new ArrayList<Gateway>();
 		for (Object o: elements) {
@@ -53,7 +84,6 @@ public class Filter<T> {
 				}
 			}
 		}
-			
 		return results;
 	}
 }

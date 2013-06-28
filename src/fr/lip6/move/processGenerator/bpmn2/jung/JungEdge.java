@@ -2,7 +2,12 @@ package fr.lip6.move.processGenerator.bpmn2.jung;
 
 import org.eclipse.bpmn2.SequenceFlow;
 
-
+/**
+ * Représente un arc bpmn (SequenceFlow). Cette classe est destinée à être manipulée
+ * par la librairie JUNG afin d'y appliquer certains algorithmes.
+ * @author Vincent
+ *
+ */
 public class JungEdge {
 	
 	private String id;

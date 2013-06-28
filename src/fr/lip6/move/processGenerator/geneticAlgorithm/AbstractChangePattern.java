@@ -1,7 +1,11 @@
 package fr.lip6.move.processGenerator.geneticAlgorithm;
 
 
-
+/**
+ * Cette classe offre un niveau d'abstraction à tout les change pattern.
+ * @author Vincent
+ *
+ */
 public abstract class AbstractChangePattern implements IChangePattern {
 	
 	private int probability;

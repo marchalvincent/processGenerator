@@ -16,7 +16,11 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.AbstractBpmnChangePat
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
-
+/**
+ * Ce change pattern se charge de supprimer une activité.
+ * @author Vincent
+ *
+ */
 public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChangePattern {
 
 	@Override
@@ -33,7 +37,7 @@ public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChange
 
 		Activity ancienneTask = null;
 		try {
-			ancienneTask = ChangePatternHelper.getInstance().getRandomActivity(process, rng);
+			ancienneTask = ChangePatternHelper.instance.getRandomActivity(process, rng);
 		} catch (Exception e) {
 			// on n'a pas trouvé d'activité à supprimer
 			return process;
@@ -85,7 +89,7 @@ public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChange
 		}
 		
 		// on simplifie les fork et decision "vides" si on vient d'en créer
-		ChangePatternHelper.getInstance().cleanProcess(process);
+		ChangePatternHelper.instance.cleanProcess(process);
 		return process;
 	}
 }

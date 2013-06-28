@@ -12,16 +12,36 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 
-
+/**
+ * Représente un process bpmn ({@link BpmnProcess}). Cette classe est destinée à être manipulée
+ * par la librairie JUNG afin d'y appliquer certains algorithmes.
+ * @author Vincent
+ *
+ */
 public class JungProcess {
 	
+	/**
+	 * Représente le graph du process
+	 */
 	private Graph<JungVertex, JungEdge> graph;
+	
+	/**
+	 * Associe chaque nom a un {@link JungVertex}
+	 */
 	private Map<String, JungVertex> allVertices;
 	
+	/**
+	 * Construit un {@link JungProcess} à partir d'un {@link BpmnProcess}.
+	 * @param process
+	 */
 	public JungProcess(BpmnProcess bpmnProcess) {
 		this(bpmnProcess.getProcess());
 	}
 	
+	/**
+	 * Construit un {@link JungProcess} à partir d'un {@link Process} bpmn.
+	 * @param process
+	 */
 	public JungProcess(Process process) {
 		super();
 		graph = new SparseMultigraph<JungVertex, JungEdge>();
