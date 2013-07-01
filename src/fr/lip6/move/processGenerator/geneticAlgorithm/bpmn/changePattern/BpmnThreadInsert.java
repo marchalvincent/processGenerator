@@ -3,6 +3,7 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
 import java.util.List;
 import java.util.Random;
 
+import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
@@ -39,19 +40,21 @@ public class BpmnThreadInsert extends AbstractBpmnChangePattern implements IBpmn
 		try {
 			SequenceFlow sequence = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 			
-			// on créé la parallel ainsi que la task (correspondant au nouveau thread)
+			// on créé la parallel, la task sainsi que l'EndEvent (correspondant au nouveau thread)
 			ParallelGateway fork = process.buildParallelGatewayDiverging();
 			Task a = process.buildTask();
+			EndEvent end = process.buildEndEvent();
 			
 			// on créé les sequences flow
 			process.buildSequenceFlow(fork, sequence.getTargetRef());
 			sequence.setTargetRef(fork);
 			process.buildSequenceFlow(fork, a);
+			process.buildSequenceFlow(a, end);
 
 			// une fois sur deux, on va créer un thread de terminaison implicite ou explicite
 			if (rng.nextBoolean()) {
-				EndEvent end = process.buildEndEvent();
-				process.buildSequenceFlow(a, end);
+				// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event
+				end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
 			}
 			
 		} catch (GeneticException e) {

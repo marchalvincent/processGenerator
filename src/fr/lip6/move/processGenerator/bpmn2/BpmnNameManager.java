@@ -8,7 +8,13 @@ package fr.lip6.move.processGenerator.bpmn2;
  */
 public class BpmnNameManager {
 	
+	private static int process = 0;
 	private static int count = 0;
+	
+	public static String getProcessName() {
+		process++;
+		return "process_" + process;
+	}
 	
 	public static String getTaskName() {
 		count++;

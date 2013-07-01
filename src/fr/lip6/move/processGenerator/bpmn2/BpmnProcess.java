@@ -19,6 +19,7 @@ import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Process;
+import org.eclipse.bpmn2.ScriptTask;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
@@ -73,6 +74,7 @@ public class BpmnProcess {
 		
 		// création du process
 		process = Bpmn2Factory.eINSTANCE.createProcess();
+		process.setName(BpmnNameManager.getProcessName());
 		documentRoot.getDefinitions().getRootElements().add(process);
 	}
 	
@@ -85,10 +87,11 @@ public class BpmnProcess {
 		super();
 		documentRoot = EcoreUtil.copy(processToCopy.getDocumentRoot());
 		if (documentRoot.getDefinitions().getRootElements().isEmpty() 
-				|| !(documentRoot.getDefinitions().getRootElements().get(0) instanceof Process))
+				|| !(documentRoot.getDefinitions().getRootElements().get(0) instanceof Process)) {
 			throw new BpmnException("Impossible to copy the process of the bpmn document.");
-		else
+		} else {
 			process = (Process) documentRoot.getDefinitions().getRootElements().get(0);
+		}
 		
 		for (String key : processToCopy.gatewaysLinked.keySet()) {
 			gatewaysLinked.put(new String(key), new String(processToCopy.gatewaysLinked.get(key)));
@@ -104,6 +107,7 @@ public class BpmnProcess {
 		super();
 		this.documentRoot = documentRoot;
 		this.process = process;
+		process.setName(BpmnNameManager.getProcessName());
 	}
 	
 	public DocumentRoot getDocumentRoot() {
@@ -147,7 +151,7 @@ public class BpmnProcess {
 	 */
 	public Task buildTask() {
 //		Task task = Bpmn2Factory.eINSTANCE.createTask();
-		Task task = this.buildRandomSubTask();
+		Task task = BpmnProcess.buildRandomSubTask();
 		
 		String name = BpmnNameManager.getTaskName();
 		task.setId("id_" + name);
@@ -160,16 +164,20 @@ public class BpmnProcess {
 	/**
 	 * Renvoie une {@link Task} au hasard parmis celle existante dans BPMN.
 	 */
-	private Task buildRandomSubTask() {
+	public static Task buildRandomSubTask() {
 		switch (rng.nextInt(7)) {
 			case 0:
-				return Bpmn2Factory.eINSTANCE.createBusinessRuleTask();
+//				return Bpmn2Factory.eINSTANCE.createBusinessRuleTask();
+				return Bpmn2Factory.eINSTANCE.createTask();
 			case 1:
 				return Bpmn2Factory.eINSTANCE.createManualTask();
 			case 2:
 				return Bpmn2Factory.eINSTANCE.createReceiveTask();
 			case 3:
-				return Bpmn2Factory.eINSTANCE.createScriptTask();
+			ScriptTask scriptTask = Bpmn2Factory.eINSTANCE.createScriptTask();
+			scriptTask.setScript("example of script");
+			scriptTask.setScriptFormat("script format");
+			return scriptTask;
 			case 4:
 				return Bpmn2Factory.eINSTANCE.createSendTask();
 			case 5:

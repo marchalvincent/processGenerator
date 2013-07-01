@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.EndEvent;
@@ -17,9 +16,9 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
-import org.uncommons.maths.random.MersenneTwisterRNG;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnNameManager;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
 public class ConstraintRepresentation implements IConstraintRepresentation {
@@ -27,13 +26,11 @@ public class ConstraintRepresentation implements IConstraintRepresentation {
 	private FlowNode begin;
 	private FlowNode end;
 	private List<FlowElement> flowElements;
-	private Random rng;
 	private Map<String, String> gatewaysTwins;
 	
 	public ConstraintRepresentation() {
 		super();
 		flowElements = new ArrayList<>();
-		rng = new MersenneTwisterRNG();
 		gatewaysTwins = new HashMap<>();
 	}
 	
@@ -69,25 +66,7 @@ public class ConstraintRepresentation implements IConstraintRepresentation {
 	}
 	
 	private Task buildRandomSubTask() {
-		switch (rng.nextInt(7)) {
-			case 0:
-				return Bpmn2Factory.eINSTANCE.createBusinessRuleTask();
-			case 1:
-				return Bpmn2Factory.eINSTANCE.createManualTask();
-			case 2:
-				return Bpmn2Factory.eINSTANCE.createReceiveTask();
-			case 3:
-				return Bpmn2Factory.eINSTANCE.createScriptTask();
-			case 4:
-				return Bpmn2Factory.eINSTANCE.createSendTask();
-			case 5:
-				return Bpmn2Factory.eINSTANCE.createServiceTask();
-			case 6:
-				return Bpmn2Factory.eINSTANCE.createUserTask();
-			default:
-				break;
-		}
-		return Bpmn2Factory.eINSTANCE.createTask();
+		return BpmnProcess.buildRandomSubTask();
 	}
 	
 
