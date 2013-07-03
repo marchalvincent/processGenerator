@@ -1,7 +1,11 @@
 package fr.lip6.move.processGenerator.structuralConstraint;
 
 
-
+/**
+ * Cette classe offre un niveau d'abstraction aux workflows patterns implémentés en Java.
+ * @author Vincent
+ *
+ */
 public abstract class AbstractJavaSolver implements IStructuralConstraint {
 
 	@Override

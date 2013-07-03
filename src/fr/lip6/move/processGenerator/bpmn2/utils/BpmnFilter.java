@@ -6,29 +6,17 @@ import java.util.List;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.GatewayDirection;
 
+import fr.lip6.move.processGenerator.Filter;
+
 /**
- * Cette classe permet de simplifier les filtres de liste par rapport aux classes contenues. 
+ * Cette classe permet de simplifier les filtres de liste par rapport aux classes bpmn. 
  * @author Vincent
  *
  */
-public class Filter {
-
-	/**
-	 * Filtre la liste selon la classe passée en paramètre.
-	 * @param clazz la classe dont on veut garder les éléments.
-	 * @param elements la liste à filtrer.
-	 * @return {@link List}.
-	 */
-	public static <T> List<T> byType(Class<T> clazz, List<?> elements) {
-		List<T> results = new ArrayList<T>();
-		for (Object o : elements)
-			if (clazz.isInstance(o))
-				results.add(clazz.cast(o));
-		return results;
-	}
+public class BpmnFilter extends Filter {
 	
 	/**
-	 * File la liste selon la classe mais aussi selon une {@link GatewayDirection}. Cette méthode n'est valable
+	 * Filtre la liste selon la classe mais aussi selon une {@link GatewayDirection}. Cette méthode n'est valable
 	 * que lorsqu'on lui spécifie une classe héritant de {@link Gateway}.
 	 * @param clazz la classe dont on veut garder les éléments.
 	 * @param elements les éléments à filtrer.

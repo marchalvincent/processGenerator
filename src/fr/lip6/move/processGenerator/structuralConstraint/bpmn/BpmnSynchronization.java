@@ -4,7 +4,6 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Task;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
 /**
@@ -12,7 +11,7 @@ import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentat
  * @author Vincent
  *
  */
-public class BpmnSynchronization extends AbstractOclSolver {
+public class BpmnSynchronization extends AbstractBpmnOclSolver {
 
 	public BpmnSynchronization() throws BpmnException {
 		super();

@@ -1,14 +1,17 @@
 package fr.lip6.move.processGenerator.structuralConstraint.uml;
 
-import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
-import fr.lip6.move.processGenerator.structuralConstraint.uml.query.UmlQueryReaderHelper;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.AbstractBpmnOclSolver;
 
-
-public class UmlSequence extends AbstractOclSolver {
+/**
+ * Représente le WP1 - Sequence.
+ * @author Vincent
+ *
+ */
+public class UmlSequence extends AbstractBpmnOclSolver {
 	
 	public UmlSequence() throws UmlException {
 		super();
 		System.err.println("Attention la requête OCL de UmlSequence n'est pas définie.");
-		super.setOclQuery(UmlQueryReaderHelper.read("sequence"));
+		super.setOclQuery("");
 	}
 }

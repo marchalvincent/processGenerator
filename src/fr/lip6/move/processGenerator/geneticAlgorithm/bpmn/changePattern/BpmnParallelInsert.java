@@ -86,7 +86,7 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		}
 
 		// on récupère la parallelConverging
-		ParallelGateway parallelConverging = (ParallelGateway) SESEManager.instance.findTwinGateway(process, parallelDiverging);
+		ParallelGateway parallelConverging = (ParallelGateway) GatewayManager.instance.findTwinGateway(process, parallelDiverging);
 		if (parallelConverging == null)
 			return process;
 

@@ -27,10 +27,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
+
+import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
-import fr.lip6.move.processGenerator.bpmn2.utils.ConfigurationManager;
 import fr.lip6.move.processGenerator.geneticAlgorithm.ESelectionStrategy;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.EBpmnChangePattern;
@@ -41,7 +42,11 @@ import fr.lip6.move.processGenerator.structuralConstraint.uml.EUmlWorkflowPatter
 import fr.lip6.move.processGenerator.uml.EUmlElement;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
 
-
+/**
+ * Représente la vue générale du plugin.
+ * @author Vincent
+ *
+ */
 public class ProcessGeneratorView extends ViewPart {
 
 	public static final String ID = "ProcessGenerator.views.ProcessGeneratorView";

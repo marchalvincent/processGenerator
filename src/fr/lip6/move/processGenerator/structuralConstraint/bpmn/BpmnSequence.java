@@ -3,7 +3,6 @@ package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 import org.eclipse.bpmn2.Task;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
 /**
@@ -11,7 +10,7 @@ import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentat
  * @author Vincent
  *
  */
-public class BpmnSequence extends AbstractOclSolver {
+public class BpmnSequence extends AbstractBpmnOclSolver {
 
 	public BpmnSequence() throws BpmnException {
 		super();

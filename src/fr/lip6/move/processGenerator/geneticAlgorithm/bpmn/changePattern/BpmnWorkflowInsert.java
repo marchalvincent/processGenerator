@@ -39,7 +39,7 @@ public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBp
 		if (structuralConstraints == null || (structuralConstraints.size() == 0))
 			return process;
 		
-		// on tire au hasard un workflow parmis ceux seléctionnés par l'utilisateur
+		// on tire au hasard un workflow parmis ceux sélectionnés par l'utilisateur
 		int poidTotal = 0;
 		for (StructuralConstraintChecker constraint : structuralConstraints) {
 			if (constraint.hasRepresentation())

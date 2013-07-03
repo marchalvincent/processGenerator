@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2.utils;
+package fr.lip6.move.processGenerator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+
 
 /**
  * Cette classe se charge d'enregistrer chaque données sélectionnées par l'utilisateur sur l'interface 

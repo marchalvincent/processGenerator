@@ -10,8 +10,15 @@ import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
 import org.eclipse.uml2.uml.MergeNode;
 
+import fr.lip6.move.processGenerator.IEnumElement;
 
-public enum EUmlElement {
+/**
+ * Représente les éléments que peut sélectionner l'utilisateur pour spécifier des contraintes
+ * structurelles.
+ * @author Vincent
+ *
+ */
+public enum EUmlElement implements IEnumElement {
 	
 	INITIAL_NODE(InitialNode.class),
 	FINAL_NODE(FinalNode.class),

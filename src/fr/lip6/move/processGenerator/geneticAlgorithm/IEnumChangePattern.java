@@ -2,7 +2,8 @@ package fr.lip6.move.processGenerator.geneticAlgorithm;
 
 /**
  * Cette interface permet de définir le comportement que doit avoir chaque énumération
- * représentant un {@link IChangePattern}.
+ * représentant les {@link IChangePattern} que peut sélectionner l'utilisateur sur l'interface
+ * graphique.
  * @author Vincent
  *
  */

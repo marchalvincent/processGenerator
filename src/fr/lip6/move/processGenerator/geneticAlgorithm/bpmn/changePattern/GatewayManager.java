@@ -15,19 +15,19 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
-import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 
 /**
- * Cette classe se charge de séparer un diagramme d'activité en plusieurs sous diagrammes
- * nommés SESE ({@link SingleEntrySingleExit}). Les diagrammes d'activités manipulés sont des 
- * diagrammes représentés à l'aide de BPMN2.0.
+ * Cette classe se charge de retrouver la gateway "jumelle" d'une autre par rapport à un diagramme d'activité.
+ * Typiquement, une gateway "parallel split" et une "synchronise" possédant les mêmes branches sont jumelles.
+ * Les diagrammes d'activités manipulés sont des diagrammes représentés à l'aide de BPMN2.0.
  * @author Vincent
  *
  */
-public class SESEManager {
+public class GatewayManager {
 
-	public static SESEManager instance = new SESEManager();
-	private SESEManager() {}
+	public static GatewayManager instance = new GatewayManager();
+	private GatewayManager() {}
 
 	/**
 	 * Renvoie la {@link Gateway} jumelle correspondant à celle passée en paramètre.
@@ -59,11 +59,13 @@ public class SESEManager {
 		if (twin != null)
 			return twin;
 		
-		// attention, ce code ne détecte pas les boucles
+		/*
+		 * attention, ce code ne détecte pas les boucles. Si l'utilisateur spécifie un process initial 
+		 * avec une boucle, les deux gateways ne seront pas linkées.
+		 */
 		// TODO détection des boucles
 		return null;
 	}
-	
 
 	/**
 	 * Renvoie la liste des gateways succeptibles d'être la "twin" de la gateway passée en paramètre.
@@ -85,13 +87,13 @@ public class SESEManager {
 		// si c'est une parallel, on ne cherche que les parallel
 		List<? extends Gateway> list, list2;
 		if (gateway instanceof ParallelGateway) {
-			list = Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), direction);
+			list = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), direction);
 			list2 = Collections.emptyList();
 		} else {
 			// les exclusives gateways
-			list = Filter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), direction);
+			list = BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), direction);
 			// et les inclusives gateways
-			list2 = Filter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), direction);
+			list2 = BpmnFilter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), direction);
 		}
 		
 		// on peut enlever celles qui sont déjà liées

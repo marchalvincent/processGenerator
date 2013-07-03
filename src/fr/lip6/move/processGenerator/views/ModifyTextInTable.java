@@ -5,7 +5,12 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-
+/**
+ * Ce listener est déclenché lorsque l'utilisateur change une valeur dans un tableau.
+ * Il va permettre de forcer l'utilisateur à mettre un entier dans le champ associé.
+ * @author Vincent
+ *
+ */
 public class ModifyTextInTable implements ModifyListener {
 
 	private TableItem item;

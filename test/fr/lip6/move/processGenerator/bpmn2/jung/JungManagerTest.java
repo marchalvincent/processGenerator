@@ -9,7 +9,7 @@ import org.junit.Test;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 
 
 public class JungManagerTest {
@@ -21,7 +21,7 @@ public class JungManagerTest {
 
 		JungProcess jung = new JungProcess(process);
 
-		List<ExclusiveGateway> list = Filter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING);
+		List<ExclusiveGateway> list = BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING);
 		for (ExclusiveGateway exclusive : list) {
 			DijkstraShortestPath<JungVertex, JungEdge> algo = new DijkstraShortestPath<JungVertex, JungEdge>(jung.getGraph());
 

@@ -4,7 +4,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-
+/**
+ * Cette classe permet de filtrer les fichiers selon leurs extension.
+ * Elle est utilisée lorsque l'utilisateur souhaite sélection manuellement le process
+ * initial de l'algorithme génétique.
+ * @author Vincent
+ *
+ */
 public class MyViewerFilter extends ViewerFilter {
 
 	private final String extension;

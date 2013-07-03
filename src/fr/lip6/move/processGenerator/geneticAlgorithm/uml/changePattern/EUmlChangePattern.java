@@ -3,7 +3,12 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.uml.changePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
 import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 
-
+/**
+ * Cette énumération représente les change patterns que peut sélectionner l'utilisateur sur 
+ * l'interface graphique. Chaque change pattern est associé à un {@link IChangePattern}.
+ * @author Vincent
+ *
+ */
 public enum EUmlChangePattern implements IEnumChangePattern {
 	
 	SERIAL_INSERT(UmlSerialInsert.class);

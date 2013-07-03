@@ -8,7 +8,7 @@ import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.ChangePatternHelper;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SESEManager;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.GatewayManager;
 
 /**
  * Cette classe permet de construire rapidement des {@link BpmnProcess}.
@@ -506,7 +506,7 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Créé un exemple pour les tests sur le {@link SESEManager}.
+	 * Créé un exemple pour les tests sur le {@link GatewayManager}.
 	 * @return
 	 */
 	public BpmnProcess getExampleForSESE2() {

@@ -18,7 +18,8 @@ import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintCh
 
 /**
  * Ce change pattern applique l'insertion d'un nouveau thread au process. Ce nouveau thread
- * s'aboutira soit explicitement (sur un EndEvent) soir implicitement (sans arc sortant).
+ * s'aboutira sur un nouveau noeud EndEvent soit explicitement (met fin au process) soit implicitement
+ * (continue l'éxecution des autres threads).
  * @author Vincent
  *
  */
@@ -51,7 +52,7 @@ public class BpmnThreadInsert extends AbstractBpmnChangePattern implements IBpmn
 			process.buildSequenceFlow(fork, a);
 			process.buildSequenceFlow(a, end);
 
-			// une fois sur deux, on va créer un thread de terminaison implicite ou explicite
+			// une fois sur deux, on va créer un thread de terminaison explicite
 			if (rng.nextBoolean()) {
 				// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event
 				end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());

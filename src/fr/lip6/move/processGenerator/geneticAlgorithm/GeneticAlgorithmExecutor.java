@@ -21,8 +21,8 @@ import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.selection.StochasticUniversalSampling;
 import org.uncommons.watchmaker.framework.selection.TournamentSelection;
 
+import fr.lip6.move.processGenerator.Benchmarker;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.Benchmarker;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnCandidateFactory;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnCrossoverOperation;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnEvolutionObserver;

@@ -17,7 +17,8 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
 
 /**
- * Ce change pattern se charge de supprimer une activité.
+ * Ce change pattern se charge de supprimer une activité puis de simplifier le process lorsqu'il
+ * contient des données incohérentes.
  * @author Vincent
  *
  */

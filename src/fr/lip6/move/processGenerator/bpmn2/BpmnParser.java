@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SESEManager;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.GatewayManager;
 
 /**
  * Cette classe permet de parser un fichier ayant pour extension .bpmn 
@@ -134,7 +134,7 @@ public class BpmnParser {
 		for (FlowElement element : bpmnProcess.getProcess().getFlowElements()) {
 			if (element instanceof Gateway) {
 				Gateway gate = (Gateway) element;
-				Gateway twin = SESEManager.instance.findTwinGateway(bpmnProcess, gate);
+				Gateway twin = GatewayManager.instance.findTwinGateway(bpmnProcess, gate);
 				if (twin != null) {
 					bpmnProcess.linkGateways(gate, twin);
 				}

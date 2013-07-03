@@ -6,7 +6,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
-
+/**
+ * Adapteur déclenché par le changement du dossier de destination des fichiers.
+ * @author Vincent
+ *
+ */
 public class SelectPathDirectory extends SelectionAdapter {
 	
 	private ProcessGeneratorView view;

@@ -1,6 +1,7 @@
 package fr.lip6.move.processGenerator.structuralConstraint;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.BpmnWorkflowInsert;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
 
 
@@ -20,8 +21,9 @@ public interface IStructuralConstraint {
 	int matches(Object process) throws Exception;
 	
 	/**
-	 * Vous pouvez implémenter cette méthode de façon à ce qu'elle renvoie la représentation (bpmn2 ou uml ad par exemple) 
-	 * de la contrainte structurelle.
+	 * Vous pouvez implémenter cette méthode de façon à ce qu'elle renvoie la représentation (bpmn2 ou uml2.0 ad par exemple) 
+	 * de la contrainte structurelle. Cette représentation est utile pour le change pattern qui insert directement les workflow.
+	 * Cf. {@link BpmnWorkflowInsert} par exemple.
 	 * @return {@link IConstraintRepresentation} si la représentation existe, null sinon.
 	 */
 	IConstraintRepresentation getRepresentation();

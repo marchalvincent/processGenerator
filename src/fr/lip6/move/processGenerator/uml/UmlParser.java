@@ -11,6 +11,8 @@ import org.eclipse.uml2.uml.Activity;
 
 /**
  * Un parseur de fichier UML.
+ * @author Vincent
+ *
  */
 public class UmlParser {
 

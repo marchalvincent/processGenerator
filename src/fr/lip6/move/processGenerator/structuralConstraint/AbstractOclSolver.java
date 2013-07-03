@@ -11,10 +11,9 @@ import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
- * Cette classe valide une contrainte OCL à partir d'un {@link EObjet} représentant le process à vérifier.
+ * Cette classe offre un niveau d'abstraction aux solveurs de contraintes OCL.
  * @author Vincent
  *
  */
@@ -27,22 +26,30 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		oclQuery = new String();
 	}
 	
-	protected void setOclQuery(String query) {
+	public void setOclQuery(String query) {
 		this.oclQuery = query;
+	}
+	
+	public String getOclQuery() {
+		return oclQuery;
 	}
 
 	@Override
-	public int matches(Object object) throws BpmnException {
+	public abstract int matches(Object object) throws BpmnException;
+	
+	@Override
+	public IConstraintRepresentation getRepresentation() {
+		// par défaut les contraintes n'ont pas de représentation
+		return null;
+	}
 
-		if (oclQuery.isEmpty()) 
-			return 0;
-		
-		if (!(object instanceof BpmnProcess)) {
-			throw new BpmnException("Matches method : The object is not a Bpmn Process.");
-		}
-		
-		BpmnProcess process = (BpmnProcess) object;
-		
+	/**
+	 * Cette méthode est générique et permet de résoudre les contraintes OCL sur un objet donné.
+	 * @param eClass la {@link EClass} de l'objet à évaluer.
+	 * @param object l'objet à évaluer.
+	 * @return le nombre de structure trouvée par la contrainte ocl.
+	 */
+	protected int resolveQuery(EClass eClass, Object object) {
 		// create an OCL instance for Ecore
 		OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
 		ocl = OCL.newInstance(EcoreEnvironmentFactory.INSTANCE);
@@ -51,7 +58,7 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
 
 		// set the OCL context classifier
-		helper.setContext(process.getProcess().eClass());
+		helper.setContext(eClass);
 
 		// create the ocl expression
 		OCLExpression<EClassifier> oclExpession = null;
@@ -67,7 +74,7 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		Query<EClassifier, EClass, EObject> query = ocl.createQuery(oclExpession);
 		
 		// evaluate
-		Object o = query.evaluate(process.getProcess());
+		Object o = query.evaluate(object);
 		if (o instanceof Integer) {
 			return ((Integer)o).intValue();
 		}
@@ -76,15 +83,5 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		}
 		return 0;
 	}
-	
-	@Override
-	public IConstraintRepresentation getRepresentation() {
-		// par défaut les contraintes n'ont pas de représentation
-		return null;
-	}
-
-	@Override
-	public String toString() {
-		return "AbstractOclSolver [oclQuery=" + oclQuery + "]";
-	}
 }
+

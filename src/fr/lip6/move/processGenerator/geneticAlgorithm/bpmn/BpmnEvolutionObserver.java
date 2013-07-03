@@ -3,8 +3,9 @@ package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn;
 import java.text.DecimalFormat;
 import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
+
+import fr.lip6.move.processGenerator.Benchmarker;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.Benchmarker;
 import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
 
 /**

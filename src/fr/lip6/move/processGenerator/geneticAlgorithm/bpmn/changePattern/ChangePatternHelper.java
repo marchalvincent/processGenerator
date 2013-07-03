@@ -14,14 +14,13 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
-import fr.lip6.move.processGenerator.bpmn2.utils.Utils;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
 
 /**
- * Cette classe permet de simplifier la manipulation des {@link BpmnProcess}. Par exemple pour rechercher
- * une activité aléatoirement.
+ * Cette classe permet de simplifier la manipulation des {@link BpmnProcess}.
  * @author Vincent
  *
  */
@@ -40,7 +39,7 @@ public class ChangePatternHelper {
 	public SequenceFlow getRandomSequenceFlow(BpmnProcess process, Random rng) throws GeneticException {
 
 		// on récupère la liste des sequence flow
-		List<SequenceFlow> liste = Filter.byType(SequenceFlow.class, process.getProcess().getFlowElements());
+		List<SequenceFlow> liste = BpmnFilter.byType(SequenceFlow.class, process.getProcess().getFlowElements());
 
 		// s'il n'y a aucun arc (cela ne devrait jamais arriver !)
 		if (liste.isEmpty())
@@ -60,7 +59,7 @@ public class ChangePatternHelper {
 	public Activity getRandomActivity(BpmnProcess process, Random rng) throws GeneticException {
 
 		// on récupère la liste des activité
-		List<Activity> liste = Filter.byType(Activity.class, process.getProcess().getFlowElements());
+		List<Activity> liste = BpmnFilter.byType(Activity.class, process.getProcess().getFlowElements());
 
 		// s'il n'y a aucune activité...
 		if (liste.isEmpty())
@@ -80,7 +79,7 @@ public class ChangePatternHelper {
 	public ParallelGateway getRandomParallelGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
 
 		// on récupère la liste des ParallelGateway
-		List<ParallelGateway> liste = Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
+		List<ParallelGateway> liste = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
 
 		// s'il n'y a aucune ParallelGateway...
 		if (liste.isEmpty())
@@ -103,7 +102,7 @@ public class ChangePatternHelper {
 		List<Class<? extends Gateway>> classes = new ArrayList<>();
 		classes.add(ExclusiveGateway.class);
 		classes.add(InclusiveGateway.class);
-		List<Gateway> liste = Filter.gatewayByType(classes, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
+		List<Gateway> liste = BpmnFilter.gatewayByType(classes, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
 		
 		// s'il n'y a aucune Gateway...
 		if (liste.isEmpty())
@@ -128,7 +127,7 @@ public class ChangePatternHelper {
 	 * @return int.
 	 */
 	public int countActivity(BpmnProcess process) {
-		return Filter.byType(Activity.class, process.getProcess().getFlowElements()).size();
+		return BpmnFilter.byType(Activity.class, process.getProcess().getFlowElements()).size();
 	}
 	
 	/**
@@ -137,7 +136,7 @@ public class ChangePatternHelper {
 	 * @return int.
 	 */
 	public int countSequenceFlow(BpmnProcess process) {
-		return Filter.byType(SequenceFlow.class, process.getProcess().getFlowElements()).size();
+		return BpmnFilter.byType(SequenceFlow.class, process.getProcess().getFlowElements()).size();
 	}
 	
 	/**
@@ -147,7 +146,7 @@ public class ChangePatternHelper {
 	 */
 	public int countParallelGateway(BpmnProcess process) {
 		int count = 0;
-		List<ParallelGateway> list = Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
+		List<ParallelGateway> list = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
 		for (ParallelGateway parallelGateway : list)
 			if (process.getTwin(parallelGateway.getId()) != null)
 				count ++;
@@ -163,7 +162,7 @@ public class ChangePatternHelper {
 		List<Class<? extends Gateway>> classes = new ArrayList<>();
 		classes.add(ExclusiveGateway.class);
 		classes.add(InclusiveGateway.class);
-		return Filter.gatewayByType(classes, process.getProcess().getFlowElements()).size();
+		return BpmnFilter.gatewayByType(classes, process.getProcess().getFlowElements()).size();
 	}
 	
 	/**
@@ -174,13 +173,13 @@ public class ChangePatternHelper {
 
 		// on récupère la liste des ParallelGateway divergentes
 		ParallelGateway parallelConverging;
-		List<ParallelGateway> listeDiverging = Filter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
+		List<ParallelGateway> listeDiverging = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
 
 		// pour chaque ParallelGateway divergentes
 		for (ParallelGateway parallelGateway : listeDiverging) {
 
 			// on cherche la parallelGateway converging qui referme le chemin
-			parallelConverging = (ParallelGateway) SESEManager.instance.findTwinGateway(process, parallelGateway);
+			parallelConverging = (ParallelGateway) GatewayManager.instance.findTwinGateway(process, parallelGateway);
 			// petite vérification, si on a une parallel sans twin, cela peut être un nouveau thread dans le process
 			if (parallelConverging == null) {
 				this.cleanNewThread(process, parallelGateway);
@@ -286,14 +285,14 @@ public class ChangePatternHelper {
 		classes.add(ExclusiveGateway.class);
 		classes.add(InclusiveGateway.class);
 		
-		List<Gateway> listeDivergente = Filter.gatewayByType(classes, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
+		List<Gateway> listeDivergente = BpmnFilter.gatewayByType(classes, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING);
 		
 		// pour chaque conditional gateway divergentes
 		for (Gateway gatewayDiverging : listeDivergente) {
 			boolean removed = false;
 
 			// on cherche la Gateway converging qui referme le chemin
-			gatewayConverging = SESEManager.instance.findTwinGateway(process, gatewayDiverging);
+			gatewayConverging = GatewayManager.instance.findTwinGateway(process, gatewayDiverging);
 			if (gatewayConverging == null)
 				continue;
 			

@@ -5,7 +5,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.TableItem;
 
-
+/**
+ * Cet adapteur est déclenché lorsque l'utilisateur modifie la valeur d'un combobox dans un tableau.
+ * Afin de garder la valeur seléctionnée, on l'écrit dans un champ caché du tableau.
+ * @author Vincent
+ *
+ */
 public class SelectionComboInTable extends SelectionAdapter {
 	
 	private TableItem item;

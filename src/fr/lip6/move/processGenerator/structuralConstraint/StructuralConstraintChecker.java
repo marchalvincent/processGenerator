@@ -1,8 +1,6 @@
 package fr.lip6.move.processGenerator.structuralConstraint;
 
 import fr.lip6.move.processGenerator.EQuantity;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
  * Représente un checker de contrainte structurelle. En fonction du nombre d'occurence
@@ -46,9 +44,16 @@ public class StructuralConstraintChecker {
 		this.weight = weight;
 	}
 	
-	public boolean check(BpmnProcess process) throws Exception {
+	/**
+	 * Execute la contrainte qu'on lui a associé et vérifie selon la quantité et le nombre
+	 * si la contrainte est vérifiée.
+	 * @param process Object, la représentation du process à évaluer.
+	 * @return boolean vrai si le process vérifie la contrainte selon la quantité et le nombre. Faux sinon.
+	 * @throws Exception dans le cas ou 
+	 */
+	public boolean check(Object process) throws Exception {
 		if (number < 0)
-			throw new BpmnException("Le nombre du pattern doit être supérieure ou égale à 0.");
+			throw new Exception("The number of the pattern must be higher or equal than 0.");
 		
 		Object result = constraint.matches(process);
 		if (!(result instanceof Integer))
@@ -81,11 +86,5 @@ public class StructuralConstraintChecker {
 	
 	public IConstraintRepresentation getRepresentation() {
 		return constraint.getRepresentation();
-	}
-	
-	@Override
-	public String toString() {
-		return "StructuralConstraintChecker [constraint=" + constraint + ", quantity=" + quantity
-				+ ", number=" + number + "]";
 	}
 }

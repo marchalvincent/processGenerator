@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.SESEManager;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.GatewayManager;
 
 
 public class SESEManagerTest {
@@ -21,9 +21,9 @@ public class SESEManagerTest {
 	public void test() throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.getExampleForSESE2();
 		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
-		List<Gateway> list = Filter.byType(Gateway.class, process.getProcess().getFlowElements());
+		List<Gateway> list = BpmnFilter.byType(Gateway.class, process.getProcess().getFlowElements());
 		for (Gateway gateway : list) {
-			Gateway twin = SESEManager.instance.findTwinGateway(process, gateway);
+			Gateway twin = GatewayManager.instance.findTwinGateway(process, gateway);
 			if (twin != null)
 				System.out.println("The twin of " + gateway.getId() + " is " + twin.getId());
 			else 

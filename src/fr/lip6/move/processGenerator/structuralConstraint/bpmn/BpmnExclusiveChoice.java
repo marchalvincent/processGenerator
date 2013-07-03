@@ -4,7 +4,6 @@ import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.Task;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.structuralConstraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
 /**
@@ -12,7 +11,7 @@ import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentat
  * @author Vincent
  *
  */
-public class BpmnExclusiveChoice extends AbstractOclSolver {
+public class BpmnExclusiveChoice extends AbstractBpmnOclSolver {
 
 	public BpmnExclusiveChoice() throws BpmnException {
 		super();

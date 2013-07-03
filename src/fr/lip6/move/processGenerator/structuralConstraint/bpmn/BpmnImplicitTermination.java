@@ -10,10 +10,15 @@ import org.eclipse.bpmn2.TerminateEventDefinition;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
+/**
+ * Représente le WP11 - Implicite Termination.
+ * @author Vincent
+ *
+ */
 public class BpmnImplicitTermination extends AbstractJavaSolver {
 
 	public BpmnImplicitTermination() throws BpmnException {
@@ -32,7 +37,7 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 
 		BpmnProcess process = (BpmnProcess) object;
 		// on compte le nombre de EndEvent qui n'ont pas de TerminateEventDefinition moins 1
-		List<EndEvent> list = Filter.byType(EndEvent.class, process.getProcess().getFlowElements());
+		List<EndEvent> list = BpmnFilter.byType(EndEvent.class, process.getProcess().getFlowElements());
 		boolean isTermination = false;
 		for (EndEvent endEvent : list) {
 			isTermination = false;

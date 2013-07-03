@@ -10,18 +10,21 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
-import fr.lip6.move.processGenerator.bpmn2.utils.Filter;
-import fr.lip6.move.processGenerator.bpmn2.utils.Utils;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.structuralConstraint.IConstraintRepresentation;
 
-
+/**
+ * Représente le WP10 - Arbitrary Cycle.
+ * @author Vincent
+ *
+ */
 public class BpmnArbitraryCycle extends AbstractJavaSolver {
-
 
 	public BpmnArbitraryCycle() {
 		super();
@@ -41,7 +44,7 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 		JungProcess jung = new JungProcess(process);
 		List<List<JungEdge>> allPaths = new ArrayList<>();
 
-		List<ExclusiveGateway> list = Filter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING);
+		List<ExclusiveGateway> list = BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING);
 		for (ExclusiveGateway converging : list) {
 			// on récupère l'activité juste après la converging
 			if (converging.getOutgoing().size() > 1) {
@@ -53,7 +56,6 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 			}
 						
 			SequenceFlow sequence = converging.getOutgoing().get(0);
-			
 			if (sequence != null) {
 				FlowNode next = sequence.getTargetRef();
 				// et on cherche un chemin partant de ce noeud et revenant à la gateway merge.

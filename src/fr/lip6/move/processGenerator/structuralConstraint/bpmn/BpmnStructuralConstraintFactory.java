@@ -1,15 +1,20 @@
 package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
 
+import fr.lip6.move.processGenerator.IEnumElement;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 
+/**
+ * Représente la factory des contraintes structurelles BPMN.
+ * @author Vincent
+ *
+ */
+public class BpmnStructuralConstraintFactory extends AbstractStructuralConstraintFactory {
 
-public class StructuralConstraintFactory extends AbstractStructuralConstraintFactory {
-
-	public static final StructuralConstraintFactory instance = new StructuralConstraintFactory();
-	private StructuralConstraintFactory() {}
+	public static final BpmnStructuralConstraintFactory instance = new BpmnStructuralConstraintFactory();
+	private BpmnStructuralConstraintFactory() {}
 	
 	@Override
 	public IStructuralConstraint newManualOclConstraint(String query) {
@@ -17,7 +22,7 @@ public class StructuralConstraintFactory extends AbstractStructuralConstraintFac
 	}
 
 	@Override
-	public IStructuralConstraint newElementConstraint(Object eElement) throws BpmnException {
+	public IStructuralConstraint newElementConstraint(IEnumElement eElement) throws BpmnException {
 		if (eElement instanceof EBpmnElement) {
 			return new BpmnElementConstraint((EBpmnElement) eElement);
 		}

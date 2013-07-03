@@ -30,11 +30,6 @@ public enum EBpmnWorkflowPattern implements IEnumWorkflowPattern {
 		this.clazz = clazz;
 	}
 	
-	/**
-	 * Créé une nouvelle instance de la classe associée à l'énumération.
-	 * @return {@link IStructuralConstraint}.
-	 * @throws BpmnException peut renvoyer cette exception si la lecture de la requête OCL est impossible
-	 */
 	@Override
 	public IStructuralConstraint newInstance() throws Exception {
 		return this.clazz.newInstance();

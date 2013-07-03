@@ -14,9 +14,11 @@ import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.Stagnation;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.uncommons.watchmaker.framework.termination.UserAbort;
+
+import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
+import fr.lip6.move.processGenerator.IEnumElement;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.utils.ConfigurationManager;
 import fr.lip6.move.processGenerator.geneticAlgorithm.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmData;
 import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmExecutor;
@@ -26,11 +28,15 @@ import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
 import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.StructuralConstraintFactory;
+import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.structuralConstraint.uml.UmlStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.uml.UmlProcess;
 
-
+/**
+ * Cet adapteur est déclenché lorsque l'utilisateur click sur le bouton "run".
+ * @author Vincent
+ *
+ */
 public class SelectionStartExecution extends SelectionAdapter {
 
 	public enum ConstraintType {
@@ -78,7 +84,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		AbstractStructuralConstraintFactory factory = null;
 		if (typeFile.toLowerCase().contains("bpmn")) {
 			typeFile = "bpmn";
-			factory = StructuralConstraintFactory.instance;
+			factory = BpmnStructuralConstraintFactory.instance;
 		} else {
 			typeFile = "uml";
 			factory = UmlStructuralConstraintFactory.instance;
@@ -230,6 +236,13 @@ public class SelectionStartExecution extends SelectionAdapter {
 		}
 	}
 
+	/**
+	 * En fonction du type de fichier passé en paramètre, cette méthode va récupérer le tableau
+	 * des change patterns sélectionné par l'utilisateur, les instancier et les renvoyer.
+	 * @param typeFile le type de fichier sélectionnés.
+	 * @return une {@link List} de {@link IChangePattern}.
+	 * @throws Exception
+	 */
 	private List<IChangePattern> getChangePatterns(String typeFile) throws Exception {
 
 		List<IChangePattern> changePatterns = new ArrayList<IChangePattern>();
@@ -257,6 +270,15 @@ public class SelectionStartExecution extends SelectionAdapter {
 		return changePatterns;
 	}
 
+	/**
+	 * Construit une liste de {@link StructuralConstraintChecker} en fonction du tableau passé en paramètre.
+	 * Cette méthode fonctionne à la fois pour le tableau des éléments mais aussi pour le tableau des workflow patterns.
+	 * @param table
+	 * @param constraintType
+	 * @param factory
+	 * @return
+	 * @throws Exception
+	 */
 	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType, 
 			AbstractStructuralConstraintFactory factory) throws Exception {
 
@@ -276,7 +298,13 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// on construit la StructuralConstraint dyamiquement en fonction du type
 				IStructuralConstraint contrainte;
 				if (constraintType.equals(ConstraintType.Element)) {
-					contrainte = factory.newElementConstraint(item.getData("1"));
+					Object o = item.getData("1");
+					if (o instanceof IEnumElement)
+						contrainte = factory.newElementConstraint((IEnumElement) o);
+					else {
+						System.err.println("The object in the table is not a " + IEnumElement.class.getSimpleName() + ".");
+						continue;
+					}
 				} else {
 					contrainte = factory.newWorkflowPatternConstraint(item.getData("1"));
 				}
@@ -296,7 +324,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
 					liste.add(checker);
 				} catch(Exception e) {
-					System.err.println("NumberFormatException : " + e.getMessage());
+					e.printStackTrace();
 				}
 				
 				// pour les préférences utilisateurs

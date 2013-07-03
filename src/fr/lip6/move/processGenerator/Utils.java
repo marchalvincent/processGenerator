@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2.utils;
+package fr.lip6.move.processGenerator;
 
 import java.io.File;
 

@@ -2,7 +2,11 @@ package fr.lip6.move.processGenerator.uml;
 
 import org.eclipse.uml2.uml.Activity;
 
-
+/**
+ * Représente un process UML.
+ * @author Vincent
+ *
+ */
 public class UmlProcess {
 	
 	// implémenter le diagramme d'activités de UML2.0
