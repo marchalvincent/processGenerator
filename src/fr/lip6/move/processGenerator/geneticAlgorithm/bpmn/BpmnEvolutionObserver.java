@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.utils.Benchmarker;
 import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
 
 /**
@@ -15,16 +16,20 @@ import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
 public class BpmnEvolutionObserver implements EvolutionObserver<BpmnProcess> {
 
 	private ProcessGeneratorView view;
+	private Benchmarker bench;
 	
-	public BpmnEvolutionObserver(ProcessGeneratorView view) {
+	public BpmnEvolutionObserver(ProcessGeneratorView view, Benchmarker bench) {
 		super();
 		this.view = view;
+		this.bench = bench;
 	}
 
 	@Override
 	public void populationUpdate(PopulationData<? extends BpmnProcess> data) {
 		Double best = new Double(data.getBestCandidateFitness());
-		DecimalFormat df = new DecimalFormat("#.###");
-		view.print("Generation " + data.getGenerationNumber() + ": " + df.format(best) + "% matches.");
+		DecimalFormat df = new DecimalFormat("#.##");
+		String bestS = df.format(best);
+		view.print("Generation " + data.getGenerationNumber() + ": " + bestS + "% matches.");
+		bench.tic(bestS);
 	}
 }

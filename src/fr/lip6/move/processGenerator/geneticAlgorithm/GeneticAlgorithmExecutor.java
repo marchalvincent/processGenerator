@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.CandidateFactory;
@@ -19,7 +20,9 @@ import org.uncommons.watchmaker.framework.selection.RankSelection;
 import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.selection.StochasticUniversalSampling;
 import org.uncommons.watchmaker.framework.selection.TournamentSelection;
+
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.utils.Benchmarker;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnCandidateFactory;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnCrossoverOperation;
 import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnEvolutionObserver;
@@ -159,6 +162,7 @@ public class GeneticAlgorithmExecutor extends Thread {
 		}
 
 		if (typeFile.contains("bpmn")) {
+			
 			try {
 				this.runBpmn();
 			} catch (GeneticException | IOException | IllegalArgumentException e) {
@@ -223,7 +227,8 @@ public class GeneticAlgorithmExecutor extends Thread {
 				random);
 
 		// un petit observeur pour voir ce qu'il se passe
-		engine.addEvolutionObserver(new BpmnEvolutionObserver(view));
+		Benchmarker bench = new Benchmarker();
+		engine.addEvolutionObserver(new BpmnEvolutionObserver(view, bench));
 
 		// les conditions de terminaisons
 		TerminationCondition[] cond = new TerminationCondition[terminationCondition.size()];
@@ -234,7 +239,9 @@ public class GeneticAlgorithmExecutor extends Thread {
 		}
 
 		// la méthode d'évolution
+		bench.start();
 		BpmnProcess winner = engine.evolve(nbPopulation, elitism, cond);
+		bench.stop(location + "bpmn_bench.csv");
 
 		// la sauvegarde du process winner
 		i = 0;

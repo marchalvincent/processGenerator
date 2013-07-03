@@ -150,7 +150,7 @@ public class BpmnProcess {
 	 * Créé et associé une {@link Task} choisie au hasard au process.
 	 */
 	public Task buildTask() {
-//		Task task = Bpmn2Factory.eINSTANCE.createTask();
+		
 		Task task = BpmnProcess.buildRandomSubTask();
 		
 		String name = BpmnNameManager.getTaskName();
@@ -165,25 +165,21 @@ public class BpmnProcess {
 	 * Renvoie une {@link Task} au hasard parmis celle existante dans BPMN.
 	 */
 	public static Task buildRandomSubTask() {
-		switch (rng.nextInt(7)) {
+		// TODO voir si possible sendTask, BusinessRuleTask
+		switch (rng.nextInt(5)) {
 			case 0:
-//				return Bpmn2Factory.eINSTANCE.createBusinessRuleTask();
-				return Bpmn2Factory.eINSTANCE.createTask();
-			case 1:
 				return Bpmn2Factory.eINSTANCE.createManualTask();
-			case 2:
+			case 1:
 				return Bpmn2Factory.eINSTANCE.createReceiveTask();
-			case 3:
+			case 2:
 			ScriptTask scriptTask = Bpmn2Factory.eINSTANCE.createScriptTask();
 			scriptTask.setScript("example of script");
 			scriptTask.setScriptFormat("script format");
 			return scriptTask;
-			case 4:
-				return Bpmn2Factory.eINSTANCE.createSendTask();
-			case 5:
+			case 3:
 				return Bpmn2Factory.eINSTANCE.createServiceTask();
-			case 6:
-				return Bpmn2Factory.eINSTANCE.createUserTask();
+			case 4:
+			return Bpmn2Factory.eINSTANCE.createUserTask();
 			default:
 				break;
 		}
