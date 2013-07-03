@@ -1,15 +1,16 @@
 package fr.lip6.move.processGenerator.ga;
 
 /**
- * Cette classe Helper va nous permettre de stocker le poids associé à chaque élément de la fonction fitness
- * par l'utilisateur depuis l'interface graphique.
+ * Cette classe Helper va nous permettre de stocker le poids associé à chaque élément de la fonction fitness par
+ * l'utilisateur depuis l'interface graphique.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class FitnessWeightHelper {
 	
 	private double sizePercent, elementPercent, workflowPercent, manualOclPercent;
-
+	
 	public FitnessWeightHelper(double sizeWeight, double elementWeight, double workflowWeight, double manualOclWeight) {
 		super();
 		double total = sizeWeight + elementWeight + workflowWeight + manualOclWeight;
@@ -19,19 +20,19 @@ public class FitnessWeightHelper {
 		this.manualOclPercent = manualOclWeight / total * 100;
 	}
 	
-	public double getSizePercent() {
+	public double getSizePercent () {
 		return sizePercent;
 	}
 	
-	public double getElementPercent() {
+	public double getElementPercent () {
 		return elementPercent;
 	}
 	
-	public double getWorkflowPercent() {
+	public double getWorkflowPercent () {
 		return workflowPercent;
 	}
 	
-	public double getManualOclPercent() {
+	public double getManualOclPercent () {
 		return manualOclPercent;
 	}
 }

@@ -2,11 +2,9 @@ package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import java.util.List;
 import java.util.Random;
-
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.SequenceFlow;
-
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.WorkflowRepresentation;
@@ -18,14 +16,15 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
  * Ce change pattern se charge d'insérer un workflow entier au process.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
-
+	
 	@Override
-	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
-
+	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+		
 		BpmnProcess process = null;
 		try {
 			process = new BpmnProcess(oldProcess);
@@ -97,5 +96,5 @@ public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBp
 		
 		return process;
 	}
-
+	
 }

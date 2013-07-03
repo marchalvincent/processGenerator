@@ -2,11 +2,9 @@ package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import java.util.List;
 import java.util.Random;
-
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
-
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
@@ -15,17 +13,18 @@ import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
- * Ce change pattern représente l'insertion conditionnelle d'une activité. Elle peut s'appliquer
- * sur une activité et entrainer la création de gateways de condition, ou tout simplement s'appliquer
- * sur des gateways déjà existantes et ajouter une branche seulement.
+ * Ce change pattern représente l'insertion conditionnelle d'une activité. Elle peut s'appliquer sur une activité et
+ * entrainer la création de gateways de condition, ou tout simplement s'appliquer sur des gateways déjà existantes et
+ * ajouter une branche seulement.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
-
+	
 	@Override
-	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
-
+	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+		
 		BpmnProcess process = null;
 		try {
 			process = new BpmnProcess(oldProcess);
@@ -34,7 +33,7 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return oldProcess;
 		}
-
+		
 		// on récupère le nombre de séquence et le nombre d'exclusive gateway
 		int nbSequence = ChangePatternHelper.instance.countSequenceFlow(process);
 		int nbConditional = ChangePatternHelper.instance.countConditionalGateway(process);
@@ -49,7 +48,8 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		if ((nbSequence + nbConditional) == 0)
 			return process;
 		
-		// on fait un random équitable pour savoir si on applique la condition sur un arc ou sur une ExclusiveGateway deja existante
+		// on fait un random équitable pour savoir si on applique la condition sur un arc ou sur une ExclusiveGateway
+		// deja existante
 		int[] tableau = new int[nbSequence + nbConditional];
 		for (int i = 0; i < nbSequence; i++) {
 			tableau[i] = 0;
@@ -57,7 +57,7 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		for (int i = nbSequence; i < nbSequence + nbConditional; i++) {
 			tableau[i] = 1;
 		}
-
+		
 		// on procède au tirage au sort. 0 pour une insertion sur un arc, 1 pour une insertion sur une ExclusiveGateway.
 		int tirage = tableau[rng.nextInt(tableau.length)];
 		if (tirage == 0) {
@@ -68,14 +68,17 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 	}
 	
 	/**
-	 * Applique la modification génétique d'une insertion conditionelle sur une MyExclusiveGateway ou MyInclusiveGateway déjà existente. 
-	 * Cette modification va entrainer l'ajout d'un chemin supplémentaire à la Gateway tirée au sort.
-	 * @param process le {@link BpmnProcess} à modifier.
-	 * @param rng une source de {@link Random}.
+	 * Applique la modification génétique d'une insertion conditionelle sur une MyExclusiveGateway ou MyInclusiveGateway
+	 * déjà existente. Cette modification va entrainer l'ajout d'un chemin supplémentaire à la Gateway tirée au sort.
+	 * 
+	 * @param process
+	 *            le {@link BpmnProcess} à modifier.
+	 * @param rng
+	 *            une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnConditional(BpmnProcess process, Random rng) {
-
+	private BpmnProcess applyOnConditional (BpmnProcess process, Random rng) {
+		
 		// on récupère une Gateway diverging au hasard
 		Gateway gatewayDiverging = null;
 		try {
@@ -99,16 +102,19 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		
 		return process;
 	}
-
+	
 	/**
-	 * Applique la modification génétique d'une insertion conditionelle autour d'un arc ({@link SequenceFlow}. Cette modification va entrainer
-	 * une création de deux "conditional gateway" qui seront fixées avant et après cet arc.
-	 * @param process le {@link BpmnProcess} à modifier.
-	 * @param rng une source de {@link Random}.
+	 * Applique la modification génétique d'une insertion conditionelle autour d'un arc ({@link SequenceFlow}. Cette
+	 * modification va entrainer une création de deux "conditional gateway" qui seront fixées avant et après cet arc.
+	 * 
+	 * @param process
+	 *            le {@link BpmnProcess} à modifier.
+	 * @param rng
+	 *            une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnSequenceFlow(BpmnProcess process, Random rng) {
-
+	private BpmnProcess applyOnSequenceFlow (BpmnProcess process, Random rng) {
+		
 		SequenceFlow ancienArc = null;
 		try {
 			ancienArc = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
@@ -117,7 +123,7 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 			System.err.println(getClass().getSimpleName() + e.getMessage());
 			return process;
 		}
-
+		
 		// les nouveaux noeuds on tire au hasard si on met exclusive ou inclusive
 		int rand = rng.nextInt(3);
 		Gateway choice, merge;

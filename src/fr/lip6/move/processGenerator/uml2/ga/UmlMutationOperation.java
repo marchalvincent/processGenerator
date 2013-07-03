@@ -1,69 +1,69 @@
-package fr.lip6.move.processGenerator.bpmn2.ga;
+package fr.lip6.move.processGenerator.uml2.ga;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
-import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 import fr.lip6.move.processGenerator.ga.IChangePattern;
+import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
 /**
- * Cette classe se charge de la mutation des candidats entre chaque génération. Elle appliquera un change pattern selon
- * leurs probabilités.
+ * Cette classe se charge de la mutation des candidats entre chaque génération. Elle appliquera un change pattern au
+ * hasard selon leurs probabilités.
  * 
  * @author Vincent
  * 
  */
-public class BpmnMutationOperation implements EvolutionaryOperator<BpmnProcess> {
+public class UmlMutationOperation implements EvolutionaryOperator<UmlProcess> {
 	
-	private List<IBpmnChangePattern> changePatterns;
+	private List<IUmlChangePattern> changePatterns;
 	private List<StructuralConstraintChecker> workflowsConstraints;
 	private Random rng;
 	
-	public BpmnMutationOperation(List<IChangePattern> changePatterns, List<StructuralConstraintChecker> contraintesWorkflows)
+	public UmlMutationOperation(List<IChangePattern> changePatterns, List<StructuralConstraintChecker> contraintesWorkflows)
 			throws GeneticException {
 		super();
-		this.changePatterns = new ArrayList<IBpmnChangePattern>();
+		this.changePatterns = new ArrayList<>();
 		for (IChangePattern iChangePattern : changePatterns) {
-			if (iChangePattern instanceof IBpmnChangePattern)
-				this.changePatterns.add((IBpmnChangePattern) iChangePattern);
+			if (iChangePattern instanceof IUmlChangePattern)
+				this.changePatterns.add((IUmlChangePattern) iChangePattern);
 			else
 				throw new GeneticException("BpmnMutationOperation constructor : one change pattern is not implementing "
-						+ IBpmnChangePattern.class.getSimpleName() + ".");
+						+ IUmlChangePattern.class.getSimpleName() + ".");
 		}
 		this.rng = new MersenneTwisterRNG();
 		this.workflowsConstraints = contraintesWorkflows;
 	}
 	
 	@Override
-	public List<BpmnProcess> apply (List<BpmnProcess> selectedCandidates, Random rng) {
+	public List<UmlProcess> apply (List<UmlProcess> selectedCandidates, Random rng) {
 		
-		List<BpmnProcess> newGeneration = new ArrayList<BpmnProcess>();
+		List<UmlProcess> newGeneration = new ArrayList<>();
 		// pour chaque candidat...
-		for (BpmnProcess bpmnProcess : selectedCandidates) {
+		for (UmlProcess umlProcess : selectedCandidates) {
 			// on prend un changePattern au hasard
-			IBpmnChangePattern changePattern = this.getRandomChangePattern();
+			IUmlChangePattern changePattern = this.getRandomChangePattern();
 			// et on applique la mutation
-			newGeneration.add(changePattern.apply(bpmnProcess, rng, workflowsConstraints));
+			newGeneration.add(changePattern.apply(umlProcess, rng, workflowsConstraints));
 		}
 		return newGeneration;
 	}
 	
 	/**
-	 * Sélectionne un {@link IBpmnChangePattern} au hasard selon leurs poids. Plus le poids d'un change pattern est
+	 * Sélectionne un {@link IUmlChangePattern} au hasard selon leurs poids. Plus le poids d'un change pattern est
 	 * élevé, plus il a de chance d'être sélectionné. En revanche, la sélection se fait quand même à l'aide d'un objet
 	 * Random.
 	 * 
-	 * @return {@link IBpmnChangePattern}.
+	 * @return {@link IUmlChangePattern}.
 	 */
-	private IBpmnChangePattern getRandomChangePattern () {
+	private IUmlChangePattern getRandomChangePattern () {
 		
 		// on initialise un tableau d'entier pour donner un poids à chaque probabilité
 		int totalPoid = 0;
-		for (IBpmnChangePattern changeP : this.changePatterns) {
+		for (IUmlChangePattern changeP : this.changePatterns) {
 			totalPoid = totalPoid + changeP.getProba();
 		}
 		

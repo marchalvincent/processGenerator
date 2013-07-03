@@ -2,10 +2,8 @@ package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import java.util.List;
 import java.util.Random;
-
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
-
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
@@ -15,15 +13,15 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
  * Insère une {@link Task} au hasard dans le diagramme.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnSerialInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
-
 	
 	@Override
-	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
-
+	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+		
 		BpmnProcess process = null;
 		try {
 			process = new BpmnProcess(oldProcess);

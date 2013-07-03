@@ -12,57 +12,60 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnStructuredSynchronizingMerge;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
-
 public class StructuredSynchronizingMergeTest {
-
+	
 	private BpmnProcess process;
-
+	
 	@Before
-	public void before() {
+	public void before () {
 		process = new BpmnProcess();
 	}
-
+	
 	@After
-	public void after() {
+	public void after () {
 		process = null;
 	}
-
-	@Test(expected=BpmnException.class)
-	public void test0() throws Exception {
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, -1);
+	
+	@Test(expected = BpmnException.class)
+	public void test0 () throws Exception {
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(),
+				EQuantity.EQUAL, -1);
 		checker.check(process);
 	}
-
+	
 	@Test
-	public void test1() throws Exception {
-
+	public void test1 () throws Exception {
+		
 		// init du process
 		process = BpmnBuilder.instance.initialFinal();
-
+		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 0);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(),
+				EQuantity.EQUAL, 0);
 		assertTrue(checker.check(process));
 	}
-
+	
 	@Test
-	public void test2() throws Exception {
-
+	public void test2 () throws Exception {
+		
 		// init du process
 		process = BpmnBuilder.instance.createExampleWithStructuredSynchronizingMerge();
-
+		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(),
+				EQuantity.EQUAL, 1);
 		assertTrue(checker.check(process));
 	}
-
+	
 	@Test
-	public void test3() throws Exception {
-
+	public void test3 () throws Exception {
+		
 		// init du process
 		process = BpmnBuilder.instance.createExampleWithMultiChoiceMultiMerge();
-
+		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(), EQuantity.EQUAL, 1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(),
+				EQuantity.EQUAL, 1);
 		assertFalse(checker.check(process));
 	}
 }

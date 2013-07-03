@@ -15,23 +15,25 @@ import fr.lip6.move.processGenerator.uml2.UmlParser;
 
 /**
  * Cet évènement est déclenché lorsque l'utilisateur à sélectionné le process initial de l'algo génétique.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class SelectSetInitialProcess extends SelectionAdapter {
-
+	
 	private ProcessGeneratorView view;
+	
 	public SelectSetInitialProcess(ProcessGeneratorView view) {
 		super();
 		this.view = view;
 	}
-
+	
 	@Override
-	public void widgetSelected(SelectionEvent e) {
-
+	public void widgetSelected (SelectionEvent e) {
+		
 		// on vérifie quel type de fichier l'utilisateur a sélectionné
 		String typeFile = view.getComboTypeFile().getText();
-
+		
 		// en fonction, on adapte le filtre de fichier pour la popup
 		String extension = "bpmn";
 		if (typeFile.toLowerCase().contains("uml"))
@@ -42,8 +44,9 @@ public class SelectSetInitialProcess extends SelectionAdapter {
 		filters.add(new MyViewerFilter(extension));
 		
 		// on ouvre la popup
-		IFile files[] = WorkspaceResourceDialog.openFileSelection(new Shell(), "Select the " + extension + " file.", null, false, null, filters);
-
+		IFile files[] = WorkspaceResourceDialog.openFileSelection(new Shell(), "Select the " + extension + " file.", null, false,
+				null, filters);
+		
 		// puis on fait appel au setter
 		if (files.length > 0) {
 			if (typeFile.toLowerCase().contains("bpmn")) {

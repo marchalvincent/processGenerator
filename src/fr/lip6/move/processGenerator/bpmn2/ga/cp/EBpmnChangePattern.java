@@ -4,10 +4,11 @@ import fr.lip6.move.processGenerator.ga.IChangePattern;
 import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
 
 /**
- * Cette énumération représente les change pattern que peut sélectionner l'utilisateur
- * sur l'interface graphique. Chaque énumération est associée à un {@link IEnumChangePattern}.
+ * Cette énumération représente les change pattern que peut sélectionner l'utilisateur sur l'interface graphique. Chaque
+ * énumération est associée à un {@link IEnumChangePattern}.
+ * 
  * @author Vincent
- *
+ * 
  */
 public enum EBpmnChangePattern implements IEnumChangePattern {
 	
@@ -24,9 +25,9 @@ public enum EBpmnChangePattern implements IEnumChangePattern {
 	private EBpmnChangePattern(Class<? extends IChangePattern> clazz) {
 		this.clazz = clazz;
 	}
-
+	
 	@Override
-	public IChangePattern newInstance(String proba) throws Exception {
+	public IChangePattern newInstance (String proba) throws Exception {
 		IChangePattern cp = this.clazz.newInstance();
 		cp.setProba(proba);
 		return cp;

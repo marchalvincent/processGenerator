@@ -1,11 +1,13 @@
 package fr.lip6.move.processGenerator.uml2.constraints;
 
 import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.uml2.UmlException;
 
 /**
  * Représente le WP1 - Sequence.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class UmlSequence extends AbstractBpmnOclSolver {
 	

@@ -4,8 +4,9 @@ import org.eclipse.uml2.uml.Activity;
 
 /**
  * Représente un process UML.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class UmlProcess {
 	

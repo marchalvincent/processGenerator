@@ -8,8 +8,9 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Adapteur déclenché par le changement du dossier de destination des fichiers.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class SelectPathDirectory extends SelectionAdapter {
 	
@@ -19,10 +20,10 @@ public class SelectPathDirectory extends SelectionAdapter {
 		super();
 		this.view = view;
 	}
-
+	
 	@Override
-	public void widgetSelected(SelectionEvent e) {
-
+	public void widgetSelected (SelectionEvent e) {
+		
 		DirectoryDialog directoryD = new DirectoryDialog(new Shell());
 		String chemin = directoryD.open();
 		if (chemin != null) {

@@ -8,11 +8,10 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnRemove;
 
-
 public class ChangePatternHelperTest {
-
-//	@Test
-	public void test() throws IOException {
+	
+	// @Test
+	public void test () throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.createExampleWithUselessParallel();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
 		process = new BpmnRemove().apply(process, new MersenneTwisterRNG(), null);
@@ -20,8 +19,8 @@ public class ChangePatternHelperTest {
 		assertTrue(true);
 	}
 	
-//	@Test
-	public void test2() throws IOException {
+	// @Test
+	public void test2 () throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.createExampleWithUselessExclusive();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
 		process = new BpmnRemove().apply(process, new MersenneTwisterRNG(), null);
@@ -30,7 +29,7 @@ public class ChangePatternHelperTest {
 	}
 	
 	@Test
-	public void test3() throws IOException {
+	public void test3 () throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.getUselessLoopExample();
 		process.save("C:/Users/Vincent/workspace/processGenerator/gen/vincentAvant.bpmn");
 		process = new BpmnRemove().apply(process, new MersenneTwisterRNG(), null);

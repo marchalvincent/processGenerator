@@ -27,7 +27,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
-
 import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
@@ -44,50 +43,51 @@ import fr.lip6.move.processGenerator.uml2.ga.cp.EUmlChangePattern;
 
 /**
  * Représente la vue générale du plugin.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class ProcessGeneratorView extends ViewPart {
-
+	
 	public static final String ID = "ProcessGenerator.views.ProcessGeneratorView";
 	private ScrolledForm form;
 	private Table tableWorkflow, tableMutationParameters, tableElements;
 	private Group groupMutationParameters, grpElementsParameters;
 	private Text text_oclConstraint;
 	private Combo comboTypeFile, comboStrategySelection;
-	private Spinner spinner_nbNode, spinner_marginNbNode, spinnerNbPopulation, spinnerElitism, spinnerUntilSecondes, 
-				spinnerUntilGeneration, spinnerUntilStagnation, spinnerSizeWeight, spinnerElementWeight, spinnerWorkflowWeight,
-				spinnerManualOclWeight;
+	private Spinner spinner_nbNode, spinner_marginNbNode, spinnerNbPopulation, spinnerElitism, spinnerUntilSecondes,
+			spinnerUntilGeneration, spinnerUntilStagnation, spinnerSizeWeight, spinnerElementWeight, spinnerWorkflowWeight,
+			spinnerManualOclWeight;
 	private Button btnStart, btnStop, btnSetInitialProcess, checkMutation, checkCrossover, btnOneSolutionFound, btnDuringSec,
-				btnGeneration, btnUntilStagnation, btnChange;
+			btnGeneration, btnUntilStagnation, btnChange;
 	private Label lblResult, lblpath, lblFiletype, lblErrors;
 	private FormToolkit toolkit;
 	private Composite compositeTarget2;
-
+	
 	private BpmnProcess bpmnInitialProcess;
 	private UmlProcess umlInitialProcess;
-
+	
 	/**
 	 * The constructor.
 	 */
 	public ProcessGeneratorView() {}
-
+	
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
-	public void createPartControl(Composite parent) {
-
+	public void createPartControl (Composite parent) {
+		
 		GridData gd = null;
-
+		
 		toolkit = new FormToolkit(parent.getDisplay());
 		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd.horizontalSpan = 1;
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
-
+		
 		TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
 		toolkit.adapt(tabFolder);
 		toolkit.paintBordersFor(tabFolder);
-
+		
 		TabItem tabRun = new TabItem(tabFolder, SWT.NONE);
 		tabRun.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/run.gif"));
 		tabRun.setText("Run");
@@ -96,49 +96,49 @@ public class ProcessGeneratorView extends ViewPart {
 		form.setDelayedReflow(true);
 		form.getBody().setLayout(new GridLayout(2, true));
 		toolkit.decorateFormHeading(form.getForm());
-
+		
 		Section sectionSizeLocation = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		sectionSizeLocation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sectionSizeLocation.marginWidth = 0;
 		sectionSizeLocation.marginHeight = 0;
 		toolkit.paintBordersFor(sectionSizeLocation);
 		sectionSizeLocation.setText("Size and location");
-
+		
 		Composite composite = new Composite(sectionSizeLocation, SWT.NONE);
 		toolkit.adapt(composite);
 		toolkit.paintBordersFor(composite);
 		sectionSizeLocation.setClient(composite);
 		composite.setLayout(new GridLayout(1, false));
-
+		
 		Composite composite_1 = new Composite(composite, SWT.NONE);
 		composite_1.setLayout(new GridLayout(3, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(composite_1);
 		toolkit.paintBordersFor(composite_1);
-
+		
 		Label lblSaveLocation = new Label(composite_1, SWT.NONE);
 		toolkit.adapt(lblSaveLocation, true, true);
 		lblSaveLocation.setText("Save location : ");
-
+		
 		lblpath = new Label(composite_1, SWT.NONE);
 		toolkit.adapt(lblpath, true, true);
 		lblpath.setText("/model/");
-
+		
 		btnChange = new Button(composite_1, SWT.NONE);
 		btnChange.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/folder.gif"));
 		toolkit.adapt(btnChange, true, true);
 		btnChange.setText("Change");
-
+		
 		Composite composite_2 = new Composite(composite, SWT.NONE);
 		composite_2.setLayout(new GridLayout(5, false));
 		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(composite_2);
 		toolkit.paintBordersFor(composite_2);
-
+		
 		Label lblNode = new Label(composite_2, SWT.NONE);
 		toolkit.adapt(lblNode, true, true);
 		lblNode.setText("Node (#) : ");
-
+		
 		spinner_nbNode = new Spinner(composite_2, SWT.BORDER);
 		spinner_nbNode.setMaximum(10000);
 		spinner_nbNode.setIncrement(10);
@@ -147,17 +147,17 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(spinner_nbNode);
 		toolkit.paintBordersFor(spinner_nbNode);
 		new Label(composite_2, SWT.NONE);
-
+		
 		Label lblMargin = new Label(composite_2, SWT.NONE);
 		toolkit.adapt(lblMargin, true, true);
 		lblMargin.setText("Margin (%) : ");
-
+		
 		spinner_marginNbNode = new Spinner(composite_2, SWT.BORDER);
 		spinner_marginNbNode.setMaximum(500);
 		spinner_marginNbNode.setSelection(10);
 		toolkit.adapt(spinner_marginNbNode);
 		toolkit.paintBordersFor(spinner_marginNbNode);
-
+		
 		Section sctnRun = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		sctnRun.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnRun.marginWidth = 0;
@@ -165,45 +165,45 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnRun);
 		sctnRun.setText("Run");
 		sctnRun.setExpanded(true);
-
+		
 		Composite compSctnRun = new Composite(sctnRun, SWT.NONE);
 		toolkit.adapt(compSctnRun);
 		toolkit.paintBordersFor(compSctnRun);
 		sctnRun.setClient(compSctnRun);
 		compSctnRun.setLayout(new GridLayout(1, false));
-
+		
 		Composite compRun = new Composite(compSctnRun, SWT.NONE);
 		compRun.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(compRun);
 		toolkit.paintBordersFor(compRun);
 		compRun.setLayout(new GridLayout(2, false));
-
+		
 		btnStart = new Button(compRun, SWT.NONE);
 		btnStart.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/run.gif"));
 		toolkit.adapt(btnStart, true, true);
 		btnStart.setText("Start");
-
+		
 		btnStop = new Button(compRun, SWT.NONE);
 		btnStop.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/stop.gif"));
 		toolkit.adapt(btnStop, true, true);
 		btnStop.setText("Stop");
-
+		
 		lblResult = new Label(compSctnRun, SWT.NONE);
 		toolkit.adapt(lblResult, true, true);
 		
 		lblErrors = new Label(compSctnRun, SWT.NONE);
 		toolkit.adapt(lblErrors, true, true);
-
+		
 		TabItem tbtmTargetConfiguration = new TabItem(tabFolder, SWT.NONE);
 		tbtmTargetConfiguration.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/target.gif"));
 		tbtmTargetConfiguration.setText("Target configuration");
-
+		
 		ScrolledForm scrolledFormTarget = toolkit.createScrolledForm(tabFolder);
 		scrolledFormTarget.setDelayedReflow(true);
 		tbtmTargetConfiguration.setControl(scrolledFormTarget);
 		toolkit.paintBordersFor(scrolledFormTarget);
 		scrolledFormTarget.getBody().setLayout(new GridLayout(2, true));
-
+		
 		Section sctnFile = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnFile.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnFile.marginWidth = 0;
@@ -211,56 +211,56 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnFile);
 		sctnFile.setText("File information");
 		sctnFile.setExpanded(true);
-
+		
 		Composite compositeTarget1 = new Composite(sctnFile, SWT.NONE);
 		toolkit.adapt(compositeTarget1);
 		toolkit.paintBordersFor(compositeTarget1);
 		sctnFile.setClient(compositeTarget1);
 		compositeTarget1.setLayout(new GridLayout(1, false));
-
+		
 		Composite composite_3 = new Composite(compositeTarget1, SWT.NONE);
 		composite_3.setLayout(new GridLayout(2, false));
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(composite_3);
 		toolkit.paintBordersFor(composite_3);
-
+		
 		Label lblFileType = new Label(composite_3, SWT.NONE);
 		lblFileType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		toolkit.adapt(lblFileType, true, true);
 		lblFileType.setText("File type : ");
-
+		
 		comboTypeFile = new Combo(composite_3, SWT.READ_ONLY);
 		comboTypeFile.setItems(new String[] {"BPMN 2.0", "UML 2.0 AD"});
 		comboTypeFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(comboTypeFile);
 		toolkit.paintBordersFor(comboTypeFile);
 		comboTypeFile.select(0);
-
+		
 		grpElementsParameters = new Group(compositeTarget1, SWT.NONE);
 		grpElementsParameters.setLayout(new GridLayout(1, false));
 		grpElementsParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpElementsParameters.setText("Elements parameters");
 		toolkit.adapt(grpElementsParameters);
 		toolkit.paintBordersFor(grpElementsParameters);
-
+		
 		tableElements = new Table(grpElementsParameters, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
 		tableElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableElements.setLinesVisible(true);
 		tableElements.setHeaderVisible(true);
 		toolkit.adapt(tableElements);
 		toolkit.paintBordersFor(tableElements);
-
+		
 		TableColumn tableColumn = new TableColumn(tableElements, SWT.NONE);
 		tableColumn.setWidth(28);
-
+		
 		TableColumn tableColumn_6 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_6.setWidth(150);
 		tableColumn_6.setText("Element name");
-
+		
 		TableColumn tableColumn_7 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_7.setWidth(100);
 		tableColumn_7.setText("Quantity");
-
+		
 		TableColumn tableColumn_8 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_8.setWidth(60);
 		tableColumn_8.setText("Number");
@@ -268,7 +268,7 @@ public class ProcessGeneratorView extends ViewPart {
 		TableColumn tblclmnWeight = new TableColumn(tableElements, SWT.NONE);
 		tblclmnWeight.setWidth(50);
 		tblclmnWeight.setText("Weight");
-
+		
 		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2));
 		sctnWorkflow.marginWidth = 0;
@@ -276,13 +276,13 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnWorkflow);
 		sctnWorkflow.setText("Workflow patterns");
 		sctnWorkflow.setExpanded(true);
-
+		
 		compositeTarget2 = new Composite(sctnWorkflow, SWT.NONE);
 		toolkit.adapt(compositeTarget2);
 		toolkit.paintBordersFor(compositeTarget2);
 		sctnWorkflow.setClient(compositeTarget2);
 		compositeTarget2.setLayout(new GridLayout(1, false));
-
+		
 		tableWorkflow = new Table(compositeTarget2, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
 		tableWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableWorkflow.setLinesVisible(true);
@@ -290,18 +290,18 @@ public class ProcessGeneratorView extends ViewPart {
 		tableWorkflow.setBounds(0, 0, 85, 85);
 		toolkit.adapt(tableWorkflow);
 		toolkit.paintBordersFor(tableWorkflow);
-
+		
 		TableColumn tableColumn_1_checkbox = new TableColumn(tableWorkflow, SWT.NONE);
 		tableColumn_1_checkbox.setWidth(28);
-
+		
 		TableColumn tableColumnName = new TableColumn(tableWorkflow, SWT.NONE);
 		tableColumnName.setWidth(170);
 		tableColumnName.setText("Workflow name");
-
+		
 		TableColumn tableColumnQuantity = new TableColumn(tableWorkflow, SWT.NONE);
 		tableColumnQuantity.setWidth(115);
 		tableColumnQuantity.setText("Quantity");
-
+		
 		TableColumn tblclmnNumber = new TableColumn(tableWorkflow, SWT.NONE);
 		tblclmnNumber.setWidth(60);
 		tblclmnNumber.setText("Number");
@@ -309,7 +309,7 @@ public class ProcessGeneratorView extends ViewPart {
 		TableColumn tblclmnWeight_1 = new TableColumn(tableWorkflow, SWT.NONE);
 		tblclmnWeight_1.setWidth(50);
 		tblclmnWeight_1.setText("Weight");
-
+		
 		Section sctnOclConstraints = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnOclConstraints.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnOclConstraints.marginWidth = 0;
@@ -317,29 +317,29 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnOclConstraints);
 		sctnOclConstraints.setText("Add OCL constraints");
 		sctnOclConstraints.setExpanded(true);
-
+		
 		Composite compositeTarget3 = new Composite(sctnOclConstraints, SWT.NONE);
 		toolkit.adapt(compositeTarget3);
 		toolkit.paintBordersFor(compositeTarget3);
 		sctnOclConstraints.setClient(compositeTarget3);
 		compositeTarget3.setLayout(new GridLayout(1, false));
-
+		
 		text_oclConstraint = new Text(compositeTarget3, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		GridData gd_text_oclConstraint = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		gd_text_oclConstraint.heightHint = 71;
 		text_oclConstraint.setLayoutData(gd_text_oclConstraint);
 		toolkit.adapt(text_oclConstraint, true, true);
-
+		
 		TabItem tbtmGeneticAlgorithmConfiguration = new TabItem(tabFolder, SWT.NONE);
 		tbtmGeneticAlgorithmConfiguration.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/tool.gif"));
 		tbtmGeneticAlgorithmConfiguration.setText("Genetic algorithm configuration");
-
+		
 		ScrolledForm scrolledForm = toolkit.createScrolledForm(tabFolder);
 		scrolledForm.setDelayedReflow(true);
 		tbtmGeneticAlgorithmConfiguration.setControl(scrolledForm);
 		toolkit.paintBordersFor(scrolledForm);
 		scrolledForm.getBody().setLayout(new GridLayout(2, false));
-
+		
 		Section sctnInitial = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnInitial.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnInitial.marginWidth = 0;
@@ -347,17 +347,17 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnInitial);
 		sctnInitial.setText("Initial population");
 		sctnInitial.setExpanded(true);
-
+		
 		Composite compositeGA1 = new Composite(sctnInitial, SWT.NONE);
 		toolkit.adapt(compositeGA1);
 		toolkit.paintBordersFor(compositeGA1);
 		sctnInitial.setClient(compositeGA1);
 		compositeGA1.setLayout(new GridLayout(3, false));
-
+		
 		Label lblPopulation = new Label(compositeGA1, SWT.NONE);
 		toolkit.adapt(lblPopulation, true, true);
 		lblPopulation.setText("Population (#) :");
-
+		
 		spinnerNbPopulation = new Spinner(compositeGA1, SWT.BORDER);
 		spinnerNbPopulation.setIncrement(10);
 		spinnerNbPopulation.setMaximum(10000);
@@ -366,17 +366,17 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(spinnerNbPopulation);
 		toolkit.paintBordersFor(spinnerNbPopulation);
 		new Label(compositeGA1, SWT.NONE);
-
+		
 		btnSetInitialProcess = new Button(compositeGA1, SWT.NONE);
 		btnSetInitialProcess.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		btnSetInitialProcess.setImage(ResourceManager.getPluginImage("ProcessGenerator", "icons/process.gif"));
 		toolkit.adapt(btnSetInitialProcess, true, true);
 		btnSetInitialProcess.setText("Set initial process");
-
+		
 		lblFiletype = new Label(compositeGA1, SWT.NONE);
 		toolkit.adapt(lblFiletype, true, true);
 		lblFiletype.setText("(bpmn file)");
-
+		
 		Section sctnSelection = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnSelection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnSelection.marginWidth = 0;
@@ -384,28 +384,28 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnSelection);
 		sctnSelection.setText("Elitism and selection strategies");
 		sctnSelection.setExpanded(true);
-
+		
 		Composite compositeGA2 = new Composite(sctnSelection, SWT.NONE);
 		toolkit.adapt(compositeGA2);
 		toolkit.paintBordersFor(compositeGA2);
 		sctnSelection.setClient(compositeGA2);
 		compositeGA2.setLayout(new GridLayout(2, false));
-
+		
 		Label lblElitism_1 = new Label(compositeGA2, SWT.NONE);
 		toolkit.adapt(lblElitism_1, true, true);
 		lblElitism_1.setText("Elitism :");
-
+		
 		spinnerElitism = new Spinner(compositeGA2, SWT.BORDER);
 		spinnerElitism.setMaximum(1000);
 		spinnerElitism.setSelection(5);
 		toolkit.adapt(spinnerElitism);
 		toolkit.paintBordersFor(spinnerElitism);
-
+		
 		Label lblStrategySelection_1 = new Label(compositeGA2, SWT.NONE);
 		lblStrategySelection_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		toolkit.adapt(lblStrategySelection_1, true, true);
 		lblStrategySelection_1.setText("Strategy :");
-
+		
 		comboStrategySelection = new Combo(compositeGA2, SWT.READ_ONLY);
 		comboStrategySelection.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		comboStrategySelection.setVisibleItemCount(10);
@@ -413,7 +413,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(comboStrategySelection);
 		new Label(compositeGA2, SWT.NONE);
 		new Label(compositeGA2, SWT.NONE);
-
+		
 		Section sctnEvolutionary = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnEvolutionary.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnEvolutionary.marginWidth = 0;
@@ -421,29 +421,30 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnEvolutionary);
 		sctnEvolutionary.setText("Evolutionary operations");
 		sctnEvolutionary.setExpanded(true);
-
+		
 		Composite compositeGA3 = new Composite(sctnEvolutionary, SWT.NONE);
 		toolkit.adapt(compositeGA3);
 		toolkit.paintBordersFor(compositeGA3);
 		sctnEvolutionary.setClient(compositeGA3);
 		compositeGA3.setLayout(new GridLayout(2, true));
-
+		
 		checkMutation = new Button(compositeGA3, SWT.CHECK);
 		checkMutation.addMouseListener(new MouseAdapter() {
+			
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseDown (MouseEvent e) {
 				groupMutationParameters.setVisible(!((Button) e.getSource()).getSelection());
 			}
 		});
 		checkMutation.setText("Mutation");
 		checkMutation.setBounds(0, 0, 12, 25);
 		toolkit.adapt(checkMutation, true, true);
-
+		
 		checkCrossover = new Button(compositeGA3, SWT.CHECK);
 		checkCrossover.setText("Crossover");
 		checkCrossover.setBounds(0, 0, 12, 25);
 		toolkit.adapt(checkCrossover, true, true);
-
+		
 		groupMutationParameters = new Group(compositeGA3, SWT.NONE);
 		groupMutationParameters.setVisible(false);
 		groupMutationParameters.setLayout(new GridLayout(1, false));
@@ -452,22 +453,22 @@ public class ProcessGeneratorView extends ViewPart {
 		groupMutationParameters.setBounds(0, 0, 70, 82);
 		toolkit.adapt(groupMutationParameters);
 		toolkit.paintBordersFor(groupMutationParameters);
-
+		
 		tableMutationParameters = new Table(groupMutationParameters, SWT.BORDER | SWT.FULL_SELECTION);
 		tableMutationParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableMutationParameters.setLinesVisible(true);
 		tableMutationParameters.setHeaderVisible(true);
 		toolkit.adapt(tableMutationParameters);
 		toolkit.paintBordersFor(tableMutationParameters);
-
+		
 		TableColumn tableColumnChangePatternName = new TableColumn(tableMutationParameters, SWT.NONE);
 		tableColumnChangePatternName.setWidth(200);
 		tableColumnChangePatternName.setText("Change pattern");
-
+		
 		TableColumn tableColumnProbability = new TableColumn(tableMutationParameters, SWT.NONE);
 		tableColumnProbability.setWidth(100);
 		tableColumnProbability.setText("Probability");
-
+		
 		Section sctnTermination = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnTermination.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		sctnTermination.marginWidth = 0;
@@ -475,34 +476,34 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(sctnTermination);
 		sctnTermination.setText("Termination condition");
 		sctnTermination.setExpanded(true);
-
+		
 		Composite compositeGA4 = new Composite(sctnTermination, SWT.NONE);
 		toolkit.adapt(compositeGA4);
 		toolkit.paintBordersFor(compositeGA4);
 		sctnTermination.setClient(compositeGA4);
 		compositeGA4.setLayout(new GridLayout(3, false));
-
+		
 		Group groupInfo = new Group(compositeGA4, SWT.NONE);
 		groupInfo.setText("Info");
 		groupInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1));
 		toolkit.adapt(groupInfo);
 		toolkit.paintBordersFor(groupInfo);
 		groupInfo.setLayout(new GridLayout(1, false));
-
+		
 		Label lblInfo = new Label(groupInfo, SWT.NONE);
 		toolkit.adapt(lblInfo, true, true);
 		lblInfo.setText("If multiple termination conditions are specified, \r\nthe evolution will stop as soon as any one of them is satisfied.");
-
+		
 		btnOneSolutionFound = new Button(compositeGA4, SWT.CHECK);
 		toolkit.adapt(btnOneSolutionFound, true, true);
 		btnOneSolutionFound.setText("Until 1 solutions found");
 		new Label(compositeGA4, SWT.NONE);
 		new Label(compositeGA4, SWT.NONE);
-
+		
 		btnDuringSec = new Button(compositeGA4, SWT.CHECK);
 		toolkit.adapt(btnDuringSec, true, true);
 		btnDuringSec.setText("During # sec");
-
+		
 		spinnerUntilSecondes = new Spinner(compositeGA4, SWT.BORDER);
 		spinnerUntilSecondes.setMaximum(100000);
 		spinnerUntilSecondes.setMinimum(1);
@@ -510,11 +511,11 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(spinnerUntilSecondes);
 		toolkit.paintBordersFor(spinnerUntilSecondes);
 		new Label(compositeGA4, SWT.NONE);
-
+		
 		btnGeneration = new Button(compositeGA4, SWT.CHECK);
 		toolkit.adapt(btnGeneration, true, true);
 		btnGeneration.setText("Until # generations");
-
+		
 		spinnerUntilGeneration = new Spinner(compositeGA4, SWT.BORDER);
 		spinnerUntilGeneration.setMaximum(100000);
 		spinnerUntilGeneration.setMinimum(1);
@@ -522,11 +523,11 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(spinnerUntilGeneration);
 		toolkit.paintBordersFor(spinnerUntilGeneration);
 		new Label(compositeGA4, SWT.NONE);
-
+		
 		btnUntilStagnation = new Button(compositeGA4, SWT.CHECK);
 		toolkit.adapt(btnUntilStagnation, true, true);
 		btnUntilStagnation.setText("Until # stagnations");
-
+		
 		spinnerUntilStagnation = new Spinner(compositeGA4, SWT.BORDER);
 		spinnerUntilStagnation.setMaximum(100000);
 		spinnerUntilStagnation.setMinimum(1);
@@ -592,23 +593,15 @@ public class ProcessGeneratorView extends ViewPart {
 		gd_spnNode.widthHint = 23;
 		GridData gd_spnMarge = new GridData(GridData.VERTICAL_ALIGN_CENTER);
 		gd_spnMarge.widthHint = 19;
-
-
+		
 		manualCode();
 	}
-
-
-
-
-
-
-
-
+	
 	/**
 	 * Toutes les opérations codées à la main
 	 */
-	private void manualCode() {
-
+	private void manualCode () {
+		
 		// les préférences utilisateur pour la partie run
 		setPathDirectory(ConfigurationManager.instance.getLocation());
 		getSpinnerNbNode().setSelection(ConfigurationManager.instance.getNbNodes());
@@ -630,8 +623,8 @@ public class ProcessGeneratorView extends ViewPart {
 		// le nombre de population, elitism et stratégie de séléction
 		getSpinnerNbPopulation().setSelection(ConfigurationManager.instance.getPopulation());
 		getSpinnerElitism().setSelection(ConfigurationManager.instance.getElitism());
-
-		// on remplit le combo box de la stratégie de sélection 
+		
+		// on remplit le combo box de la stratégie de sélection
 		for (ESelectionStrategy strat : ESelectionStrategy.values()) {
 			getComboStrategySelection().add(strat.toString());
 		}
@@ -660,7 +653,7 @@ public class ProcessGeneratorView extends ViewPart {
 		getSpinnerElementWeight().setSelection(ConfigurationManager.instance.getElementsWeight());
 		getSpinnerWorkflowWeight().setSelection(ConfigurationManager.instance.getWorkflowsWeight());
 		getSpinnerManualOclWeight().setSelection(ConfigurationManager.instance.getManualOCLWeight());
-
+		
 		// les listeners
 		// selection du type de fichier de sortie (bpmn, uml, etc.)
 		getComboTypeFile().addSelectionListener(new SelectionFileType(this));
@@ -668,14 +661,17 @@ public class ProcessGeneratorView extends ViewPart {
 		btnSetInitialProcess.addSelectionListener(new SelectSetInitialProcess(this));
 		btnChange.addSelectionListener(new SelectPathDirectory(this));
 	}
-
+	
 	/**
 	 * Remplit un tableau selon la liste des éléments passés en paramètre.
-	 * @param table le {@link Table} à remplir.
-	 * @param elements un tableau d'{@link Object} représentant les éléments constituant le tableau.
+	 * 
+	 * @param table
+	 *            le {@link Table} à remplir.
+	 * @param elements
+	 *            un tableau d'{@link Object} représentant les éléments constituant le tableau.
 	 */
-	private void addElementToTable(Table table, Object[] elements) {
-
+	private void addElementToTable (Table table, Object[] elements) {
+		
 		// les préférences utilisateurs
 		String lecturePref;
 		if (table == tableElements) {
@@ -694,14 +690,14 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 		
 		// on construit les lignes
-		for (int i = 0 ; i < elements.length; i++) {
+		for (int i = 0; i < elements.length; i++) {
 			new TableItem(table, SWT.NONE);
 		}
-
+		
 		// pour chaque ligne...
 		TableItem[] lignes = table.getItems();
-		for (int i = 0 ; i < lignes.length ; i++) {
-
+		for (int i = 0; i < lignes.length; i++) {
+			
 			// on récupère les préférences utilisateurs
 			String[] infos = preferences.get(elements[i].toString());
 			// si infos est null, on met les valeurs par défaut
@@ -715,13 +711,13 @@ public class ProcessGeneratorView extends ViewPart {
 			}
 			
 			// empalcement 0 : la case a cocher est déjà intégrée par le tableau
-			if (infos[1].equals("1")) 
+			if (infos[1].equals("1"))
 				lignes[i].setChecked(true);
-
+			
 			// emplacement 1 : le nom de l'élément
 			lignes[i].setText(1, elements[i].toString());
 			lignes[i].setData("1", elements[i]);
-
+			
 			// emplacement 2 : le combobox
 			TableEditor editor = new TableEditor(table);
 			Combo combo = new Combo(table, SWT.READ_ONLY);
@@ -740,7 +736,7 @@ public class ProcessGeneratorView extends ViewPart {
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction de la selection du combo
 			combo.addSelectionListener(new SelectionComboInTable(lignes[i], combo));
 			lignes[i].setText(2, combo.getText());
-
+			
 			// emplacement 3 : le nombre
 			editor = new TableEditor(table);
 			Text text = new Text(table, SWT.NONE);
@@ -762,9 +758,9 @@ public class ProcessGeneratorView extends ViewPart {
 			lignes[i].setText(4, text.getText());
 		}
 	}
-
-	private void setChangePatternToTable(IEnumChangePattern[] eBpmnChangePatterns) {
-
+	
+	private void setChangePatternToTable (IEnumChangePattern[] eBpmnChangePatterns) {
+		
 		// on récupère les préférences utilisateurs
 		String lecturePreferences = ConfigurationManager.instance.getChangePatternAttributes();
 		Map<String, String> preferences = new HashMap<String, String>();
@@ -776,13 +772,13 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 		
 		// on construit les lignes
-		for (int i = 0 ; i < eBpmnChangePatterns.length ; i++) {
+		for (int i = 0; i < eBpmnChangePatterns.length; i++) {
 			new TableItem(tableMutationParameters, SWT.NONE);
 		}
-
+		
 		// pour chaque ligne...
 		TableItem[] lignes = tableMutationParameters.getItems();
-		for (int i = 0 ; i < lignes.length ; i++) {
+		for (int i = 0; i < lignes.length; i++) {
 			
 			// la préférence utilisateur
 			String proba = preferences.get(eBpmnChangePatterns[i].toString());
@@ -792,7 +788,7 @@ public class ProcessGeneratorView extends ViewPart {
 			// emplacement 0 : le nom
 			lignes[i].setText(0, eBpmnChangePatterns[i].toString());
 			lignes[i].setData("0", eBpmnChangePatterns[i]);
-
+			
 			// emplacement 1 : le nombre de proba
 			TableEditor editor = new TableEditor(tableMutationParameters);
 			Text text = new Text(tableMutationParameters, SWT.NONE);
@@ -805,170 +801,170 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 	}
 	
-	public Spinner getSpinnerNbNode() {
+	public Spinner getSpinnerNbNode () {
 		return spinner_nbNode;
 	}
-
-	public Spinner getSpinnerMargin() {
+	
+	public Spinner getSpinnerMargin () {
 		return spinner_marginNbNode;
 	}
-
-	public Combo getComboTypeFile() {
+	
+	public Combo getComboTypeFile () {
 		return comboTypeFile;
 	}
-
-	public Table getTableElements() {
+	
+	public Table getTableElements () {
 		return tableElements;
 	}
-
-	public Table getTableWorkflow() {
+	
+	public Table getTableWorkflow () {
 		return tableWorkflow;
 	}
-
-	public Label getLabelLocation() {
+	
+	public Label getLabelLocation () {
 		return lblpath;
 	}
-
-	public Text getTextOclConstraint() {
+	
+	public Text getTextOclConstraint () {
 		return text_oclConstraint;
 	}
-
-	public Spinner getSpinnerNbPopulation() {
+	
+	public Spinner getSpinnerNbPopulation () {
 		return spinnerNbPopulation;
 	}
-
-	public Label getLabelSetInitialProcess() {
+	
+	public Label getLabelSetInitialProcess () {
 		return lblFiletype;
 	}
-
-	public BpmnProcess getInitialBpmnProcess() {
+	
+	public BpmnProcess getInitialBpmnProcess () {
 		return bpmnInitialProcess;
 	}
-
-	public UmlProcess getInitialUmlProcess() {
+	
+	public UmlProcess getInitialUmlProcess () {
 		return umlInitialProcess;
 	}
-
-	public Spinner getSpinnerElitism() {
+	
+	public Spinner getSpinnerElitism () {
 		return spinnerElitism;
 	}
-
-	public Combo getComboStrategySelection() {
+	
+	public Combo getComboStrategySelection () {
 		return comboStrategySelection;
 	}
-
-	public Button getButtonCheckMutation() {
+	
+	public Button getButtonCheckMutation () {
 		return checkMutation;
 	}
-
-	public Button getButtonCheckCrossover() {
+	
+	public Button getButtonCheckCrossover () {
 		return checkCrossover;
 	}
-
-	public Table getTableMutationParameters() {
+	
+	public Table getTableMutationParameters () {
 		return tableMutationParameters;
 	}
-
-	public Button getButtonUntilSolutionFound() {
+	
+	public Button getButtonUntilSolutionFound () {
 		return btnOneSolutionFound;
 	}
 	
-	public Button getButtonDuringSeconde() {
+	public Button getButtonDuringSeconde () {
 		return btnDuringSec;
 	}
 	
-	public Spinner getSpinnerUntilSeconde() {
+	public Spinner getSpinnerUntilSeconde () {
 		return spinnerUntilSecondes;
 	}
 	
-	public Button getButtonUntilGeneration() {
+	public Button getButtonUntilGeneration () {
 		return btnGeneration;
 	}
 	
-	public Spinner getSpinnerUntilGeneration() {
+	public Spinner getSpinnerUntilGeneration () {
 		return spinnerUntilGeneration;
 	}
 	
-	public Button getButtonUntilStagnation() {
+	public Button getButtonUntilStagnation () {
 		return btnUntilStagnation;
 	}
 	
-	public Spinner getSpinnerUntilStagnation() {
+	public Spinner getSpinnerUntilStagnation () {
 		return spinnerUntilStagnation;
 	}
 	
-	public Label getLabelResult() {
+	public Label getLabelResult () {
 		return lblResult;
 	}
 	
-	public Label getLabelError() {
+	public Label getLabelError () {
 		return lblErrors;
 	}
 	
-	public Button getButtonStop() {
+	public Button getButtonStop () {
 		return btnStop;
 	}
 	
-	public Spinner getSpinnerSizeWeight() {
+	public Spinner getSpinnerSizeWeight () {
 		return spinnerSizeWeight;
 	}
 	
-	public Spinner getSpinnerElementWeight() {
+	public Spinner getSpinnerElementWeight () {
 		return spinnerElementWeight;
 	}
 	
-	public Spinner getSpinnerWorkflowWeight() {
+	public Spinner getSpinnerWorkflowWeight () {
 		return spinnerWorkflowWeight;
 	}
 	
-	public Spinner getSpinnerManualOclWeight() {
+	public Spinner getSpinnerManualOclWeight () {
 		return spinnerManualOclWeight;
 	}
 	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus() {
+	public void setFocus () {
 		form.setFocus();
 	}
-
-	public void setBpmnInitialProcess(BpmnProcess process) {
+	
+	public void setBpmnInitialProcess (BpmnProcess process) {
 		this.bpmnInitialProcess = process;
 	}
-
-	public void setUmlInitialProcess(UmlProcess process) {
+	
+	public void setUmlInitialProcess (UmlProcess process) {
 		this.umlInitialProcess = process;
 	}
 	
-	public void setPathDirectory(String path) {
+	public void setPathDirectory (String path) {
 		this.lblpath.setText(path);
 		this.lblpath.getParent().layout(true);
 	}
 	
-	public void print(String text) {
+	public void print (String text) {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblResult, text));
 	}
 	
-	public void printError(String text) {
+	public void printError (String text) {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblErrors, text));
 	}
-
-	public void majTableOfElements(Object[] elements) {
+	
+	public void majTableOfElements (Object[] elements) {
 		this.newTableElement();
 		this.addElementToTable(tableElements, elements);
 	}
-
-	public void majTableOfWorkflows(IEnumWorkflowPattern[] elements) {
+	
+	public void majTableOfWorkflows (IEnumWorkflowPattern[] elements) {
 		this.newTableWorkflow();
 		this.addElementToTable(tableWorkflow, elements);
 	}
 	
-	public void majTableOfChangePatterns(IEnumChangePattern[] eBpmnChangePatterns) {
+	public void majTableOfChangePatterns (IEnumChangePattern[] eBpmnChangePatterns) {
 		this.newTableMutation();
 		this.setChangePatternToTable(eBpmnChangePatterns);
 	}
-
-	private void newTableElement() {
+	
+	private void newTableElement () {
 		tableElements.dispose();
 		tableElements = new Table(grpElementsParameters, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
 		tableElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -976,26 +972,26 @@ public class ProcessGeneratorView extends ViewPart {
 		tableElements.setHeaderVisible(true);
 		toolkit.adapt(tableElements);
 		toolkit.paintBordersFor(tableElements);
-
+		
 		TableColumn tableColumn = new TableColumn(tableElements, SWT.NONE);
 		tableColumn.setWidth(28);
-
+		
 		TableColumn tableColumn_6 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_6.setWidth(150);
 		tableColumn_6.setText("Element name");
-
+		
 		TableColumn tableColumn_7 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_7.setWidth(100);
 		tableColumn_7.setText("Quantity");
-
+		
 		TableColumn tableColumn_8 = new TableColumn(tableElements, SWT.NONE);
 		tableColumn_8.setWidth(100);
 		tableColumn_8.setText("Number");
-
+		
 		grpElementsParameters.layout(true);
 	}
 	
-	private void newTableWorkflow() {
+	private void newTableWorkflow () {
 		tableWorkflow.dispose();
 		tableWorkflow = new Table(compositeTarget2, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
 		tableWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -1004,26 +1000,26 @@ public class ProcessGeneratorView extends ViewPart {
 		tableWorkflow.setBounds(0, 0, 85, 85);
 		toolkit.adapt(tableWorkflow);
 		toolkit.paintBordersFor(tableWorkflow);
-
+		
 		TableColumn tableColumn_1_checkbox = new TableColumn(tableWorkflow, SWT.NONE);
 		tableColumn_1_checkbox.setWidth(28);
-
+		
 		TableColumn tableColumnName = new TableColumn(tableWorkflow, SWT.NONE);
 		tableColumnName.setWidth(148);
 		tableColumnName.setText("Workflow name");
-
+		
 		TableColumn tableColumnQuantity = new TableColumn(tableWorkflow, SWT.NONE);
 		tableColumnQuantity.setWidth(115);
 		tableColumnQuantity.setText("Quantity");
-
+		
 		TableColumn tblclmnNumber = new TableColumn(tableWorkflow, SWT.NONE);
 		tblclmnNumber.setWidth(100);
 		tblclmnNumber.setText("Number");
 		
 		compositeTarget2.layout(true);
 	}
-
-	private void newTableMutation() {
+	
+	private void newTableMutation () {
 		tableMutationParameters.dispose();
 		tableMutationParameters = new Table(groupMutationParameters, SWT.BORDER | SWT.FULL_SELECTION);
 		tableMutationParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -1031,11 +1027,11 @@ public class ProcessGeneratorView extends ViewPart {
 		tableMutationParameters.setHeaderVisible(true);
 		toolkit.adapt(tableMutationParameters);
 		toolkit.paintBordersFor(tableMutationParameters);
-
+		
 		TableColumn tableColumnChangePatternName = new TableColumn(tableMutationParameters, SWT.NONE);
 		tableColumnChangePatternName.setWidth(150);
 		tableColumnChangePatternName.setText("Change pattern");
-
+		
 		TableColumn tableColumnProbability = new TableColumn(tableMutationParameters, SWT.NONE);
 		tableColumnProbability.setWidth(100);
 		tableColumnProbability.setText("Probability");

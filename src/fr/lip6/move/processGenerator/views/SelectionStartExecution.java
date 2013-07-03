@@ -14,15 +14,14 @@ import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.Stagnation;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.uncommons.watchmaker.framework.termination.UserAbort;
-
 import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.IEnumElement;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.constraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.DecisionMaker;
 import fr.lip6.move.processGenerator.ga.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmData;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmExecutor;
@@ -30,30 +29,30 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
 import fr.lip6.move.processGenerator.ga.IChangePattern;
 import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
-import fr.lip6.move.processGenerator.uml2.constraints.UmlStructuralConstraintFactory;
 
 /**
  * Cet adapteur est déclenché lorsque l'utilisateur click sur le bouton "run".
+ * 
  * @author Vincent
- *
+ * 
  */
 public class SelectionStartExecution extends SelectionAdapter {
-
+	
 	public enum ConstraintType {
 		Element,
 		Workflow
 	}
 	
 	private ProcessGeneratorView view;
-
+	
 	public SelectionStartExecution(ProcessGeneratorView view) {
 		super();
 		this.view = view;
 	}
-
+	
 	@Override
-	public void widgetSelected(SelectionEvent e) {
-
+	public void widgetSelected (SelectionEvent e) {
+		
 		view.print("Initialization...");
 		
 		// on créé le répertoire s'il n'existe pas
@@ -75,20 +74,16 @@ public class SelectionStartExecution extends SelectionAdapter {
 		ConfigurationManager.instance.setLocation(location);
 		ConfigurationManager.instance.setNbNodes(nbNode + "");
 		ConfigurationManager.instance.setMargin(margin + "");
-
+		
 		// ONGLET TARGET
 		String typeFile = view.getComboTypeFile().getText();
 		ConfigurationManager.instance.setTypeFile(view.getComboTypeFile().getSelectionIndex() + "");
 		
+		DecisionMaker decisionMaker = new DecisionMaker(typeFile);
+		
 		// on construit la factory des contraintes au passage
-		AbstractStructuralConstraintFactory factory = null;
-		if (typeFile.toLowerCase().contains("bpmn")) {
-			typeFile = "bpmn";
-			factory = BpmnStructuralConstraintFactory.instance;
-		} else {
-			typeFile = "uml";
-			factory = UmlStructuralConstraintFactory.instance;
-		}
+		AbstractStructuralConstraintFactory factory = decisionMaker.getStructuralConstraintFactory();
+		typeFile = decisionMaker.getTypeFile();
 		
 		// les elements et workflows sélectionnés
 		Table tableElements = view.getTableElements();
@@ -100,7 +95,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		try {
 			contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element, factory);
 			contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow, factory);
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			view.printError(ex.getMessage());
 			System.err.println(ex.getMessage());
 			return;
@@ -123,14 +118,14 @@ public class SelectionStartExecution extends SelectionAdapter {
 		// les process initiaux s'ils existent
 		BpmnProcess initialBpmnProcess = view.getInitialBpmnProcess();
 		UmlProcess initialUmlProcess = view.getInitialUmlProcess();
-
-		// le nombre d'elitism et la stratégie de sélection 
+		
+		// le nombre d'elitism et la stratégie de sélection
 		int elitism = view.getSpinnerElitism().getSelection();
 		String selectionStrategy = view.getComboStrategySelection().getText();
 		
 		ConfigurationManager.instance.setElitism(elitism + "");
 		ConfigurationManager.instance.setSelectionStrategy(view.getComboStrategySelection().getSelectionIndex() + "");
-
+		
 		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
 		ConfigurationManager.instance.setCheckMutation(isCheckMutation);
@@ -138,7 +133,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		List<IChangePattern> changePatterns = null;
 		if (isCheckMutation) {
 			try {
-				changePatterns = this.getChangePatterns(typeFile);
+				changePatterns = this.getChangePatterns();
 			} catch (Exception ex) {
 				view.printError(ex.getMessage());
 				System.err.println(ex.getMessage());
@@ -197,8 +192,9 @@ public class SelectionStartExecution extends SelectionAdapter {
 		// le bouton stop
 		final UserAbort userAbort = new UserAbort();
 		view.getButtonStop().addSelectionListener(new SelectionAdapter() {
+			
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected (SelectionEvent e) {
 				userAbort.abort();
 			}
 		});
@@ -206,11 +202,11 @@ public class SelectionStartExecution extends SelectionAdapter {
 		
 		// Enfin on peut construire l'exécuteur de l'algo génétique
 		GeneticAlgorithmExecutor executor = new GeneticAlgorithmExecutor();
-		executor.setFileType(typeFile);
+		executor.setDecisionMaker(decisionMaker);
 		executor.setGeneticOperations(isCheckMutation, changePatterns, isCheckCrossover);
 		executor.setGeneticSelection(elitism, selectionStrategy);
 		try {
-			if (typeFile.contains("bpmn") && initialBpmnProcess != null)
+			if (decisionMaker.isBpmn() && initialBpmnProcess != null)
 				executor.setInitialProcess(initialBpmnProcess);
 			else if (initialUmlProcess != null)
 				executor.setInitialProcess(initialUmlProcess);
@@ -219,6 +215,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 			System.err.println(ex.getMessage());
 			return;
 		}
+		
 		executor.setLabel(view);
 		executor.setNbPopulation(nbPopulation);
 		executor.setRunConfiguration(location, nbNode, margin);
@@ -235,16 +232,16 @@ public class SelectionStartExecution extends SelectionAdapter {
 			System.err.println("Impossible to save the configuration.");
 		}
 	}
-
+	
 	/**
-	 * En fonction du type de fichier passé en paramètre, cette méthode va récupérer le tableau
-	 * des change patterns sélectionné par l'utilisateur, les instancier et les renvoyer.
-	 * @param typeFile le type de fichier sélectionnés.
+	 * En fonction du type de fichier passé en paramètre, cette méthode va récupérer le tableau des change patterns
+	 * sélectionné par l'utilisateur, les instancier et les renvoyer.
+	 * 
 	 * @return une {@link List} de {@link IChangePattern}.
 	 * @throws Exception
 	 */
-	private List<IChangePattern> getChangePatterns(String typeFile) throws Exception {
-
+	private List<IChangePattern> getChangePatterns () throws Exception {
+		
 		List<IChangePattern> changePatterns = new ArrayList<IChangePattern>();
 		// le stringBuilder va servir à enregistrer les préférences utilisateurs
 		StringBuilder sb = new StringBuilder();
@@ -262,26 +259,27 @@ public class SelectionStartExecution extends SelectionAdapter {
 				sb.append("%");
 				sb.append(item.getText(1));
 			} else {
-				System.err.println("Carreful, the item data is not a IEnumChangePattern.");
+				System.err.println("Carreful, the item data is not a " + IEnumChangePattern.class.getSimpleName() + ".");
 			}
 		}
 		
 		ConfigurationManager.instance.setChangePatternAttributes(sb.toString());
 		return changePatterns;
 	}
-
+	
 	/**
-	 * Construit une liste de {@link StructuralConstraintChecker} en fonction du tableau passé en paramètre.
-	 * Cette méthode fonctionne à la fois pour le tableau des éléments mais aussi pour le tableau des workflow patterns.
+	 * Construit une liste de {@link StructuralConstraintChecker} en fonction du tableau passé en paramètre. Cette
+	 * méthode fonctionne à la fois pour le tableau des éléments mais aussi pour le tableau des workflow patterns.
+	 * 
 	 * @param table
 	 * @param constraintType
 	 * @param factory
 	 * @return
 	 * @throws Exception
 	 */
-	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType, 
+	private List<StructuralConstraintChecker> buildStructuralConstraints (Table table, ConstraintType constraintType,
 			AbstractStructuralConstraintFactory factory) throws Exception {
-
+		
 		// ce stringBuilder va permettre d'enregistrer les préférences utilisateurs
 		StringBuilder sb = new StringBuilder();
 		
@@ -312,7 +310,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// on récupère la quantité
 				EQuantity quantity = EQuantity.getQuantityByString(item.getText(2));
 				
-				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à la volée
+				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à
+				// la volée
 				int number = 1, weight = 1;
 				try {
 					number = Integer.parseInt(item.getText(3));
@@ -323,7 +322,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 					// on construit le checker puis on l'ajoute à la liste
 					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
 					liste.add(checker);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
@@ -333,7 +332,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// le numéro suivant représente la sélection de la quantité
 				sb.append(quantity.getPosition());
 				sb.append("%");
-				// ensuite le nombre 
+				// ensuite le nombre
 				sb.append(number);
 				sb.append("%");
 				// puis enfin le poids

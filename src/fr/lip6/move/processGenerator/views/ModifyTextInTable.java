@@ -6,13 +6,14 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Ce listener est déclenché lorsque l'utilisateur change une valeur dans un tableau.
- * Il va permettre de forcer l'utilisateur à mettre un entier dans le champ associé.
+ * Ce listener est déclenché lorsque l'utilisateur change une valeur dans un tableau. Il va permettre de forcer
+ * l'utilisateur à mettre un entier dans le champ associé.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class ModifyTextInTable implements ModifyListener {
-
+	
 	private TableItem item;
 	private Text text;
 	private int indexOfTable;
@@ -25,7 +26,7 @@ public class ModifyTextInTable implements ModifyListener {
 	}
 	
 	@Override
-	public void modifyText(ModifyEvent me) {
+	public void modifyText (ModifyEvent me) {
 		// on n'accepte que les nombres
 		try {
 			Integer.parseInt(text.getText());

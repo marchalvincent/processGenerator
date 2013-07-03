@@ -14,11 +14,12 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 
 /**
  * Cette classe offre un niveau d'abstraction aux solveurs de contraintes OCL.
+ * 
  * @author Vincent
- *
+ * 
  */
 public abstract class AbstractOclSolver implements IStructuralConstraint {
-
+	
 	private String oclQuery;
 	
 	public AbstractOclSolver() {
@@ -26,40 +27,43 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		oclQuery = new String();
 	}
 	
-	public void setOclQuery(String query) {
+	public void setOclQuery (String query) {
 		this.oclQuery = query;
 	}
 	
-	public String getOclQuery() {
+	public String getOclQuery () {
 		return oclQuery;
 	}
-
-	@Override
-	public abstract int matches(Object object) throws BpmnException;
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation() {
+	public abstract int matches (Object object) throws BpmnException;
+	
+	@Override
+	public IWorkflowRepresentation getRepresentation () {
 		// par défaut les contraintes n'ont pas de représentation
 		return null;
 	}
-
+	
 	/**
 	 * Cette méthode est générique et permet de résoudre les contraintes OCL sur un objet donné.
-	 * @param eClass la {@link EClass} de l'objet à évaluer.
-	 * @param object l'objet à évaluer.
+	 * 
+	 * @param eClass
+	 *            la {@link EClass} de l'objet à évaluer.
+	 * @param object
+	 *            l'objet à évaluer.
 	 * @return le nombre de structure trouvée par la contrainte ocl.
 	 */
-	protected int resolveQuery(EClass eClass, Object object) {
+	protected int resolveQuery (EClass eClass, Object object) {
 		// create an OCL instance for Ecore
 		OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
 		ocl = OCL.newInstance(EcoreEnvironmentFactory.INSTANCE);
-
+		
 		// create an OCL helper object
 		OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
-
+		
 		// set the OCL context classifier
 		helper.setContext(eClass);
-
+		
 		// create the ocl expression
 		OCLExpression<EClassifier> oclExpession = null;
 		try {
@@ -76,12 +80,10 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		// evaluate
 		Object o = query.evaluate(object);
 		if (o instanceof Integer) {
-			return ((Integer)o).intValue();
-		}
-		else {
+			return ((Integer) o).intValue();
+		} else {
 			System.err.println("Warning, the query result is not an Integer -> " + o.getClass().getSimpleName());
 		}
 		return 0;
 	}
 }
-

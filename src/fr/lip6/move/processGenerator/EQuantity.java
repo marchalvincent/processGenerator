@@ -1,6 +1,5 @@
 package fr.lip6.move.processGenerator;
 
-
 public enum EQuantity {
 	MORE(0),
 	LESS(1),
@@ -8,7 +7,7 @@ public enum EQuantity {
 	MORE_OR_EQUAL(3),
 	LESS_OR_EQUAL(4);
 	
-	public static EQuantity getQuantityByString(String name) {
+	public static EQuantity getQuantityByString (String name) {
 		switch (name.toUpperCase()) {
 			case "MORE":
 				return MORE;
@@ -34,7 +33,7 @@ public enum EQuantity {
 		this.position = position;
 	}
 	
-	public int getPosition() {
+	public int getPosition () {
 		return position;
 	}
 }

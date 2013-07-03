@@ -6,90 +6,91 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
-
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.ChangePatternHelper;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 
 /**
  * Cette classe permet de construire rapidement des {@link BpmnProcess}.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnBuilder {
 	
 	public static final BpmnBuilder instance = new BpmnBuilder();
+	
 	private BpmnBuilder() {}
-
+	
 	/**
-	 * Construit un process simple : 
-	 * StartEvent -> EndEvent.
+	 * Construit un process simple : StartEvent -> EndEvent.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess initialFinal() {
+	public BpmnProcess initialFinal () {
 		BpmnProcess process = new BpmnProcess();
-
+		
 		// les noeuds
 		StartEvent start = process.buildStartEvent();
 		EndEvent end = process.buildEndEvent();
-
+		
 		// les arcs
 		process.buildSequenceFlow(start, end);
-
+		
 		return process;
 	}
-
+	
 	/**
-	 * Construit un process simple : 
-	 * StartEvent -> Task -> Task -> EndEvent.
+	 * Construit un process simple : StartEvent -> Task -> Task -> EndEvent.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess initialABFinal() {
+	public BpmnProcess initialABFinal () {
 		BpmnProcess process = new BpmnProcess();
-
+		
 		// les noeuds
 		StartEvent start = process.buildStartEvent();
 		Task a = process.buildTask();
 		Task b = process.buildTask();
 		EndEvent end = process.buildEndEvent();
-
+		
 		// les arcs
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, b);
 		process.buildSequenceFlow(b, end);
-
+		
 		return process;
 	}
-
+	
 	/**
-	 * Construit un process simple : 
-	 * StartEvent -> Task -> Task -> Task -> EndEvent.
+	 * Construit un process simple : StartEvent -> Task -> Task -> Task -> EndEvent.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess initialABCFinal() {
+	public BpmnProcess initialABCFinal () {
 		BpmnProcess process = new BpmnProcess();
-
+		
 		// les noeuds
 		StartEvent start = process.buildStartEvent();
 		Task a = process.buildTask();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
 		EndEvent end = process.buildEndEvent();
-
+		
 		// les arcs
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, b);
 		process.buildSequenceFlow(b, c);
 		process.buildSequenceFlow(c, end);
-
+		
 		return process;
 	}
-
+	
 	/**
-	 * Construit un process avec : 
-	 *  init -> a -> parallel -> (b & c) -> join -> d -> e -> f -> final
-	 *  @return
+	 * Construit un process avec : init -> a -> parallel -> (b & c) -> join -> d -> e -> f -> final
+	 * 
+	 * @return
 	 */
-	public BpmnProcess createExampleWithParallel() {
+	public BpmnProcess createExampleWithParallel () {
 		BpmnProcess process = new BpmnProcess();
 		
 		// les noeuds
@@ -103,9 +104,9 @@ public class BpmnBuilder {
 		Task e = process.buildTask();
 		Task f = process.buildTask();
 		EndEvent end = process.buildEndEvent();
-
+		
 		process.linkGateways(decision, merge);
-
+		
 		// les arcs
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, decision);
@@ -122,12 +123,12 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Construit un process avec : 
-	 *  init -> parallel -> (b & c) -> join -> final
+	 * Construit un process avec : init -> parallel -> (b & c) -> join -> final
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithParallel2() {
-
+	public BpmnProcess createExampleWithParallel2 () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -137,9 +138,9 @@ public class BpmnBuilder {
 		Task c = process.buildTask();
 		ParallelGateway join = process.buildParallelGatewayConverging();
 		EndEvent end = process.buildEndEvent();
-
+		
 		process.linkGateways(parallel, join);
-
+		
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, b);
 		process.buildSequenceFlow(parallel, c);
@@ -149,13 +150,15 @@ public class BpmnBuilder {
 		
 		return process;
 	}
-
+	
 	/**
-	 * Créé un exemple avec une parallel gateway qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * Créé un exemple avec une parallel gateway qui peut être simplifiée et supprimée par le
+	 * {@link ChangePatternHelper}.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithUselessParallel() {
-
+	public BpmnProcess createExampleWithUselessParallel () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -164,7 +167,7 @@ public class BpmnBuilder {
 		Task c = process.buildTask();
 		ParallelGateway join = process.buildParallelGatewayConverging();
 		EndEvent end = process.buildEndEvent();
-
+		
 		process.linkGateways(parallel, join);
 		
 		process.buildSequenceFlow(start, parallel);
@@ -177,11 +180,13 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Créé un exemple avec une exclusive gateway qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * Créé un exemple avec une exclusive gateway qui peut être simplifiée et supprimée par le
+	 * {@link ChangePatternHelper}.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithUselessExclusive() {
-
+	public BpmnProcess createExampleWithUselessExclusive () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -192,7 +197,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(parallel, join);
-
+		
 		process.buildSequenceFlow(start, parallel);
 		process.buildSequenceFlow(parallel, c);
 		process.buildSequenceFlow(parallel, join);
@@ -203,12 +208,13 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Créé un exemple avec une parallel gateway et une exclusive gateway qui peut être simplifiée et 
-	 * supprimée par le {@link ChangePatternHelper}.
+	 * Créé un exemple avec une parallel gateway et une exclusive gateway qui peut être simplifiée et supprimée par le
+	 * {@link ChangePatternHelper}.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithUselessParallelAndExclusive() {
-
+	public BpmnProcess createExampleWithUselessParallelAndExclusive () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -220,7 +226,7 @@ public class BpmnBuilder {
 		Task d = process.buildTask();
 		ExclusiveGateway merge = process.buildExclusiveGatewayConverging();
 		EndEvent end = process.buildEndEvent();
-
+		
 		process.linkGateways(parallel, join);
 		
 		process.buildSequenceFlow(start, parallel);
@@ -235,14 +241,14 @@ public class BpmnBuilder {
 		
 		return process;
 	}
-
+	
 	/**
-	 * Construit un process avec : 
-	 *  init -> exclusiveChoice -> (b & c) -> merge -> final
+	 * Construit un process avec : init -> exclusiveChoice -> (b & c) -> merge -> final
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithExclusiveChoice() {
-
+	public BpmnProcess createExampleWithExclusiveChoice () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -254,7 +260,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(choice, merge);
-
+		
 		process.buildSequenceFlow(start, choice);
 		process.buildSequenceFlow(choice, b);
 		process.buildSequenceFlow(choice, c);
@@ -266,12 +272,12 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Construit un process avec : 
-	 *  init -> multiChoice -> (b & c) -> multiMerge -> final
+	 * Construit un process avec : init -> multiChoice -> (b & c) -> multiMerge -> final
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithStructuredSynchronizingMerge() {
-
+	public BpmnProcess createExampleWithStructuredSynchronizingMerge () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -283,7 +289,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(choice, merge);
-
+		
 		process.buildSequenceFlow(start, choice);
 		process.buildSequenceFlow(choice, b);
 		process.buildSequenceFlow(choice, c);
@@ -295,12 +301,12 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Construit un process avec : 
-	 *  init -> multiChoice -> (b & c) -> multiMerge -> final
+	 * Construit un process avec : init -> multiChoice -> (b & c) -> multiMerge -> final
+	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithMultiChoiceMultiMerge() {
-
+	public BpmnProcess createExampleWithMultiChoiceMultiMerge () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -312,7 +318,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(choice, merge);
-
+		
 		process.buildSequenceFlow(start, choice);
 		process.buildSequenceFlow(choice, b);
 		process.buildSequenceFlow(choice, c);
@@ -325,11 +331,12 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un process avec un certains nombre de noeud.
+	 * 
 	 * @param number
 	 * @return
 	 */
-	public BpmnProcess numberNodes(int number) {
-
+	public BpmnProcess numberNodes (int number) {
+		
 		BpmnProcess process = new BpmnProcess();
 		for (int i = 0; i < number; i++) {
 			process.buildTask();
@@ -339,10 +346,11 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple pour les tests du SESE.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess getExampleForSESE() {
-
+	public BpmnProcess getExampleForSESE () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		// init du process
@@ -359,7 +367,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(choice, merge);
-
+		
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, choice);
 		process.buildSequenceFlow(choice, b);
@@ -377,9 +385,10 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une boucle.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess getLoopExample() {
+	public BpmnProcess getLoopExample () {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -393,7 +402,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(choice, merge);
-
+		
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, merge);
 		process.buildSequenceFlow(merge, b);
@@ -408,9 +417,10 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une boucle complexe.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess getComplexLoopExample() {
+	public BpmnProcess getComplexLoopExample () {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -425,9 +435,9 @@ public class BpmnBuilder {
 		Task d = process.buildTask();
 		EndEvent end = process.buildEndEvent();
 		
-		process.linkGateways(choice1, merge1);		
+		process.linkGateways(choice1, merge1);
 		process.linkGateways(choice2, merge2);
-
+		
 		process.buildSequenceFlow(start, merge1);
 		process.buildSequenceFlow(merge1, a);
 		process.buildSequenceFlow(a, choice2);
@@ -442,12 +452,13 @@ public class BpmnBuilder {
 		
 		return process;
 	}
-
+	
 	/**
 	 * Créé un exemple avec deux boucles, l'une a la suite de l'autre.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess getDoubleLoopExample() {
+	public BpmnProcess getDoubleLoopExample () {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -463,7 +474,7 @@ public class BpmnBuilder {
 		
 		process.linkGateways(choice1, merge1);
 		process.linkGateways(choice2, merge2);
-
+		
 		process.buildSequenceFlow(start, merge1);
 		process.buildSequenceFlow(merge1, a);
 		process.buildSequenceFlow(a, choice1);
@@ -480,9 +491,10 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une boucle qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess getUselessLoopExample() {
+	public BpmnProcess getUselessLoopExample () {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -494,7 +506,7 @@ public class BpmnBuilder {
 		EndEvent end = process.buildEndEvent();
 		
 		process.linkGateways(choice, merge);
-
+		
 		process.buildSequenceFlow(start, a);
 		process.buildSequenceFlow(a, merge);
 		process.buildSequenceFlow(merge, choice);
@@ -507,10 +519,11 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple pour les tests sur le {@link GatewayManager}.
+	 * 
 	 * @return
 	 */
-	public BpmnProcess getExampleForSESE2() {
-
+	public BpmnProcess getExampleForSESE2 () {
+		
 		BpmnProcess process = new BpmnProcess();
 		
 		StartEvent start = process.buildStartEvent();
@@ -519,7 +532,7 @@ public class BpmnBuilder {
 		
 		ExclusiveGateway choice2 = process.buildExclusiveGatewayDiverging();
 		ExclusiveGateway merge2 = process.buildExclusiveGatewayConverging();
-
+		
 		Task a = process.buildTask();
 		Task b = process.buildTask();
 		Task c = process.buildTask();
@@ -527,9 +540,9 @@ public class BpmnBuilder {
 		Task e = process.buildTask();
 		EndEvent end = process.buildEndEvent();
 		
-//		process.linkGateways(choice1, merge1);
-//		process.linkGateways(choice2, merge2);
-
+		// process.linkGateways(choice1, merge1);
+		// process.linkGateways(choice2, merge2);
+		
 		process.buildSequenceFlow(start, choice1);
 		process.buildSequenceFlow(choice1, choice2);
 		process.buildSequenceFlow(choice1, c);

@@ -1,11 +1,9 @@
 package fr.lip6.move.processGenerator.bpmn2;
 
 import java.io.IOException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
@@ -24,34 +22,36 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 
 /**
- * Cette classe permet de parser un fichier ayant pour extension .bpmn 
- * et d'y récupérer un {@link BpmnProcess}.
+ * Cette classe permet de parser un fichier ayant pour extension .bpmn et d'y récupérer un {@link BpmnProcess}.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnParser {
-
+	
 	public static final BpmnParser instance = new BpmnParser();
+	
 	private BpmnParser() {}
 	
 	/**
 	 * Renvoie un {@link BpmnProcess} à partir du path d'un fichier.
-	 * @param path String, le chemin vers le fichier à parser.
+	 * 
+	 * @param path
+	 *            String, le chemin vers le fichier à parser.
 	 * @return {@link BpmnProcess}.
 	 */
-	public BpmnProcess getBpmnProcess(String path) {
+	public BpmnProcess getBpmnProcess (String path) {
 		
 		DocumentRoot documentRoot = null;
 		Process process = null;
 		URI uri = URI.createFileURI(path);
-
+		
 		ResourceSet resourceSet = new ResourceSetImpl();
 		Resource resource = (Resource) resourceSet.getResource(uri, true);
-
+		
 		TreeIterator<EObject> tree = resource.getAllContents();
 		while (tree.hasNext() && (documentRoot == null || process == null)) {
 			EObject eo = tree.next();
@@ -61,12 +61,13 @@ public class BpmnParser {
 				process = (Process) eo;
 			}
 		}
-
+		
 		// si on a trouvé un documentRoot
 		if (documentRoot != null) {
 			
 			BpmnProcess bpmnProcess = new BpmnProcess(documentRoot, process);
-			// on est obligé de faire un second parsing car le précédent ne retient pas les liens sources/targets des sequenceFlow
+			// on est obligé de faire un second parsing car le précédent ne retient pas les liens sources/targets des
+			// sequenceFlow
 			this.getSequenceFlowDetails(uri, bpmnProcess);
 			// cette fois on va essayer de récupérer les gateways jumelles
 			this.linkGateways(bpmnProcess);
@@ -77,25 +78,30 @@ public class BpmnParser {
 		
 		return BpmnBuilder.instance.initialFinal();
 	}
-
+	
 	/**
 	 * Renomme tous les ids des éléments pour éviter d'entrer en conflit de nom avec le {@link BpmnNameManager}.
-	 * @param bpmnProcess le {@link BpmnProcess} dont on doit renommer les ids.
+	 * 
+	 * @param bpmnProcess
+	 *            le {@link BpmnProcess} dont on doit renommer les ids.
 	 */
-	private void renameIds(BpmnProcess bpmnProcess) {
+	private void renameIds (BpmnProcess bpmnProcess) {
 		for (FlowElement element : bpmnProcess.getProcess().getFlowElements()) {
 			element.setId("perso_" + element.getId());
 			element.setName("perso_" + element.getName());
 		}
 	}
-
+	
 	/**
-	 * Utilise un {@link DocumentBuilder} pour parser le fichier XML et récupérer chaque source/destination des {@link SequenceFlow}
-	 * afin de les lier avec les {@link FlowNode} du process.
-	 * @param uri l'{@link URI} du fichier correspondant au process sélectionné.
-	 * @param process le {@link BpmnProcess} récupéré par le 1er parsing.
+	 * Utilise un {@link DocumentBuilder} pour parser le fichier XML et récupérer chaque source/destination des
+	 * {@link SequenceFlow} afin de les lier avec les {@link FlowNode} du process.
+	 * 
+	 * @param uri
+	 *            l'{@link URI} du fichier correspondant au process sélectionné.
+	 * @param process
+	 *            le {@link BpmnProcess} récupéré par le 1er parsing.
 	 */
-	private void getSequenceFlowDetails(URI uri, BpmnProcess process) {
+	private void getSequenceFlowDetails (URI uri, BpmnProcess process) {
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
@@ -125,12 +131,14 @@ public class BpmnParser {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Essaye de lier les gateways qui sont jumelles.
-	 * @param bpmnProcess le {@link BpmnProcess} à parcourir.
+	 * 
+	 * @param bpmnProcess
+	 *            le {@link BpmnProcess} à parcourir.
 	 */
-	private void linkGateways(BpmnProcess bpmnProcess) {
+	private void linkGateways (BpmnProcess bpmnProcess) {
 		for (FlowElement element : bpmnProcess.getProcess().getFlowElements()) {
 			if (element instanceof Gateway) {
 				Gateway gate = (Gateway) element;
@@ -141,14 +149,16 @@ public class BpmnParser {
 			}
 		}
 	}
-
+	
 	/**
 	 * Renvoie un {@link BpmnProcess} à partir d'un {@link IFile}.
-	 * @param ifile le {@link IFile} est un descripteur de fichier selon eclipse.
+	 * 
+	 * @param ifile
+	 *            le {@link IFile} est un descripteur de fichier selon eclipse.
 	 * @return {@link BpmnProcess}.
 	 */
-	public BpmnProcess getBpmnProcess(IFile ifile) {
-
+	public BpmnProcess getBpmnProcess (IFile ifile) {
+		
 		if (ifile != null) {
 			return this.getBpmnProcess(ifile.getRawLocationURI().getPath());
 		}

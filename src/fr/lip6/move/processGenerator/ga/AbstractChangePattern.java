@@ -1,10 +1,10 @@
 package fr.lip6.move.processGenerator.ga;
 
-
 /**
  * Cette classe offre un niveau d'abstraction à tout les change pattern.
+ * 
  * @author Vincent
- *
+ * 
  */
 public abstract class AbstractChangePattern implements IChangePattern {
 	
@@ -13,9 +13,9 @@ public abstract class AbstractChangePattern implements IChangePattern {
 	public AbstractChangePattern() {
 		super();
 	}
-
+	
 	@Override
-	public void setProba(String proba) {
+	public void setProba (String proba) {
 		try {
 			int prob = Integer.parseInt(proba);
 			probability = prob;
@@ -23,9 +23,9 @@ public abstract class AbstractChangePattern implements IChangePattern {
 			probability = 1;
 		}
 	}
-
+	
 	@Override
-	public int getProba() {
+	public int getProba () {
 		return probability;
 	}
 }

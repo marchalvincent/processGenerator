@@ -2,36 +2,36 @@ package fr.lip6.move.processGenerator.bpmn2.constraints;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.Task;
-
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
  * Représente le WP5 - Simple Merge.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnSimpleMerge extends AbstractBpmnOclSolver {
-
+	
 	public BpmnSimpleMerge() throws BpmnException {
 		super();
 		StringBuilder sb = new StringBuilder();
 		sb.append("ExclusiveGateway.allInstances()->select(");
-		sb.append(	"gate : ExclusiveGateway | gate.gatewayDirection = GatewayDirection::Converging");
+		sb.append("gate : ExclusiveGateway | gate.gatewayDirection = GatewayDirection::Converging");
 		sb.append(")->size()");
 		super.setOclQuery(sb.toString());
 	}
-
+	
 	@Override
-	public IWorkflowRepresentation getRepresentation() {
+	public IWorkflowRepresentation getRepresentation () {
 		WorkflowRepresentation representation = new WorkflowRepresentation();
 		
-		// on construit les noeuds 
+		// on construit les noeuds
 		ExclusiveGateway choice = representation.buildExclusiveGatewayDiverging();
 		Task a = representation.buildTask();
 		Task b = representation.buildTask();
 		ExclusiveGateway merge = representation.buildExclusiveGatewayConverging();
-
+		
 		representation.linkGatewys(choice, merge);
 		
 		// puis les arcs

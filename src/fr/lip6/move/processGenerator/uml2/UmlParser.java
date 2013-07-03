@@ -11,15 +11,17 @@ import org.eclipse.uml2.uml.Activity;
 
 /**
  * Un parseur de fichier UML.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class UmlParser {
-
+	
 	public static final UmlParser instance = new UmlParser();
+	
 	private UmlParser() {}
 	
-	public UmlProcess getUmlProcess(IFile ifile) {
+	public UmlProcess getUmlProcess (IFile ifile) {
 		
 		if (ifile != null) {
 			Activity activity = null;
@@ -27,7 +29,7 @@ public class UmlParser {
 			URI uri = URI.createFileURI(ifile.getRawLocationURI().getPath());
 			ResourceSet resourceSet = new ResourceSetImpl();
 			Resource resource = (Resource) resourceSet.getResource(uri, true);
-
+			
 			TreeIterator<EObject> tree = resource.getAllContents();
 			while (tree.hasNext()) {
 				EObject eo = tree.next();

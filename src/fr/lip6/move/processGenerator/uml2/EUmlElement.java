@@ -9,14 +9,13 @@ import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
 import org.eclipse.uml2.uml.MergeNode;
-
 import fr.lip6.move.processGenerator.IEnumElement;
 
 /**
- * Représente les éléments que peut sélectionner l'utilisateur pour spécifier des contraintes
- * structurelles.
+ * Représente les éléments que peut sélectionner l'utilisateur pour spécifier des contraintes structurelles.
+ * 
  * @author Vincent
- *
+ * 
  */
 public enum EUmlElement implements IEnumElement {
 	
@@ -28,14 +27,15 @@ public enum EUmlElement implements IEnumElement {
 	JOIN_NODE(JoinNode.class),
 	DECISION_NODE(DecisionNode.class),
 	MERGE_NODE(MergeNode.class);
-
+	
 	private Class<? extends Element> clazz;
+	
 	private EUmlElement(Class<? extends Element> clazz) {
 		this.clazz = clazz;
 	}
 	
 	@Override
-	public String toString() {
+	public String toString () {
 		return this.clazz.getSimpleName();
 	}
 }

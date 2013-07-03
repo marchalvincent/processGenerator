@@ -19,24 +19,29 @@ import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 
 /**
  * Cette classe se charge de retrouver la gateway "jumelle" d'une autre par rapport à un diagramme d'activité.
- * Typiquement, une gateway "parallel split" et une "synchronise" possédant les mêmes branches sont jumelles.
- * Les diagrammes d'activités manipulés sont des diagrammes représentés à l'aide de BPMN2.0.
+ * Typiquement, une gateway "parallel split" et une "synchronise" possédant les mêmes branches sont jumelles. Les
+ * diagrammes d'activités manipulés sont des diagrammes représentés à l'aide de BPMN2.0.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class GatewayManager {
-
+	
 	public static GatewayManager instance = new GatewayManager();
+	
 	private GatewayManager() {}
-
+	
 	/**
 	 * Renvoie la {@link Gateway} jumelle correspondant à celle passée en paramètre.
-	 * @param process le {@link BpmnProcess} contenant les Gateway.
-	 * @param gateway la {@link Gateway} dont on cherche la jumelle.
+	 * 
+	 * @param process
+	 *            le {@link BpmnProcess} contenant les Gateway.
+	 * @param gateway
+	 *            la {@link Gateway} dont on cherche la jumelle.
 	 * @return {@link Gateway} la twin si trouvée, null sinon.
 	 */
-	public Gateway findTwinGateway(BpmnProcess process, Gateway gateway) {
-
+	public Gateway findTwinGateway (BpmnProcess process, Gateway gateway) {
+		
 		// on tente de récupérer la twin par le process
 		Gateway twin = process.getTwin(gateway.getId());
 		if (twin != null) {
@@ -60,28 +65,29 @@ public class GatewayManager {
 			return twin;
 		
 		/*
-		 * attention, ce code ne détecte pas les boucles. Si l'utilisateur spécifie un process initial 
-		 * avec une boucle, les deux gateways ne seront pas linkées.
+		 * attention, ce code ne détecte pas les boucles. Si l'utilisateur spécifie un process initial avec une boucle,
+		 * les deux gateways ne seront pas linkées.
 		 */
 		// TODO détection des boucles
 		return null;
 	}
-
+	
 	/**
 	 * Renvoie la liste des gateways succeptibles d'être la "twin" de la gateway passée en paramètre.
+	 * 
 	 * @param process
 	 * @param gateway
 	 * @return
 	 */
-	private List<Gateway> getPotentialsCandidats(BpmnProcess process, Gateway gateway) {
-
+	private List<Gateway> getPotentialsCandidats (BpmnProcess process, Gateway gateway) {
+		
 		List<Gateway> candidats = new ArrayList<>();
 		
 		// on récupère la direction
 		GatewayDirection direction;
 		if (gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING))
 			direction = GatewayDirection.CONVERGING;
-		else 
+		else
 			direction = GatewayDirection.DIVERGING;
 		
 		// si c'est une parallel, on ne cherche que les parallel
@@ -117,18 +123,22 @@ public class GatewayManager {
 		candidats.addAll(list2);
 		return candidats;
 	}
-
+	
 	/**
 	 * Cherche parmis les candidats la gateway correspondant à la "twin" de celle passée en paramètre.
-	 * @param process le {@link BpmnProcess}.
-	 * @param gateway la {@link Gateway} dont on cherche la twin.
-	 * @param potentialsCandidats une {@link List} de {@link Gateway} potentiellement twin.
+	 * 
+	 * @param process
+	 *            le {@link BpmnProcess}.
+	 * @param gateway
+	 *            la {@link Gateway} dont on cherche la twin.
+	 * @param potentialsCandidats
+	 *            une {@link List} de {@link Gateway} potentiellement twin.
 	 * @return {@link Gateway} la twin si elle est trouvée, null sinon.
 	 */
-	private Gateway searchBestCandidat(BpmnProcess process, Gateway gateway, List<Gateway> potentialsCandidats) {
-
+	private Gateway searchBestCandidat (BpmnProcess process, Gateway gateway, List<Gateway> potentialsCandidats) {
+		
 		boolean isDiverging = gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING);
-
+		
 		Gateway twin = null;
 		int scoreTwin = Integer.MAX_VALUE;
 		
@@ -139,7 +149,7 @@ public class GatewayManager {
 		for (Gateway candidat : potentialsCandidats) {
 			boolean save = true;
 			int score = 0;
-
+			
 			// on vérifie que pour chaque arc sortant/entrant (selon la direction de la gateway), on a un chemin
 			List<SequenceFlow> sequences = isDiverging ? gateway.getOutgoing() : gateway.getIncoming();
 			
@@ -148,20 +158,21 @@ public class GatewayManager {
 				FlowNode node = isDiverging ? seq.getTargetRef() : seq.getSourceRef();
 				if (node == candidat) {
 					score++;
-				} 
+				}
 				// sinon on fait le plus court chemin avec Dijkstra
 				else {
 					JungVertex v1 = jung.getVertex(node.getId());
 					JungVertex v2 = jung.getVertex(candidat.getId());
 					
-					// si notre gateway est diverging, alors on cherche dans le sens v1 -> v2, sinon on cherche dans le sens v2 -> v1
+					// si notre gateway est diverging, alors on cherche dans le sens v1 -> v2, sinon on cherche dans le
+					// sens v2 -> v1
 					List<JungEdge> path = isDiverging ? algo.getPath(v1, v2) : algo.getPath(v2, v1);
 					
 					// si un chemin n'arrive pas au candidat on abandonne
 					if (path.isEmpty()) {
 						save = false;
 						break;
-					} 
+					}
 					// sinon on peut ajouter le score
 					else {
 						score += path.size() + 1;

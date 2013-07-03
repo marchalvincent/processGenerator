@@ -11,25 +11,25 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class Benchmarker {
-
+	
 	private long startTime;
 	private Map<Long, String> numbers;
-
+	
 	public Benchmarker() {
 		super();
-		numbers = new TreeMap<>();  
+		numbers = new TreeMap<>();
 	}
-
-	public void start() {
+	
+	public void start () {
 		startTime = System.nanoTime();
 	}
-
-	public void tic(String bestS) {
+	
+	public void tic (String bestS) {
 		long estimatedTimeMillis = (System.nanoTime() - startTime) / 1000000;
 		numbers.put(estimatedTimeMillis, bestS);
 	}
-
-	public void stop(String string) {
+	
+	public void stop (String string) {
 		
 		Path path = Paths.get(string);
 		// append to an existing file, create file if it doesn't initially exist

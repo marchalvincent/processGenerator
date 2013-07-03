@@ -11,12 +11,12 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
-
 /**
- * Représente un process bpmn ({@link BpmnProcess}). Cette classe est destinée à être manipulée
- * par la librairie JUNG afin d'y appliquer certains algorithmes.
+ * Représente un process bpmn ({@link BpmnProcess}). Cette classe est destinée à être manipulée par la librairie JUNG
+ * afin d'y appliquer certains algorithmes.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class JungProcess {
 	
@@ -32,6 +32,7 @@ public class JungProcess {
 	
 	/**
 	 * Construit un {@link JungProcess} à partir d'un {@link BpmnProcess}.
+	 * 
 	 * @param process
 	 */
 	public JungProcess(BpmnProcess bpmnProcess) {
@@ -40,6 +41,7 @@ public class JungProcess {
 	
 	/**
 	 * Construit un {@link JungProcess} à partir d'un {@link Process} bpmn.
+	 * 
 	 * @param process
 	 */
 	public JungProcess(Process process) {
@@ -68,16 +70,16 @@ public class JungProcess {
 		}
 	}
 	
-	public Graph<JungVertex, JungEdge> getGraph() {
+	public Graph<JungVertex, JungEdge> getGraph () {
 		return graph;
 	}
 	
-	public JungVertex getVertex(String name) {
+	public JungVertex getVertex (String name) {
 		return allVertices.get(name);
 	}
-
+	
 	@Override
-	public String toString() {
+	public String toString () {
 		return "JungManager [graph=" + graph + "]";
 	}
 }

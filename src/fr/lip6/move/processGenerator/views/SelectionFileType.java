@@ -12,8 +12,9 @@ import fr.lip6.move.processGenerator.uml2.ga.cp.EUmlChangePattern;
 
 /**
  * Evenement déclenché par la sélection d'un type de fichier de sortie (bpmn, uml, etc.).
+ * 
  * @author Vincent
- *
+ * 
  */
 public class SelectionFileType extends SelectionAdapter {
 	
@@ -25,7 +26,7 @@ public class SelectionFileType extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected(SelectionEvent e) {
+	public void widgetSelected (SelectionEvent e) {
 		Combo combo = (Combo) e.getSource();
 		String s = combo.getText();
 		if (s.toLowerCase().contains("bpmn")) {
@@ -41,7 +42,6 @@ public class SelectionFileType extends SelectionAdapter {
 			// on affiche le bon tableau des mutations change patterns
 			view.majTableOfChangePatterns(EBpmnChangePattern.values());
 			
-			
 		} else {
 			// on met à jour le tableau des éléments
 			view.majTableOfElements(EUmlElement.values());
@@ -51,7 +51,7 @@ public class SelectionFileType extends SelectionAdapter {
 			
 			// on met a jour le texte à coté du bouton (set initial process)
 			view.getLabelSetInitialProcess().setText("(uml file)");
-
+			
 			// on affiche le bon tableau des mutations change patterns
 			view.majTableOfChangePatterns(EUmlChangePattern.values());
 		}

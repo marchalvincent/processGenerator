@@ -3,11 +3,11 @@ package fr.lip6.move.processGenerator.bpmn2.constraints;
 import fr.lip6.move.processGenerator.constraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 
-
 /**
  * Cette enumération liste l'ensemble des workflow patterns implémentés pour le type de fichier bpmn.
+ * 
  * @author Vincent
- *
+ * 
  */
 public enum EBpmnWorkflowPattern implements IEnumWorkflowPattern {
 	
@@ -30,7 +30,7 @@ public enum EBpmnWorkflowPattern implements IEnumWorkflowPattern {
 	}
 	
 	@Override
-	public IStructuralConstraint newInstance() throws Exception {
+	public IStructuralConstraint newInstance () throws Exception {
 		return this.clazz.newInstance();
 	}
 }

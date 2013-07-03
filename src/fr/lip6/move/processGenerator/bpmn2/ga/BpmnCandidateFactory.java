@@ -7,16 +7,16 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
  * Représente la factory qui va créer la population initiale de l'algorithme génétique.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnCandidateFactory extends AbstractCandidateFactory<BpmnProcess> {
-
+	
 	private BpmnProcess process;
 	
 	/**
-	 * Construit la factory sans process prédéfinit. Le candidat initial sera 
-	 * un simple process StartEvent -> EndEvent.
+	 * Construit la factory sans process prédéfinit. Le candidat initial sera un simple process StartEvent -> EndEvent.
 	 */
 	public BpmnCandidateFactory() {
 		this(null);
@@ -24,6 +24,7 @@ public class BpmnCandidateFactory extends AbstractCandidateFactory<BpmnProcess> 
 	
 	/**
 	 * Construit la factory avec un process prédéfinit.
+	 * 
 	 * @param process
 	 */
 	public BpmnCandidateFactory(BpmnProcess process) {
@@ -32,7 +33,7 @@ public class BpmnCandidateFactory extends AbstractCandidateFactory<BpmnProcess> 
 	}
 	
 	@Override
-	public BpmnProcess generateRandomCandidate(Random rng) {
+	public BpmnProcess generateRandomCandidate (Random rng) {
 		if (process != null)
 			return process;
 		return BpmnBuilder.instance.initialFinal();

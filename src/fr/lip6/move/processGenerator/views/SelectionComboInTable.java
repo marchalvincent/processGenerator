@@ -6,10 +6,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * Cet adapteur est déclenché lorsque l'utilisateur modifie la valeur d'un combobox dans un tableau.
- * Afin de garder la valeur seléctionnée, on l'écrit dans un champ caché du tableau.
+ * Cet adapteur est déclenché lorsque l'utilisateur modifie la valeur d'un combobox dans un tableau. Afin de garder la
+ * valeur seléctionnée, on l'écrit dans un champ caché du tableau.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class SelectionComboInTable extends SelectionAdapter {
 	
@@ -23,7 +24,7 @@ public class SelectionComboInTable extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected(SelectionEvent e) {
+	public void widgetSelected (SelectionEvent e) {
 		item.setText(2, combo.getText());
 	}
 }

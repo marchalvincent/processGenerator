@@ -4,10 +4,10 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 
 /**
- * Cette contrainte compte le nombre d'élément donné qu'il y a dans un process.
- * Par exemple : le nombre de Task.
+ * Cette contrainte compte le nombre d'élément donné qu'il y a dans un process. Par exemple : le nombre de Task.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnElementConstraint extends AbstractBpmnOclSolver {
 	

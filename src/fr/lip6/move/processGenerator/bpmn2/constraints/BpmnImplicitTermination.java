@@ -1,13 +1,11 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints;
 
 import java.util.List;
-
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TerminateEventDefinition;
-
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
@@ -16,25 +14,26 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
  * Représente le WP11 - Implicite Termination.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnImplicitTermination extends AbstractJavaSolver {
-
+	
 	public BpmnImplicitTermination() throws BpmnException {
 		super();
 	}
 	
 	@Override
-	public int matches(Object object) throws Exception {
-
+	public int matches (Object object) throws Exception {
+		
 		int count = 0;
-
+		
 		if (!(object instanceof BpmnProcess)) {
 			System.err.println("Error, the eObject is not a Bpmn Process.");
 			return count;
 		}
-
+		
 		BpmnProcess process = (BpmnProcess) object;
 		// on compte le nombre de EndEvent qui n'ont pas de TerminateEventDefinition moins 1
 		List<EndEvent> list = BpmnFilter.byType(EndEvent.class, process.getProcess().getFlowElements());
@@ -48,7 +47,7 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 				}
 			}
 			if (!isTermination)
-				count ++;
+				count++;
 		}
 		
 		// on soustrait 1 car il ne faut pas compter le EndEvent par défaut
@@ -56,9 +55,9 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation() {
+	public IWorkflowRepresentation getRepresentation () {
 		WorkflowRepresentation representation = new WorkflowRepresentation();
-
+		
 		// on construit les noeuds
 		ParallelGateway gateway = representation.buildParallelGatewayDiverging();
 		Task a = representation.buildTask();
