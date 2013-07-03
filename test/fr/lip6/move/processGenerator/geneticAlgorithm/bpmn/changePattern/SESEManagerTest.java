@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.GatewayManager;
 
 
 public class SESEManagerTest {

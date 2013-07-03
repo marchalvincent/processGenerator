@@ -4,11 +4,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.EBpmnChangePattern;
-import fr.lip6.move.processGenerator.geneticAlgorithm.uml.changePattern.EUmlChangePattern;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
-import fr.lip6.move.processGenerator.structuralConstraint.uml.EUmlWorkflowPattern;
-import fr.lip6.move.processGenerator.uml.EUmlElement;
+import fr.lip6.move.processGenerator.bpmn2.constraints.EBpmnWorkflowPattern;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.EBpmnChangePattern;
+import fr.lip6.move.processGenerator.uml2.EUmlElement;
+import fr.lip6.move.processGenerator.uml2.constraints.EUmlWorkflowPattern;
+import fr.lip6.move.processGenerator.uml2.ga.cp.EUmlChangePattern;
 
 /**
  * Evenement déclenché par la sélection d'un type de fichier de sortie (bpmn, uml, etc.).

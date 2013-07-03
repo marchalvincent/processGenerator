@@ -32,15 +32,15 @@ import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
-import fr.lip6.move.processGenerator.geneticAlgorithm.ESelectionStrategy;
-import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.EBpmnChangePattern;
-import fr.lip6.move.processGenerator.geneticAlgorithm.uml.changePattern.EUmlChangePattern;
-import fr.lip6.move.processGenerator.structuralConstraint.IEnumWorkflowPattern;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.EBpmnWorkflowPattern;
-import fr.lip6.move.processGenerator.structuralConstraint.uml.EUmlWorkflowPattern;
-import fr.lip6.move.processGenerator.uml.EUmlElement;
-import fr.lip6.move.processGenerator.uml.UmlProcess;
+import fr.lip6.move.processGenerator.bpmn2.constraints.EBpmnWorkflowPattern;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.EBpmnChangePattern;
+import fr.lip6.move.processGenerator.constraint.IEnumWorkflowPattern;
+import fr.lip6.move.processGenerator.ga.ESelectionStrategy;
+import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
+import fr.lip6.move.processGenerator.uml2.EUmlElement;
+import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.constraints.EUmlWorkflowPattern;
+import fr.lip6.move.processGenerator.uml2.ga.cp.EUmlChangePattern;
 
 /**
  * Représente la vue générale du plugin.

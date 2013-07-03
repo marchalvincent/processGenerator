@@ -11,7 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Shell;
 import fr.lip6.move.processGenerator.bpmn2.BpmnParser;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.uml.UmlParser;
+import fr.lip6.move.processGenerator.uml2.UmlParser;
 
 /**
  * Cet évènement est déclenché lorsque l'utilisateur à sélectionné le process initial de l'algo génétique.

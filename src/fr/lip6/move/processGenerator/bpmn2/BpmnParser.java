@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.GatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 
 /**
  * Cette classe permet de parser un fichier ayant pour extension .bpmn 

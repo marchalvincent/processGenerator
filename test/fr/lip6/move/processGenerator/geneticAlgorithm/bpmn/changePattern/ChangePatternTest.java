@@ -17,13 +17,18 @@ import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnMutationOperation;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.IBpmnChangePattern;
-import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
-import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnArbitraryCycle;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnExclusiveChoice;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnArbitraryCycle;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnExclusiveChoice;
+import fr.lip6.move.processGenerator.bpmn2.ga.BpmnMutationOperation;
+import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnParallelInsert;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnSerialInsert;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnThreadInsert;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnWorkflowInsert;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.EBpmnChangePattern;
+import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
+import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.IChangePattern;
 
 
 public class ChangePatternTest {

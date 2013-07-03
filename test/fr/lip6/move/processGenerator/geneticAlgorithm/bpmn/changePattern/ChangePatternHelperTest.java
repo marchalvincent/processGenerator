@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnRemove;
 
 
 public class ChangePatternHelperTest {

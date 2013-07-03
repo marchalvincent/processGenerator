@@ -7,8 +7,8 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.ChangePatternHelper;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern.GatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.ChangePatternHelper;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 
 /**
  * Cette classe permet de construire rapidement des {@link BpmnProcess}.

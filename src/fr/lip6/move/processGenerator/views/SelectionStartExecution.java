@@ -19,18 +19,18 @@ import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.IEnumElement;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.geneticAlgorithm.FitnessWeightHelper;
-import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmData;
-import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticAlgorithmExecutor;
-import fr.lip6.move.processGenerator.geneticAlgorithm.GeneticException;
-import fr.lip6.move.processGenerator.geneticAlgorithm.IChangePattern;
-import fr.lip6.move.processGenerator.geneticAlgorithm.IEnumChangePattern;
-import fr.lip6.move.processGenerator.structuralConstraint.AbstractStructuralConstraintFactory;
-import fr.lip6.move.processGenerator.structuralConstraint.IStructuralConstraint;
-import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.BpmnStructuralConstraintFactory;
-import fr.lip6.move.processGenerator.structuralConstraint.uml.UmlStructuralConstraintFactory;
-import fr.lip6.move.processGenerator.uml.UmlProcess;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnStructuralConstraintFactory;
+import fr.lip6.move.processGenerator.constraint.AbstractStructuralConstraintFactory;
+import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
+import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.FitnessWeightHelper;
+import fr.lip6.move.processGenerator.ga.GeneticAlgorithmData;
+import fr.lip6.move.processGenerator.ga.GeneticAlgorithmExecutor;
+import fr.lip6.move.processGenerator.ga.GeneticException;
+import fr.lip6.move.processGenerator.ga.IChangePattern;
+import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
+import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.constraints.UmlStructuralConstraintFactory;
 
 /**
  * Cet adapteur est déclenché lorsque l'utilisateur click sur le bouton "run".

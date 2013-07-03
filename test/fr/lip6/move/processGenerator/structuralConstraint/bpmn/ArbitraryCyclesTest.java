@@ -11,7 +11,8 @@ import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.structuralConstraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnArbitraryCycle;
+import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
 
 public class ArbitraryCyclesTest {
