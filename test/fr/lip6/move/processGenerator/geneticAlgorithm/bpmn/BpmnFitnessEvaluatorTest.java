@@ -18,7 +18,7 @@ public class BpmnFitnessEvaluatorTest {
 		double precedentFitness = 0, fitness;
 		for (int i = 0; i < 202; i++) {
 			BpmnProcess process = BpmnBuilder.instance.numberNodes(i);
-			fitness = evaluator.getSizeFitness(process, null);
+			fitness = evaluator.getSizeFitness(evaluator.getSizeCandidate(process));
 			
 			if (i < 100) {
 				// ici la fonction de fitness est croissante
@@ -44,7 +44,7 @@ public class BpmnFitnessEvaluatorTest {
 		double precedentFitness = 0, fitness;
 		for (int i = 0; i < 35; i++) {
 			BpmnProcess process = BpmnBuilder.instance.numberNodes(i);
-			fitness = evaluator.getSizeFitness(process, null);
+			fitness = evaluator.getSizeFitness(evaluator.getSizeCandidate(process));
 			
 			if (i < 10) {
 				// ici la fonction de fitness est croissante

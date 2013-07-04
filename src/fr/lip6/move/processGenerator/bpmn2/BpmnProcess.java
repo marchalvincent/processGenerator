@@ -73,7 +73,7 @@ public class BpmnProcess {
 		
 		// création du process
 		process = Bpmn2Factory.eINSTANCE.createProcess();
-		process.setName(BpmnNameManager.getProcessName());
+		process.setName(BpmnNameManager.instance.getProcessName());
 		documentRoot.getDefinitions().getRootElements().add(process);
 	}
 	
@@ -110,7 +110,7 @@ public class BpmnProcess {
 		super();
 		this.documentRoot = documentRoot;
 		this.process = process;
-		process.setName(BpmnNameManager.getProcessName());
+		process.setName(BpmnNameManager.instance.getProcessName());
 	}
 	
 	public DocumentRoot getDocumentRoot () {
@@ -127,7 +127,7 @@ public class BpmnProcess {
 	public StartEvent buildStartEvent () {
 		StartEvent start = Bpmn2Factory.eINSTANCE.createStartEvent();
 		
-		String name = BpmnNameManager.getStartName();
+		String name = BpmnNameManager.instance.getStartName();
 		start.setId("id_" + name);
 		start.setName(name);
 		
@@ -141,7 +141,7 @@ public class BpmnProcess {
 	public EndEvent buildEndEvent () {
 		EndEvent end = Bpmn2Factory.eINSTANCE.createEndEvent();
 		
-		String name = BpmnNameManager.getEndName();
+		String name = BpmnNameManager.instance.getEndName();
 		end.setId("id_" + name);
 		end.setName(name);
 		
@@ -156,7 +156,7 @@ public class BpmnProcess {
 		
 		Task task = BpmnProcess.buildRandomSubTask();
 		
-		String name = BpmnNameManager.getTaskName();
+		String name = BpmnNameManager.instance.getTaskName();
 		task.setId("id_" + name);
 		task.setName(name);
 		
@@ -214,7 +214,7 @@ public class BpmnProcess {
 		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
-		String name = BpmnNameManager.getParallelName(direction.toString());
+		String name = BpmnNameManager.instance.getParallelName(direction.toString());
 		parallel.setId("id_" + name);
 		parallel.setName(name);
 		
@@ -247,7 +247,7 @@ public class BpmnProcess {
 		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
-		String name = BpmnNameManager.getExclusiveName(direction.toString());
+		String name = BpmnNameManager.instance.getExclusiveName(direction.toString());
 		exclusive.setId("id_" + name);
 		exclusive.setName(name);
 		
@@ -280,7 +280,7 @@ public class BpmnProcess {
 		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
 		inclusive.setGatewayDirection(direction);
 		
-		String name = BpmnNameManager.getInclusiveName(direction.toString());
+		String name = BpmnNameManager.instance.getInclusiveName(direction.toString());
 		inclusive.setId("id_" + name);
 		inclusive.setName(name);
 		
@@ -294,7 +294,7 @@ public class BpmnProcess {
 	public SequenceFlow buildSequenceFlow () {
 		SequenceFlow sequence = Bpmn2Factory.eINSTANCE.createSequenceFlow();
 		
-		String name = BpmnNameManager.getSequenceName();
+		String name = BpmnNameManager.instance.getSequenceName();
 		sequence.setId("id_" + name);
 		sequence.setName(name);
 		

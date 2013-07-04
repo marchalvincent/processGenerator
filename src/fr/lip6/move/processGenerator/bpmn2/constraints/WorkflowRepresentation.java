@@ -68,7 +68,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	public EndEvent buildEndEvent () {
 		EndEvent end = Bpmn2Factory.eINSTANCE.createEndEvent();
 		
-		String name = BpmnNameManager.getEndName();
+		String name = BpmnNameManager.instance.getEndName();
 		end.setId("id_" + name);
 		end.setName(name);
 		
@@ -84,7 +84,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	public Task buildTask () {
 		Task task = this.buildRandomSubTask();
 		
-		String name = BpmnNameManager.getTaskName();
+		String name = BpmnNameManager.instance.getTaskName();
 		task.setId("id_" + name);
 		task.setName(name);
 		
@@ -130,7 +130,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
-		String name = BpmnNameManager.getParallelName(direction.toString());
+		String name = BpmnNameManager.instance.getParallelName(direction.toString());
 		parallel.setId("id_" + name);
 		parallel.setName(name);
 		
@@ -167,7 +167,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
-		String name = BpmnNameManager.getExclusiveName(direction.toString());
+		String name = BpmnNameManager.instance.getExclusiveName(direction.toString());
 		exclusive.setId("id_" + name);
 		exclusive.setName(name);
 		
@@ -204,7 +204,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
 		inclusive.setGatewayDirection(direction);
 		
-		String name = BpmnNameManager.getInclusiveName(direction.toString());
+		String name = BpmnNameManager.instance.getInclusiveName(direction.toString());
 		inclusive.setId("id_" + name);
 		inclusive.setName(name);
 		
@@ -220,7 +220,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	private SequenceFlow buildSequenceFlow () {
 		SequenceFlow sequence = Bpmn2Factory.eINSTANCE.createSequenceFlow();
 		
-		String name = BpmnNameManager.getSequenceName();
+		String name = BpmnNameManager.instance.getSequenceName();
 		sequence.setId("id_" + name);
 		sequence.setName(name);
 		
