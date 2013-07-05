@@ -8,9 +8,8 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
@@ -21,10 +20,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnParallelInsert extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -36,8 +35,8 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 		}
 		
 		// on récupère toutes les Activities et le nombre de ParallelGateway
-		int nbActivity = ChangePatternHelper.instance.countActivity(process);
-		int nbParallel = ChangePatternHelper.instance.countParallelGateway(process);
+		int nbActivity = BpmnChangePatternHelper.instance.countActivity(process);
+		int nbParallel = BpmnChangePatternHelper.instance.countParallelGateway(process);
 		if (nbParallel % 2 != 0) {
 			System.err.println("Error, the number of ParallelGateway is odd.");
 			return process;
@@ -77,19 +76,19 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 	 *            une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnParallel (BpmnProcess process, Random rng) {
+	private BpmnProcess applyOnParallel(BpmnProcess process, Random rng) {
 		
 		// on récupère une ParallelGateway diverging au hasard
 		ParallelGateway parallelDiverging = null;
 		try {
-			parallelDiverging = ChangePatternHelper.instance.getRandomParallelGatewayDiverging(process, rng);
+			parallelDiverging = BpmnChangePatternHelper.instance.getRandomParallelGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;
 		}
 		
 		// on récupère la parallelConverging
-		ParallelGateway parallelConverging = (ParallelGateway) GatewayManager.instance
+		ParallelGateway parallelConverging = (ParallelGateway) BpmnGatewayManager.instance
 				.findTwinGateway(process, parallelDiverging);
 		if (parallelConverging == null)
 			return process;
@@ -114,12 +113,12 @@ public class BpmnParallelInsert extends AbstractBpmnChangePattern implements IBp
 	 *            une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnActivity (BpmnProcess process, Random rng) {
+	private BpmnProcess applyOnActivity(BpmnProcess process, Random rng) {
 		
 		// on récupère une activité au hasard
 		Activity activity = null;
 		try {
-			activity = ChangePatternHelper.instance.getRandomActivity(process, rng);
+			activity = BpmnChangePatternHelper.instance.getRandomActivity(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;

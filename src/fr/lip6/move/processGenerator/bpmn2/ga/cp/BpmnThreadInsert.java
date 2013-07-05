@@ -9,9 +9,8 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
@@ -21,10 +20,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class BpmnThreadInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnThreadInsert extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -37,7 +36,7 @@ public class BpmnThreadInsert extends AbstractBpmnChangePattern implements IBpmn
 		
 		// on récupère une séquence au hasard
 		try {
-			SequenceFlow sequence = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
+			SequenceFlow sequence = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 			
 			// on créé la parallel, la task sainsi que l'EndEvent (correspondant au nouveau thread)
 			ParallelGateway fork = process.buildParallelGatewayDiverging();

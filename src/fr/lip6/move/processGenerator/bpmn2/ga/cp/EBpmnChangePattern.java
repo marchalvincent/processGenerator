@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.ga.IChangePattern;
 import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
 
@@ -10,7 +11,7 @@ import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
  * @author Vincent
  * 
  */
-public enum EBpmnChangePattern implements IEnumChangePattern {
+public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 	
 	WORKFLOW_INSERT(BpmnWorkflowInsert.class),
 	CONDITIONAL_INSERT(BpmnConditionalInsert.class),
@@ -20,15 +21,15 @@ public enum EBpmnChangePattern implements IEnumChangePattern {
 	LOOP_INSERT(BpmnLoopInsert.class),
 	THREAD_INSERT(BpmnThreadInsert.class);
 	
-	private Class<? extends IChangePattern> clazz;
+	private Class<? extends IChangePattern<BpmnProcess>> clazz;
 	
-	private EBpmnChangePattern(Class<? extends IChangePattern> clazz) {
+	private EBpmnChangePattern(Class<? extends IChangePattern<BpmnProcess>> clazz) {
 		this.clazz = clazz;
 	}
 	
 	@Override
-	public IChangePattern newInstance (String proba) throws Exception {
-		IChangePattern cp = this.clazz.newInstance();
+	public IChangePattern<BpmnProcess> newInstance(String proba) throws Exception {
+		IChangePattern<BpmnProcess> cp = this.clazz.newInstance();
 		cp.setProba(proba);
 		return cp;
 	}

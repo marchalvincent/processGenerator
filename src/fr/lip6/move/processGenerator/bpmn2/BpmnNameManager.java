@@ -9,47 +9,48 @@ package fr.lip6.move.processGenerator.bpmn2;
 public class BpmnNameManager {
 	
 	public static BpmnNameManager instance = new BpmnNameManager();
+	
 	private BpmnNameManager() {}
 	
 	private int process = 0;
 	private int count = 0;
 	
-	public String getProcessName () {
+	public String getProcessName() {
 		process++;
 		return "process_" + process;
 	}
 	
-	public String getTaskName () {
+	public String getTaskName() {
 		count++;
 		return "task_" + count;
 	}
 	
-	public String getParallelName (String direction) {
+	public String getParallelName(String direction) {
 		count++;
 		return "parallel" + direction + "_" + count;
 	}
 	
-	public String getExclusiveName (String direction) {
+	public String getExclusiveName(String direction) {
 		count++;
 		return "exclusive" + direction + "_" + count;
 	}
 	
-	public String getInclusiveName (String direction) {
+	public String getInclusiveName(String direction) {
 		count++;
 		return "inclusive" + direction + "_" + count;
 	}
 	
-	public String getSequenceName () {
+	public String getSequenceName() {
 		count++;
 		return "sequence_" + count;
 	}
 	
-	public String getStartName () {
+	public String getStartName() {
 		count++;
 		return "start_" + count;
 	}
 	
-	public String getEndName () {
+	public String getEndName() {
 		count++;
 		return "end_" + count;
 	}

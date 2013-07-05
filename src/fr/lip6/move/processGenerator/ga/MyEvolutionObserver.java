@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
 import fr.lip6.move.processGenerator.Benchmarker;
-import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
 
 /**
@@ -14,7 +13,7 @@ import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
  * @author Vincent
  * 
  */
-public class MyEvolutionObserver implements EvolutionObserver<BpmnProcess> {
+public class MyEvolutionObserver<T> implements EvolutionObserver<T> {
 	
 	private ProcessGeneratorView view;
 	private Benchmarker bench;
@@ -26,7 +25,7 @@ public class MyEvolutionObserver implements EvolutionObserver<BpmnProcess> {
 	}
 	
 	@Override
-	public void populationUpdate (PopulationData<? extends BpmnProcess> data) {
+	public void populationUpdate(PopulationData<? extends T> data) {
 		Double best = new Double(data.getBestCandidateFitness());
 		DecimalFormat df = new DecimalFormat("#.##");
 		String bestS = df.format(best);

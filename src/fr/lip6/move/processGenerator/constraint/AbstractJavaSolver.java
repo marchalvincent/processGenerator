@@ -9,10 +9,10 @@ package fr.lip6.move.processGenerator.constraint;
 public abstract class AbstractJavaSolver implements IStructuralConstraint {
 	
 	@Override
-	public abstract int matches (Object process) throws Exception;
+	public abstract int matches(Object process) throws Exception;
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
+	public IWorkflowRepresentation getRepresentation() {
 		// par défaut, les contraintes n'ont pas de représentation
 		return null;
 	}

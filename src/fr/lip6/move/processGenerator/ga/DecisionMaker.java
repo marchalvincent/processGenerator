@@ -1,47 +1,45 @@
 package fr.lip6.move.processGenerator.ga;
 
-import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.constraint.AbstractStructuralConstraintFactory;
-import fr.lip6.move.processGenerator.uml2.UmlProcess;
 import fr.lip6.move.processGenerator.uml2.constraints.UmlStructuralConstraintFactory;
 
+/**
+ * Cette classe utilitaire permet d'éviter de faire trop de comparaison sur un string (le type de fichier qu'on manipule).
+ * Ici la comparaison est faites qu'une seule fois dans le constructeur.
+ * @author Vincent
+ *
+ */
 public class DecisionMaker {
-	
-	private boolean isBpmn;
-	
+
+	private boolean isBpmn = false;
+	private boolean isUml = false;
+
 	public DecisionMaker(String typeFile) {
 		super();
-		isBpmn = typeFile.toLowerCase().contains("bpmn");
+		if(typeFile.toLowerCase().contains("bpmn"))
+			isBpmn = true;
+		else
+			isUml = true;
 	}
-	
+
 	public AbstractStructuralConstraintFactory getStructuralConstraintFactory () {
 		if (isBpmn)
 			return BpmnStructuralConstraintFactory.instance;
 		return UmlStructuralConstraintFactory.instance;
 	}
-	
+
 	public String getTypeFile () {
 		if (isBpmn)
 			return "bpmn";
 		return "uml";
 	}
-	
+
 	public boolean isBpmn () {
 		return isBpmn;
 	}
 	
-	public Object setInitialProcess (Object initialProcess) throws GeneticException {
-		
-		if (initialProcess == null)
-			throw new GeneticException("The initial process is null.");
-		
-		if (isBpmn && initialProcess instanceof BpmnProcess)
-			return initialProcess;
-		else if (!isBpmn && initialProcess instanceof UmlProcess)
-			return initialProcess;
-		
-		throw new GeneticException("The initial process is not matching to the type file selected. Process type : "
-				+ initialProcess.getClass().getSimpleName() + ". File type " + ((isBpmn) ? "bpmn" : "uml"));
+	public boolean isUml() {
+		return isUml;
 	}
 }

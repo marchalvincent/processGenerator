@@ -26,7 +26,7 @@ public class ModifyTextInTable implements ModifyListener {
 	}
 	
 	@Override
-	public void modifyText (ModifyEvent me) {
+	public void modifyText(ModifyEvent me) {
 		// on n'accepte que les nombres
 		try {
 			Integer.parseInt(text.getText());

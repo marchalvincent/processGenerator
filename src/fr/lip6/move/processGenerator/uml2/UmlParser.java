@@ -21,7 +21,7 @@ public class UmlParser {
 	
 	private UmlParser() {}
 	
-	public UmlProcess getUmlProcess (IFile ifile) {
+	public UmlProcess getUmlProcess(IFile ifile) {
 		
 		if (ifile != null) {
 			Activity activity = null;

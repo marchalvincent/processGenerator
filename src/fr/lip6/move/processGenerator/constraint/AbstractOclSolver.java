@@ -10,7 +10,6 @@ import org.eclipse.ocl.ecore.Constraint;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 
 /**
  * Cette classe offre un niveau d'abstraction aux solveurs de contraintes OCL.
@@ -27,25 +26,26 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		oclQuery = new String();
 	}
 	
-	public void setOclQuery (String query) {
+	public void setOclQuery(String query) {
 		this.oclQuery = query;
 	}
 	
-	public String getOclQuery () {
+	public String getOclQuery() {
 		return oclQuery;
 	}
 	
 	@Override
-	public abstract int matches (Object object) throws BpmnException;
+	public abstract int matches(Object object) throws Exception;
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
+	public IWorkflowRepresentation getRepresentation() {
 		// par défaut les contraintes n'ont pas de représentation
 		return null;
 	}
 	
 	/**
 	 * Cette méthode est générique et permet de résoudre les contraintes OCL sur un objet donné.
+	 * Attention, les paramètres passés à cette méthode doivent être vérifiés avant l'appel de cette méthode.
 	 * 
 	 * @param eClass
 	 *            la {@link EClass} de l'objet à évaluer.
@@ -53,7 +53,7 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 	 *            l'objet à évaluer.
 	 * @return le nombre de structure trouvée par la contrainte ocl.
 	 */
-	protected int resolveQuery (EClass eClass, Object object) {
+	protected int resolveQuery(EClass eClass, Object object) {
 		// create an OCL instance for Ecore
 		OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
 		ocl = OCL.newInstance(EcoreEnvironmentFactory.INSTANCE);

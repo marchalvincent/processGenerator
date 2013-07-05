@@ -9,7 +9,7 @@ import fr.lip6.move.processGenerator.bpmn2.ga.BpmnFitnessEvaluator;
 public class BpmnFitnessEvaluatorTest {
 	
 	@Test
-	public void testSizeFitness () {
+	public void testSizeFitness() {
 		
 		int size = 100;
 		int margin = 5;
@@ -35,7 +35,7 @@ public class BpmnFitnessEvaluatorTest {
 	 * Permet de test le cas ou la margin est supérieure à 100%
 	 */
 	@Test
-	public void testSizeFitness2 () {
+	public void testSizeFitness2() {
 		
 		int size = 10;
 		int margin = 200;
@@ -58,7 +58,7 @@ public class BpmnFitnessEvaluatorTest {
 	}
 	
 	@Test
-	public void test () {
+	public void test() {
 		
 	}
 }

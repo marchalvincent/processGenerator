@@ -21,12 +21,13 @@ public class BpmnFitnessEvaluator extends AbstractFitnessEvaluator<BpmnProcess> 
 			FitnessWeightHelper weightHelper) {
 		super(nbNodes, margin, contraintesElements, contraintesWorkflows, manualOclChecker, weightHelper);
 	}
-
+	
 	@Override
-	public double getSizeCandidate (BpmnProcess candidate) {
+	public double getSizeCandidate(BpmnProcess candidate) {
 		double size = 0;
 		for (FlowElement element : candidate.getProcess().getFlowElements()) {
-			if (element instanceof FlowNode) size ++;
+			if (element instanceof FlowNode)
+				size++;
 		}
 		return size;
 	}

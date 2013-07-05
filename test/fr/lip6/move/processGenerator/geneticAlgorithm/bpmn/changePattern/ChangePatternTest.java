@@ -17,7 +17,6 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnArbitraryCycle;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnExclusiveChoice;
 import fr.lip6.move.processGenerator.bpmn2.ga.BpmnMutationOperation;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnParallelInsert;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnSerialInsert;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnThreadInsert;
@@ -32,16 +31,16 @@ public class ChangePatternTest {
 	private Random rng;
 	
 	@Before
-	public void before () {
+	public void before() {
 		rng = new MersenneTwisterRNG();
 	}
 	
 	@After
-	public void after () {
+	public void after() {
 		rng = null;
 	}
 	
-	private void test (IBpmnChangePattern changePattern) throws IOException {
+	private void test(IChangePattern<BpmnProcess> changePattern) throws IOException {
 		
 		BpmnProcess process = BpmnBuilder.instance.createExampleWithParallel();
 		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
@@ -55,17 +54,17 @@ public class ChangePatternTest {
 	}
 	
 	// @Test
-	public void Appliquer3fois () throws IOException {
+	public void Appliquer3fois() throws IOException {
 		// test(new BpmnSerialInsert());
 		// test(new BpmnConditionalInsert());
 		test(new BpmnParallelInsert());
 	}
 	
 	@Test
-	public void test1 () throws IOException {
-		IBpmnChangePattern parallel = new BpmnParallelInsert();
-		IBpmnChangePattern serial = new BpmnSerialInsert();
-		IBpmnChangePattern thread = new BpmnThreadInsert();
+	public void test1() throws IOException {
+		IChangePattern<BpmnProcess> parallel = new BpmnParallelInsert();
+		IChangePattern<BpmnProcess> serial = new BpmnSerialInsert();
+		IChangePattern<BpmnProcess> thread = new BpmnThreadInsert();
 		
 		BpmnProcess process = BpmnBuilder.instance.initialFinal();
 		process = serial.apply(process, rng, null);
@@ -78,9 +77,9 @@ public class ChangePatternTest {
 	}
 	
 	// @Test
-	public void test2 () throws Exception {
+	public void test2() throws Exception {
 		
-		List<IChangePattern> listeChangePattern = new ArrayList<IChangePattern>();
+		List<IChangePattern<BpmnProcess>> listeChangePattern = new ArrayList<>();
 		listeChangePattern.add(EBpmnChangePattern.PARALLEL_INSERT.newInstance("2"));
 		listeChangePattern.add(EBpmnChangePattern.CONDITIONAL_INSERT.newInstance("2"));
 		listeChangePattern.add(EBpmnChangePattern.SERIAL_INSERT.newInstance("2"));
@@ -99,7 +98,7 @@ public class ChangePatternTest {
 	}
 	
 	// @Test
-	public void testWorkflowInsert () throws IOException, BpmnException {
+	public void testWorkflowInsert() throws IOException, BpmnException {
 		
 		BpmnProcess process = BpmnBuilder.instance.initialABFinal();
 		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test.bpmn");

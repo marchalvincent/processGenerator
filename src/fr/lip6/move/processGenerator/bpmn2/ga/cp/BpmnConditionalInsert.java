@@ -7,9 +7,8 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
@@ -20,10 +19,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnConditionalInsert extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -35,8 +34,8 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 		}
 		
 		// on récupère le nombre de séquence et le nombre d'exclusive gateway
-		int nbSequence = ChangePatternHelper.instance.countSequenceFlow(process);
-		int nbConditional = ChangePatternHelper.instance.countConditionalGateway(process);
+		int nbSequence = BpmnChangePatternHelper.instance.countSequenceFlow(process);
+		int nbConditional = BpmnChangePatternHelper.instance.countConditionalGateway(process);
 		if (nbConditional % 2 != 0) {
 			System.err.println("Error, the number of ExclusiveGateway is odd.");
 			return process;
@@ -77,19 +76,19 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 	 *            une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnConditional (BpmnProcess process, Random rng) {
+	private BpmnProcess applyOnConditional(BpmnProcess process, Random rng) {
 		
 		// on récupère une Gateway diverging au hasard
 		Gateway gatewayDiverging = null;
 		try {
-			gatewayDiverging = ChangePatternHelper.instance.getRandomConditionalGatewayDiverging(process, rng);
+			gatewayDiverging = BpmnChangePatternHelper.instance.getRandomConditionalGatewayDiverging(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;
 		}
 		
 		// on récupère l'exclusive converging
-		Gateway gatewayConverging = GatewayManager.instance.findTwinGateway(process, gatewayDiverging);
+		Gateway gatewayConverging = BpmnGatewayManager.instance.findTwinGateway(process, gatewayDiverging);
 		if (gatewayConverging == null)
 			return process;
 		
@@ -113,11 +112,11 @@ public class BpmnConditionalInsert extends AbstractBpmnChangePattern implements 
 	 *            une source de {@link Random}.
 	 * @return le {@link BpmnProcess} modifié.
 	 */
-	private BpmnProcess applyOnSequenceFlow (BpmnProcess process, Random rng) {
+	private BpmnProcess applyOnSequenceFlow(BpmnProcess process, Random rng) {
 		
 		SequenceFlow ancienArc = null;
 		try {
-			ancienArc = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
+			ancienArc = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
 			// ici on n'a trouvé aucun arc (ce n'est pas normal, il doit toujours en avoir)
 			System.err.println(getClass().getSimpleName() + e.getMessage());

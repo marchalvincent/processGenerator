@@ -23,11 +23,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class ChangePatternHelper {
+public class BpmnChangePatternHelper {
 	
-	public final static ChangePatternHelper instance = new ChangePatternHelper();
-	
-	private ChangePatternHelper() {}
+	public final static BpmnChangePatternHelper instance = new BpmnChangePatternHelper();
+	private BpmnChangePatternHelper() {}
 	
 	/**
 	 * Renvoie un {@link SequenceFlow} tiré au hasard parmis ceux du process passé en argument.
@@ -40,7 +39,7 @@ public class ChangePatternHelper {
 	 * @throws GeneticException
 	 *             si le process ne contient aucun SequenceFlow.
 	 */
-	public SequenceFlow getRandomSequenceFlow (BpmnProcess process, Random rng) throws GeneticException {
+	public SequenceFlow getRandomSequenceFlow(BpmnProcess process, Random rng) throws GeneticException {
 		
 		// on récupère la liste des sequence flow
 		List<SequenceFlow> liste = BpmnFilter.byType(SequenceFlow.class, process.getProcess().getFlowElements());
@@ -64,7 +63,7 @@ public class ChangePatternHelper {
 	 * @throws GeneticException
 	 *             si le process ne contient aucune activité.
 	 */
-	public Activity getRandomActivity (BpmnProcess process, Random rng) throws GeneticException {
+	public Activity getRandomActivity(BpmnProcess process, Random rng) throws GeneticException {
 		
 		// on récupère la liste des activité
 		List<Activity> liste = BpmnFilter.byType(Activity.class, process.getProcess().getFlowElements());
@@ -88,7 +87,7 @@ public class ChangePatternHelper {
 	 * @throws GeneticException
 	 *             si le process ne contient aucune ParallelGateway.
 	 */
-	public ParallelGateway getRandomParallelGatewayDiverging (BpmnProcess process, Random rng) throws GeneticException {
+	public ParallelGateway getRandomParallelGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
 		
 		// on récupère la liste des ParallelGateway
 		List<ParallelGateway> liste = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(),
@@ -114,7 +113,7 @@ public class ChangePatternHelper {
 	 * @throws GeneticException
 	 *             si le process ne contient ni d'ExclusiveGateway, ni d'InclusiveGateway.
 	 */
-	public Gateway getRandomConditionalGatewayDiverging (BpmnProcess process, Random rng) throws GeneticException {
+	public Gateway getRandomConditionalGatewayDiverging(BpmnProcess process, Random rng) throws GeneticException {
 		
 		// on récupère la liste des Gateway de condition
 		List<Class<? extends Gateway>> classes = new ArrayList<>();
@@ -136,7 +135,7 @@ public class ChangePatternHelper {
 	 * 
 	 * @param process
 	 */
-	public void cleanProcess (BpmnProcess process) {
+	public void cleanProcess(BpmnProcess process) {
 		this.removeUselessParallelGateway(process);
 		this.removeUselessConditionalGateway(process);
 	}
@@ -148,7 +147,7 @@ public class ChangePatternHelper {
 	 *            le {@link Bpmnprocess}.
 	 * @return int.
 	 */
-	public int countActivity (BpmnProcess process) {
+	public int countActivity(BpmnProcess process) {
 		return BpmnFilter.byType(Activity.class, process.getProcess().getFlowElements()).size();
 	}
 	
@@ -159,7 +158,7 @@ public class ChangePatternHelper {
 	 *            le {@link Bpmnprocess}.
 	 * @return int.
 	 */
-	public int countSequenceFlow (BpmnProcess process) {
+	public int countSequenceFlow(BpmnProcess process) {
 		return BpmnFilter.byType(SequenceFlow.class, process.getProcess().getFlowElements()).size();
 	}
 	
@@ -170,7 +169,7 @@ public class ChangePatternHelper {
 	 *            le {@link Bpmnprocess}.
 	 * @return int.
 	 */
-	public int countParallelGateway (BpmnProcess process) {
+	public int countParallelGateway(BpmnProcess process) {
 		int count = 0;
 		List<ParallelGateway> list = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
 		for (ParallelGateway parallelGateway : list)
@@ -186,7 +185,7 @@ public class ChangePatternHelper {
 	 *            le {@link Bpmnprocess}.
 	 * @return int.
 	 */
-	public int countConditionalGateway (BpmnProcess process) {
+	public int countConditionalGateway(BpmnProcess process) {
 		List<Class<? extends Gateway>> classes = new ArrayList<>();
 		classes.add(ExclusiveGateway.class);
 		classes.add(InclusiveGateway.class);
@@ -199,7 +198,7 @@ public class ChangePatternHelper {
 	 * @param process
 	 *            un {@link BpmnProcess}.
 	 */
-	private void removeUselessParallelGateway (BpmnProcess process) {
+	private void removeUselessParallelGateway(BpmnProcess process) {
 		
 		// on récupère la liste des ParallelGateway divergentes
 		ParallelGateway parallelConverging;
@@ -210,7 +209,7 @@ public class ChangePatternHelper {
 		for (ParallelGateway parallelGateway : listeDiverging) {
 			
 			// on cherche la parallelGateway converging qui referme le chemin
-			parallelConverging = (ParallelGateway) GatewayManager.instance.findTwinGateway(process, parallelGateway);
+			parallelConverging = (ParallelGateway) BpmnGatewayManager.instance.findTwinGateway(process, parallelGateway);
 			// petite vérification, si on a une parallel sans twin, cela peut être un nouveau thread dans le process
 			if (parallelConverging == null) {
 				this.cleanNewThread(process, parallelGateway);
@@ -272,7 +271,7 @@ public class ChangePatternHelper {
 	 * @param parallelGateway
 	 *            la {@link ParallelGateway} du nouveau thread.
 	 */
-	private void cleanNewThread (BpmnProcess process, ParallelGateway parallelGateway) {
+	private void cleanNewThread(BpmnProcess process, ParallelGateway parallelGateway) {
 		
 		// si la gateway a plusieurs arcs sortants
 		if (parallelGateway.getOutgoing().size() > 1) {
@@ -316,7 +315,7 @@ public class ChangePatternHelper {
 	 * @param process
 	 *            un {@link BpmnProcess}.
 	 */
-	private void removeUselessConditionalGateway (BpmnProcess process) {
+	private void removeUselessConditionalGateway(BpmnProcess process) {
 		
 		// on récupère la liste des ExclusiveGateway divergentes
 		Gateway gatewayConverging = null;
@@ -333,7 +332,7 @@ public class ChangePatternHelper {
 			boolean removed = false;
 			
 			// on cherche la Gateway converging qui referme le chemin
-			gatewayConverging = GatewayManager.instance.findTwinGateway(process, gatewayDiverging);
+			gatewayConverging = BpmnGatewayManager.instance.findTwinGateway(process, gatewayDiverging);
 			if (gatewayConverging == null)
 				continue;
 			
@@ -407,7 +406,7 @@ public class ChangePatternHelper {
 	 * @param gatewayConverging
 	 *            la {@link Gateway} convergente.
 	 */
-	private void cleanPotentialUselessLoop (BpmnProcess process, Gateway gatewayDiverging, Gateway gatewayConverging) {
+	private void cleanPotentialUselessLoop(BpmnProcess process, Gateway gatewayDiverging, Gateway gatewayConverging) {
 		
 		List<SequenceFlow> listToRemove = new ArrayList<>();
 		

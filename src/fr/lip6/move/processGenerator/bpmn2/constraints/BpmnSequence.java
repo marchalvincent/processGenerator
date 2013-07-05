@@ -24,8 +24,8 @@ public class BpmnSequence extends AbstractBpmnOclSolver {
 	}
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
-		WorkflowRepresentation representation = new WorkflowRepresentation();
+	public IWorkflowRepresentation getRepresentation() {
+		BpmnWorkflowRepresentation representation = new BpmnWorkflowRepresentation();
 		
 		// on construit les noeuds
 		Task a = representation.buildTask();

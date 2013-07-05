@@ -113,18 +113,18 @@ public class BpmnProcess {
 		process.setName(BpmnNameManager.instance.getProcessName());
 	}
 	
-	public DocumentRoot getDocumentRoot () {
+	public DocumentRoot getDocumentRoot() {
 		return documentRoot;
 	}
 	
-	public Process getProcess () {
+	public Process getProcess() {
 		return process;
 	}
 	
 	/**
 	 * Créé et associé un {@link StartEvent} au process.
 	 */
-	public StartEvent buildStartEvent () {
+	public StartEvent buildStartEvent() {
 		StartEvent start = Bpmn2Factory.eINSTANCE.createStartEvent();
 		
 		String name = BpmnNameManager.instance.getStartName();
@@ -138,7 +138,7 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé un {@link EndEvent} au process.
 	 */
-	public EndEvent buildEndEvent () {
+	public EndEvent buildEndEvent() {
 		EndEvent end = Bpmn2Factory.eINSTANCE.createEndEvent();
 		
 		String name = BpmnNameManager.instance.getEndName();
@@ -152,7 +152,7 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé une {@link Task} choisie au hasard au process.
 	 */
-	public Task buildTask () {
+	public Task buildTask() {
 		
 		Task task = BpmnProcess.buildRandomSubTask();
 		
@@ -167,7 +167,7 @@ public class BpmnProcess {
 	/**
 	 * Renvoie une {@link Task} au hasard parmis celle existante dans BPMN.
 	 */
-	public static Task buildRandomSubTask () {
+	public static Task buildRandomSubTask() {
 		// TODO voir si possible sendTask, BusinessRuleTask
 		switch (rng.nextInt(5)) {
 			case 0:
@@ -192,14 +192,14 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé un {@link ParallelGateway} divergente au process.
 	 */
-	public ParallelGateway buildParallelGatewayDiverging () {
+	public ParallelGateway buildParallelGatewayDiverging() {
 		return this.buildParallelGateway(GatewayDirection.DIVERGING);
 	}
 	
 	/**
 	 * Créé et associé un {@link ParallelGateway} convergente au process.
 	 */
-	public ParallelGateway buildParallelGatewayConverging () {
+	public ParallelGateway buildParallelGatewayConverging() {
 		return this.buildParallelGateway(GatewayDirection.CONVERGING);
 	}
 	
@@ -210,7 +210,7 @@ public class BpmnProcess {
 	 *            la {@link GatewayDirection} de la Gateway.
 	 * @return la parallel gateway.
 	 */
-	private ParallelGateway buildParallelGateway (GatewayDirection direction) {
+	private ParallelGateway buildParallelGateway(GatewayDirection direction) {
 		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
@@ -225,14 +225,14 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé un {@link ExclusiveGateway} divergente au process.
 	 */
-	public ExclusiveGateway buildExclusiveGatewayDiverging () {
+	public ExclusiveGateway buildExclusiveGatewayDiverging() {
 		return this.buildExclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
 	/**
 	 * Créé et associé un {@link ExclusiveGateway} convergente au process.
 	 */
-	public ExclusiveGateway buildExclusiveGatewayConverging () {
+	public ExclusiveGateway buildExclusiveGatewayConverging() {
 		return this.buildExclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
@@ -243,7 +243,7 @@ public class BpmnProcess {
 	 *            la {@link GatewayDirection} que doit avoir la gateway.
 	 * @return l'exclusive gateway.
 	 */
-	private ExclusiveGateway buildExclusiveGateway (GatewayDirection direction) {
+	private ExclusiveGateway buildExclusiveGateway(GatewayDirection direction) {
 		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
@@ -258,14 +258,14 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé un {@link InclusiveGateway} divergente au process.
 	 */
-	public InclusiveGateway buildInclusiveGatewayDiverging () {
+	public InclusiveGateway buildInclusiveGatewayDiverging() {
 		return this.buildInclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
 	/**
 	 * Créé et associé un {@link InclusiveGateway} convergente au process.
 	 */
-	public InclusiveGateway buildInclusiveGatewayConverging () {
+	public InclusiveGateway buildInclusiveGatewayConverging() {
 		return this.buildInclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
@@ -276,7 +276,7 @@ public class BpmnProcess {
 	 *            la {@link GatewayDirection} que doit avoir la gateway.
 	 * @return l'inclusive gateway.
 	 */
-	private InclusiveGateway buildInclusiveGateway (GatewayDirection direction) {
+	private InclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
 		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
 		inclusive.setGatewayDirection(direction);
 		
@@ -291,7 +291,7 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé un {@link SequenceFlow} sans source ni destination au process.
 	 */
-	public SequenceFlow buildSequenceFlow () {
+	public SequenceFlow buildSequenceFlow() {
 		SequenceFlow sequence = Bpmn2Factory.eINSTANCE.createSequenceFlow();
 		
 		String name = BpmnNameManager.instance.getSequenceName();
@@ -311,7 +311,7 @@ public class BpmnProcess {
 	 *            le {@link FlowNode} destination de l'arc.
 	 * @return l'arc créé et associé au process.
 	 */
-	public SequenceFlow buildSequenceFlow (FlowNode source, FlowNode target) {
+	public SequenceFlow buildSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow sequence = this.buildSequenceFlow();
 		sequence.setSourceRef(source);
 		sequence.setTargetRef(target);
@@ -330,7 +330,7 @@ public class BpmnProcess {
 	 * @throws BpmnException
 	 *             dans le cas où un des FlowElements est introuvable dans le process.
 	 */
-	public void setSequenceFlowInformations (String id, String source, String target) throws BpmnException {
+	public void setSequenceFlowInformations(String id, String source, String target) throws BpmnException {
 		FlowNode sourceNode = this.getElementById(FlowNode.class, source);
 		FlowNode targetNode = this.getElementById(FlowNode.class, target);
 		SequenceFlow sequence = this.getElementById(SequenceFlow.class, id);
@@ -351,7 +351,7 @@ public class BpmnProcess {
 	 *            l'id de l'élément à renvoyer.
 	 * @return
 	 */
-	private <T> T getElementById (Class<T> clazz, String id) {
+	private <T> T getElementById(Class<T> clazz, String id) {
 		for (FlowElement element : getProcess().getFlowElements()) {
 			if (element.getId().equals(id) && clazz.isInstance(element))
 				return clazz.cast(element);
@@ -366,7 +366,7 @@ public class BpmnProcess {
 	 *            le {@link FlowNode} à supprimer.
 	 * @return true si le noeud à été supprimé, false sinon.
 	 */
-	public boolean removeFlowNode (FlowNode flowNode) {
+	public boolean removeFlowNode(FlowNode flowNode) {
 		return process.getFlowElements().remove(flowNode);
 	}
 	
@@ -377,7 +377,7 @@ public class BpmnProcess {
 	 *            le {@link SequenceFlow} à supprimer.
 	 * @return true si l'arc à été supprimé, false sinon.
 	 */
-	public boolean removeSequenceFlow (SequenceFlow sequence) {
+	public boolean removeSequenceFlow(SequenceFlow sequence) {
 		sequence.setSourceRef(null);
 		sequence.setTargetRef(null);
 		return process.getFlowElements().remove(sequence);
@@ -391,7 +391,7 @@ public class BpmnProcess {
 	 * @throws IOException
 	 *             en cas de problème d'entrée sortie dans la création du fichier.
 	 */
-	public void save (String nameFile) throws IOException {
+	public void save(String nameFile) throws IOException {
 		
 		Bpmn2ResourceFactoryImpl resourceFactory = new Bpmn2ResourceFactoryImpl();
 		File tempFile = File.createTempFile("bpmn20convert", "tmp");
@@ -417,7 +417,7 @@ public class BpmnProcess {
 	 * @param diverging
 	 * @param converging
 	 */
-	public void linkGateways (Gateway diverging, Gateway converging) {
+	public void linkGateways(Gateway diverging, Gateway converging) {
 		gatewaysLinked.put(diverging.getId(), converging.getId());
 		gatewaysLinked.put(converging.getId(), diverging.getId());
 	}
@@ -427,7 +427,7 @@ public class BpmnProcess {
 	 * 
 	 * @param links
 	 */
-	public void addLinksGateways (Map<String, String> links) {
+	public void addLinksGateways(Map<String, String> links) {
 		gatewaysLinked.putAll(links);
 	}
 	
@@ -437,7 +437,7 @@ public class BpmnProcess {
 	 * @param gatewayId
 	 * @return
 	 */
-	public Gateway getTwin (String gatewayId) {
+	public Gateway getTwin(String gatewayId) {
 		String twinId = gatewaysLinked.get(gatewayId);
 		if (twinId != null) {
 			for (FlowElement element : getProcess().getFlowElements()) {

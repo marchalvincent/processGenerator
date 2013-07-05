@@ -20,19 +20,19 @@ public class FitnessWeightHelper {
 		this.manualOclPercent = manualOclWeight / total * 100;
 	}
 	
-	public double getSizePercent () {
+	public double getSizePercent() {
 		return sizePercent;
 	}
 	
-	public double getElementPercent () {
+	public double getElementPercent() {
 		return elementPercent;
 	}
 	
-	public double getWorkflowPercent () {
+	public double getWorkflowPercent() {
 		return workflowPercent;
 	}
 	
-	public double getManualOclPercent () {
+	public double getManualOclPercent() {
 		return manualOclPercent;
 	}
 }

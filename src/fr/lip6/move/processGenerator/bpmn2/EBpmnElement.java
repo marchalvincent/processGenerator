@@ -32,7 +32,7 @@ public enum EBpmnElement implements IEnumElement {
 	}
 	
 	@Override
-	public String toString () {
+	public String toString() {
 		return this.clazz.getSimpleName();
 	}
 }

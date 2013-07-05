@@ -6,7 +6,7 @@ package fr.lip6.move.processGenerator.ga;
  * @author Vincent
  * 
  */
-public abstract class AbstractChangePattern implements IChangePattern {
+public abstract class AbstractChangePattern<T> implements IChangePattern<T> {
 	
 	private int probability;
 	
@@ -15,7 +15,7 @@ public abstract class AbstractChangePattern implements IChangePattern {
 	}
 	
 	@Override
-	public void setProba (String proba) {
+	public void setProba(String proba) {
 		try {
 			int prob = Integer.parseInt(proba);
 			probability = prob;
@@ -25,7 +25,7 @@ public abstract class AbstractChangePattern implements IChangePattern {
 	}
 	
 	@Override
-	public int getProba () {
+	public int getProba() {
 		return probability;
 	}
 }

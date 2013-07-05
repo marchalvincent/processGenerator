@@ -12,13 +12,15 @@ import org.eclipse.uml2.uml.InitialNode;
 public class UmlBuilder {
 	
 	public static UmlBuilder instance = new UmlBuilder();
+	
 	private UmlBuilder() {}
 	
 	/**
 	 * Construit un process simple : InitialNode -> ActivityFinalNode.
+	 * 
 	 * @return
 	 */
-	public UmlProcess initialFinal () {
+	public UmlProcess initialFinal() {
 		UmlProcess process = new UmlProcess();
 		InitialNode init = process.buildInitialNode();
 		ActivityFinalNode finalNode = process.buildActivityFinalNode();

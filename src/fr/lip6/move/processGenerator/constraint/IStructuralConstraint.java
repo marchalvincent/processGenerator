@@ -21,7 +21,7 @@ public interface IStructuralConstraint {
 	 * @throws Exception
 	 *             en cas d'erreur. Ex : l'expression OCL est incorrecte.
 	 */
-	int matches (Object process) throws Exception;
+	int matches(Object process) throws Exception;
 	
 	/**
 	 * Vous pouvez implémenter cette méthode de façon à ce qu'elle renvoie la représentation (bpmn2 ou uml2.0 ad par
@@ -30,5 +30,5 @@ public interface IStructuralConstraint {
 	 * 
 	 * @return {@link IWorkflowRepresentation} si la représentation existe, null sinon.
 	 */
-	IWorkflowRepresentation getRepresentation ();
+	IWorkflowRepresentation getRepresentation();
 }

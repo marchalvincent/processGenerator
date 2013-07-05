@@ -14,7 +14,7 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
 public class UmlCrossoverOperation implements EvolutionaryOperator<UmlProcess> {
 	
 	@Override
-	public List<UmlProcess> apply (List<UmlProcess> selectedCandidates, Random rng) {
+	public List<UmlProcess> apply(List<UmlProcess> selectedCandidates, Random rng) {
 		// TODO Auto-generated method stub
 		return selectedCandidates;
 	}

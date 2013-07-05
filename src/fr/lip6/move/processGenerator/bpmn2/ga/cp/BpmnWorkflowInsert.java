@@ -7,11 +7,10 @@ import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.SequenceFlow;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.constraints.WorkflowRepresentation;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
@@ -20,10 +19,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnWorkflowInsert extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -64,20 +63,24 @@ public class BpmnWorkflowInsert extends AbstractBpmnChangePattern implements IBp
 		IWorkflowRepresentation rep = checker.getRepresentation();
 		
 		// si la représentation n'est pas correcte
-		if (rep == null || !(rep instanceof WorkflowRepresentation))
+		if (rep == null || !(rep instanceof BpmnWorkflowRepresentation)){
+			System.err.println("The bpmn representation of the constraints " +
+					checker.getConstraint().getClass().getSimpleName() + "is not correct.");
 			return process;
+		}
 		
-		WorkflowRepresentation representation = (WorkflowRepresentation) rep;
+		BpmnWorkflowRepresentation representation = (BpmnWorkflowRepresentation) rep;
 		
 		// ici, on a notre représentation. Maintenant, on va pouvoir l'insérer au candidat.
 		try {
-			SequenceFlow arcBefore = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
+			SequenceFlow arcBefore = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 			FlowNode cible = arcBefore.getTargetRef();
 			
-			// 1. on ajoute chaque flow Element au process
-			for (FlowElement element : representation.getFlowElements()) {
+			// 1. on ajoute chaque flow Element au process (nodes et edges)
+			for (FlowElement element : representation.getNodes())
 				process.getProcess().getFlowElements().add(element);
-			}
+			for (FlowElement element : representation.getEdges())
+				process.getProcess().getFlowElements().add(element);
 			
 			// 1bis. On ajoute les liens de gateways
 			process.addLinksGateways(representation.getLinks());

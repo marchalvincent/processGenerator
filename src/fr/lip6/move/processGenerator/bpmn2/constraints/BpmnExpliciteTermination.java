@@ -26,7 +26,7 @@ public class BpmnExpliciteTermination extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public int matches (Object object) throws Exception {
+	public int matches(Object object) throws Exception {
 		
 		int count = 0;
 		
@@ -51,8 +51,8 @@ public class BpmnExpliciteTermination extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
-		WorkflowRepresentation representation = new WorkflowRepresentation();
+	public IWorkflowRepresentation getRepresentation() {
+		BpmnWorkflowRepresentation representation = new BpmnWorkflowRepresentation();
 		
 		// on construit les noeuds
 		ParallelGateway gateway = representation.buildParallelGatewayDiverging();

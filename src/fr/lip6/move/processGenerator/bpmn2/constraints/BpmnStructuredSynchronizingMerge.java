@@ -6,7 +6,7 @@ import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnGatewayManager;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
@@ -24,7 +24,7 @@ public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public int matches (Object object) throws Exception {
+	public int matches(Object object) throws Exception {
 		
 		int countTotal = 0;
 		
@@ -37,7 +37,7 @@ public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 		List<InclusiveGateway> list = BpmnFilter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(),
 				GatewayDirection.DIVERGING);
 		for (InclusiveGateway gatewayDiverging : list) {
-			Gateway gatewayConverging = GatewayManager.instance.findTwinGateway(process, gatewayDiverging);
+			Gateway gatewayConverging = BpmnGatewayManager.instance.findTwinGateway(process, gatewayDiverging);
 			// on a la porte fermante, maintenant il faut vérifier que c'est le bon type (dans ce workflow pattern on
 			// cherche une InclusiveGateway fermante)
 			if (gatewayConverging != null && gatewayConverging instanceof InclusiveGateway)
@@ -48,8 +48,8 @@ public class BpmnStructuredSynchronizingMerge extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
-		WorkflowRepresentation representation = new WorkflowRepresentation();
+	public IWorkflowRepresentation getRepresentation() {
+		BpmnWorkflowRepresentation representation = new BpmnWorkflowRepresentation();
 		
 		// on construit les noeuds
 		InclusiveGateway choice = representation.buildInclusiveGatewayDiverging();

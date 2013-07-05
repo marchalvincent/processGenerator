@@ -7,7 +7,7 @@ package fr.lip6.move.processGenerator.ga;
  * @author Vincent
  * 
  */
-public interface IEnumChangePattern {
+public interface IEnumChangePattern<T> {
 	
 	/**
 	 * A chaque énumération est associé un {@link IChangePattern}. C'est pourquoi cette énumération doit être capable
@@ -19,5 +19,5 @@ public interface IEnumChangePattern {
 	 * @throws Exception
 	 *             une erreur peut survenir lors de l'instanciation dynamique du change pattern.
 	 */
-	public IChangePattern newInstance (String proba) throws Exception;
+	public IChangePattern<T> newInstance(String proba) throws Exception;
 }

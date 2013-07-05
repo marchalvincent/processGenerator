@@ -14,7 +14,7 @@ import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 public class JungManagerTest {
 	
 	@Test
-	public void test1 () throws IOException {
+	public void test1() throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.getLoopExample();
 		// process.save(System.getProperty("user.home") + File.separator +
 		// "./workspace/processGenerator/gen/vincent.bpmn");

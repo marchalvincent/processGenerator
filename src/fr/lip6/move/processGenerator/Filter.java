@@ -20,7 +20,7 @@ public class Filter {
 	 *            la liste à filtrer.
 	 * @return {@link List}.
 	 */
-	public static <T> List<T> byType (Class<T> clazz, List<?> elements) {
+	public static <T> List<T> byType(Class<T> clazz, List<?> elements) {
 		List<T> results = new ArrayList<T>();
 		for (Object o : elements)
 			if (clazz.isInstance(o))

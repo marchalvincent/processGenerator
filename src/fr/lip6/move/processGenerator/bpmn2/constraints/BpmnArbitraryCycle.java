@@ -30,7 +30,7 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public int matches (Object object) throws Exception {
+	public int matches(Object object) throws Exception {
 		
 		int count = 0;
 		
@@ -82,7 +82,7 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 	 *            la liste de JungEdge à vérifier si elle n'existe pas dans l'autre paramètre.
 	 * @return true si il y a une concordance de {@link JungEdge} entre les deux paramètres.
 	 */
-	private boolean exist (List<List<JungEdge>> allPaths, List<JungEdge> path) {
+	private boolean exist(List<List<JungEdge>> allPaths, List<JungEdge> path) {
 		
 		// pour chaque liste
 		for (List<JungEdge> list : allPaths)
@@ -95,8 +95,8 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
-		WorkflowRepresentation representation = new WorkflowRepresentation();
+	public IWorkflowRepresentation getRepresentation() {
+		BpmnWorkflowRepresentation representation = new BpmnWorkflowRepresentation();
 		
 		// on construit les noeuds
 		ExclusiveGateway converging = representation.buildExclusiveGatewayConverging();

@@ -10,9 +10,8 @@ import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.SequenceFlow;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 
 /**
  * Ce change pattern se charge de supprimer une activité puis de simplifier le process lorsqu'il contient des données
@@ -21,10 +20,10 @@ import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
  * @author Vincent
  * 
  */
-public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnRemove extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -37,7 +36,7 @@ public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChange
 		
 		Activity ancienneTask = null;
 		try {
-			ancienneTask = ChangePatternHelper.instance.getRandomActivity(process, rng);
+			ancienneTask = BpmnChangePatternHelper.instance.getRandomActivity(process, rng);
 		} catch (Exception e) {
 			// on n'a pas trouvé d'activité à supprimer
 			return process;
@@ -87,7 +86,7 @@ public class BpmnRemove extends AbstractBpmnChangePattern implements IBpmnChange
 		}
 		
 		// on simplifie les fork et decision "vides" si on vient d'en créer
-		ChangePatternHelper.instance.cleanProcess(process);
+		BpmnChangePatternHelper.instance.cleanProcess(process);
 		return process;
 	}
 }

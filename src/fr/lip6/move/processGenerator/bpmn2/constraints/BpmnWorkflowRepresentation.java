@@ -25,7 +25,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * @author Vincent
  * 
  */
-public class WorkflowRepresentation implements IWorkflowRepresentation {
+public class BpmnWorkflowRepresentation implements IWorkflowRepresentation {
 	
 	/**
 	 * Représente le début de la représentation.
@@ -36,12 +36,14 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * Représente la fin de la représentation.
 	 */
 	private FlowNode end;
-	private List<FlowElement> flowElements;
+	private List<FlowElement> nodes;
+	private List<FlowElement> edges;
 	private Map<String, String> gatewaysTwins;
 	
-	public WorkflowRepresentation() {
+	public BpmnWorkflowRepresentation() {
 		super();
-		flowElements = new ArrayList<>();
+		nodes = new ArrayList<>();
+		edges = new ArrayList<>();
 		gatewaysTwins = new HashMap<>();
 	}
 	
@@ -51,12 +53,13 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * @param g1
 	 * @param g2
 	 */
-	public void linkGatewys (Gateway g1, Gateway g2) {
+	public void linkGatewys(Gateway g1, Gateway g2) {
 		gatewaysTwins.put(g1.getId(), g2.getId());
 		gatewaysTwins.put(g2.getId(), g1.getId());
 	}
 	
-	public Map<String, String> getLinks () {
+	@Override
+	public Map<String, String> getLinks() {
 		return gatewaysTwins;
 	}
 	
@@ -65,14 +68,14 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public EndEvent buildEndEvent () {
+	public EndEvent buildEndEvent() {
 		EndEvent end = Bpmn2Factory.eINSTANCE.createEndEvent();
 		
 		String name = BpmnNameManager.instance.getEndName();
 		end.setId("id_" + name);
 		end.setName(name);
 		
-		getFlowElements().add(end);
+		getNodes().add(end);
 		return end;
 	}
 	
@@ -81,14 +84,14 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public Task buildTask () {
+	public Task buildTask() {
 		Task task = this.buildRandomSubTask();
 		
 		String name = BpmnNameManager.instance.getTaskName();
 		task.setId("id_" + name);
 		task.setName(name);
 		
-		getFlowElements().add(task);
+		getNodes().add(task);
 		return task;
 	}
 	
@@ -97,7 +100,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	private Task buildRandomSubTask () {
+	private Task buildRandomSubTask() {
 		return BpmnProcess.buildRandomSubTask();
 	}
 	
@@ -106,7 +109,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public ParallelGateway buildParallelGatewayDiverging () {
+	public ParallelGateway buildParallelGatewayDiverging() {
 		return this.buildParallelGateway(GatewayDirection.DIVERGING);
 	}
 	
@@ -115,7 +118,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public ParallelGateway buildParallelGatewayConverging () {
+	public ParallelGateway buildParallelGatewayConverging() {
 		return this.buildParallelGateway(GatewayDirection.CONVERGING);
 	}
 	
@@ -126,7 +129,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 *            {@link GatewayDirection} de la gateway.
 	 * @return
 	 */
-	private ParallelGateway buildParallelGateway (GatewayDirection direction) {
+	private ParallelGateway buildParallelGateway(GatewayDirection direction) {
 		ParallelGateway parallel = Bpmn2Factory.eINSTANCE.createParallelGateway();
 		parallel.setGatewayDirection(direction);
 		
@@ -134,7 +137,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		parallel.setId("id_" + name);
 		parallel.setName(name);
 		
-		getFlowElements().add(parallel);
+		getNodes().add(parallel);
 		return parallel;
 	}
 	
@@ -143,7 +146,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public ExclusiveGateway buildExclusiveGatewayDiverging () {
+	public ExclusiveGateway buildExclusiveGatewayDiverging() {
 		return this.buildExclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
@@ -152,7 +155,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public ExclusiveGateway buildExclusiveGatewayConverging () {
+	public ExclusiveGateway buildExclusiveGatewayConverging() {
 		return this.buildExclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
@@ -163,7 +166,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 *            {@link GatewayDirection} de la gateway
 	 * @return
 	 */
-	private ExclusiveGateway buildExclusiveGateway (GatewayDirection direction) {
+	private ExclusiveGateway buildExclusiveGateway(GatewayDirection direction) {
 		ExclusiveGateway exclusive = Bpmn2Factory.eINSTANCE.createExclusiveGateway();
 		exclusive.setGatewayDirection(direction);
 		
@@ -171,7 +174,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		exclusive.setId("id_" + name);
 		exclusive.setName(name);
 		
-		getFlowElements().add(exclusive);
+		getNodes().add(exclusive);
 		return exclusive;
 	}
 	
@@ -180,7 +183,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public InclusiveGateway buildInclusiveGatewayDiverging () {
+	public InclusiveGateway buildInclusiveGatewayDiverging() {
 		return this.buildInclusiveGateway(GatewayDirection.DIVERGING);
 	}
 	
@@ -189,7 +192,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	public InclusiveGateway buildInclusiveGatewayConverging () {
+	public InclusiveGateway buildInclusiveGatewayConverging() {
 		return this.buildInclusiveGateway(GatewayDirection.CONVERGING);
 	}
 	
@@ -200,7 +203,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 *            {@link GatewayDirection} de la gateway.
 	 * @return
 	 */
-	private InclusiveGateway buildInclusiveGateway (GatewayDirection direction) {
+	private InclusiveGateway buildInclusiveGateway(GatewayDirection direction) {
 		InclusiveGateway inclusive = Bpmn2Factory.eINSTANCE.createInclusiveGateway();
 		inclusive.setGatewayDirection(direction);
 		
@@ -208,7 +211,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		inclusive.setId("id_" + name);
 		inclusive.setName(name);
 		
-		getFlowElements().add(inclusive);
+		getNodes().add(inclusive);
 		return inclusive;
 	}
 	
@@ -217,14 +220,14 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	private SequenceFlow buildSequenceFlow () {
+	private SequenceFlow buildSequenceFlow() {
 		SequenceFlow sequence = Bpmn2Factory.eINSTANCE.createSequenceFlow();
 		
 		String name = BpmnNameManager.instance.getSequenceName();
 		sequence.setId("id_" + name);
 		sequence.setName(name);
 		
-		getFlowElements().add(sequence);
+		getEdges().add(sequence);
 		return sequence;
 	}
 	
@@ -237,7 +240,7 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 	 *            la destination de l'arc.
 	 * @return
 	 */
-	public SequenceFlow buildSequenceFlow (FlowNode source, FlowNode target) {
+	public SequenceFlow buildSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow sequence = this.buildSequenceFlow();
 		sequence.setSourceRef(source);
 		sequence.setTargetRef(target);
@@ -246,23 +249,39 @@ public class WorkflowRepresentation implements IWorkflowRepresentation {
 		return sequence;
 	}
 	
-	public List<FlowElement> getFlowElements () {
-		return flowElements;
-	}
-	
-	public FlowNode getBegin () {
+	@Override
+	public FlowNode getBegin() {
 		return begin;
 	}
 	
-	public void setBegin (FlowNode begin) {
-		this.begin = begin;
+	@Override
+	public void setBegin(Object begin) {
+		if (begin instanceof FlowNode)
+			this.begin = (FlowNode) begin;
+		else
+			System.err.println("The beginning of the representation is not a FlowNode.");
 	}
 	
-	public FlowNode getEnd () {
+	@Override
+	public FlowNode getEnd() {
 		return end;
 	}
 	
-	public void setEnd (FlowNode end) {
-		this.end = end;
+	@Override
+	public void setEnd(Object end) {
+		if (end instanceof FlowNode)
+			this.end = (FlowNode) end;
+		else
+			System.err.println("The end of the representation is not a FlowNode.");
+	}
+
+	@Override
+	public List<FlowElement> getNodes() {
+		return nodes;
+	}
+
+	@Override
+	public List<FlowElement> getEdges() {
+		return edges;
 	}
 }

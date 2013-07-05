@@ -19,8 +19,8 @@ public class BpmnMultiMerge extends BpmnSimpleMerge {
 	}
 	
 	@Override
-	public IWorkflowRepresentation getRepresentation () {
-		WorkflowRepresentation representation = new WorkflowRepresentation();
+	public IWorkflowRepresentation getRepresentation() {
+		BpmnWorkflowRepresentation representation = new BpmnWorkflowRepresentation();
 		
 		// on construit les noeuds
 		InclusiveGateway choice = representation.buildInclusiveGatewayDiverging();

@@ -24,7 +24,7 @@ public class SelectionComboInTable extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected (SelectionEvent e) {
+	public void widgetSelected(SelectionEvent e) {
 		item.setText(2, combo.getText());
 	}
 }

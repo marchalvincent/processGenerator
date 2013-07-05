@@ -6,8 +6,8 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.ChangePatternHelper;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnChangePatternHelper;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnGatewayManager;
 
 /**
  * Cette classe permet de construire rapidement des {@link BpmnProcess}.
@@ -26,7 +26,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess initialFinal () {
+	public BpmnProcess initialFinal() {
 		BpmnProcess process = new BpmnProcess();
 		
 		// les noeuds
@@ -44,7 +44,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess initialABFinal () {
+	public BpmnProcess initialABFinal() {
 		BpmnProcess process = new BpmnProcess();
 		
 		// les noeuds
@@ -66,7 +66,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess initialABCFinal () {
+	public BpmnProcess initialABCFinal() {
 		BpmnProcess process = new BpmnProcess();
 		
 		// les noeuds
@@ -90,7 +90,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithParallel () {
+	public BpmnProcess createExampleWithParallel() {
 		BpmnProcess process = new BpmnProcess();
 		
 		// les noeuds
@@ -127,7 +127,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithParallel2 () {
+	public BpmnProcess createExampleWithParallel2() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -153,11 +153,11 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une parallel gateway qui peut être simplifiée et supprimée par le
-	 * {@link ChangePatternHelper}.
+	 * {@link BpmnChangePatternHelper}.
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithUselessParallel () {
+	public BpmnProcess createExampleWithUselessParallel() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -181,11 +181,11 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une exclusive gateway qui peut être simplifiée et supprimée par le
-	 * {@link ChangePatternHelper}.
+	 * {@link BpmnChangePatternHelper}.
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithUselessExclusive () {
+	public BpmnProcess createExampleWithUselessExclusive() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -209,11 +209,11 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une parallel gateway et une exclusive gateway qui peut être simplifiée et supprimée par le
-	 * {@link ChangePatternHelper}.
+	 * {@link BpmnChangePatternHelper}.
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithUselessParallelAndExclusive () {
+	public BpmnProcess createExampleWithUselessParallelAndExclusive() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -247,7 +247,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithExclusiveChoice () {
+	public BpmnProcess createExampleWithExclusiveChoice() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -276,7 +276,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithStructuredSynchronizingMerge () {
+	public BpmnProcess createExampleWithStructuredSynchronizingMerge() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -305,7 +305,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess createExampleWithMultiChoiceMultiMerge () {
+	public BpmnProcess createExampleWithMultiChoiceMultiMerge() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -335,7 +335,7 @@ public class BpmnBuilder {
 	 * @param number
 	 * @return
 	 */
-	public BpmnProcess numberNodes (int number) {
+	public BpmnProcess numberNodes(int number) {
 		
 		BpmnProcess process = new BpmnProcess();
 		for (int i = 0; i < number; i++) {
@@ -349,7 +349,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess getExampleForSESE () {
+	public BpmnProcess getExampleForSESE() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -388,7 +388,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess getLoopExample () {
+	public BpmnProcess getLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -420,7 +420,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess getComplexLoopExample () {
+	public BpmnProcess getComplexLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -458,7 +458,7 @@ public class BpmnBuilder {
 	 * 
 	 * @return
 	 */
-	public BpmnProcess getDoubleLoopExample () {
+	public BpmnProcess getDoubleLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -490,11 +490,11 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Créé un exemple avec une boucle qui peut être simplifiée et supprimée par le {@link ChangePatternHelper}.
+	 * Créé un exemple avec une boucle qui peut être simplifiée et supprimée par le {@link BpmnChangePatternHelper}.
 	 * 
 	 * @return
 	 */
-	public BpmnProcess getUselessLoopExample () {
+	public BpmnProcess getUselessLoopExample() {
 		
 		BpmnProcess process = new BpmnProcess();
 		
@@ -518,11 +518,11 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Créé un exemple pour les tests sur le {@link GatewayManager}.
+	 * Créé un exemple pour les tests sur le {@link BpmnGatewayManager}.
 	 * 
 	 * @return
 	 */
-	public BpmnProcess getExampleForSESE2 () {
+	public BpmnProcess getExampleForSESE2() {
 		
 		BpmnProcess process = new BpmnProcess();
 		

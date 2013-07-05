@@ -19,7 +19,7 @@ public abstract class AbstractStructuralConstraintFactory {
 	 * @return {@link IStructuralConstraint} la contrainte représentant le workflow pattern.
 	 * @throws Exception
 	 */
-	public IStructuralConstraint newWorkflowPatternConstraint (Object eBpmnWorkflowPattern) throws Exception {
+	public IStructuralConstraint newWorkflowPatternConstraint(Object eBpmnWorkflowPattern) throws Exception {
 		if (eBpmnWorkflowPattern instanceof IEnumWorkflowPattern) {
 			return ((IEnumWorkflowPattern) eBpmnWorkflowPattern).newInstance();
 		}
@@ -34,7 +34,7 @@ public abstract class AbstractStructuralConstraintFactory {
 	 *            String, la requete écrite à la main.
 	 * @return {@link IStructuralConstraint}.
 	 */
-	public abstract IStructuralConstraint newManualOclConstraint (String query);
+	public abstract IStructuralConstraint newManualOclConstraint(String query);
 	
 	/**
 	 * Créé une nouvelle contrainte structurelle représentant un nombre d'élément à avoir.
@@ -45,5 +45,5 @@ public abstract class AbstractStructuralConstraintFactory {
 	 * @throws Exception
 	 *             si l'élément n'est pas du même type que le fichier qu'on évalue.
 	 */
-	public abstract IStructuralConstraint newElementConstraint (IEnumElement eElement) throws Exception;
+	public abstract IStructuralConstraint newElementConstraint(IEnumElement eElement) throws Exception;
 }

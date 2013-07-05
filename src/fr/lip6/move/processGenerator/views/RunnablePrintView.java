@@ -20,7 +20,7 @@ public class RunnablePrintView implements Runnable {
 	}
 	
 	@Override
-	public void run () {
+	public void run() {
 		label.setText(text);
 		label.getParent().layout(true);
 	}

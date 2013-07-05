@@ -55,7 +55,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the path to the image file.
 	 * @return the {@link ImageDescriptor} stored in the file at the specified path.
 	 */
-	public static ImageDescriptor getImageDescriptor (Class<?> clazz, String path) {
+	public static ImageDescriptor getImageDescriptor(Class<?> clazz, String path) {
 		return ImageDescriptor.createFromFile(clazz, path);
 	}
 	
@@ -66,7 +66,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the path to the image file.
 	 * @return the {@link ImageDescriptor} stored in the file at the specified path.
 	 */
-	public static ImageDescriptor getImageDescriptor (String path) {
+	public static ImageDescriptor getImageDescriptor(String path) {
 		try {
 			return ImageDescriptor.createFromURL(new File(path).toURI().toURL());
 		} catch (MalformedURLException e) {
@@ -81,7 +81,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the {@link ImageDescriptor} for the {@link Image}.
 	 * @return the {@link Image} based on the specified {@link ImageDescriptor}.
 	 */
-	public static Image getImage (ImageDescriptor descriptor) {
+	public static Image getImage(ImageDescriptor descriptor) {
 		if (descriptor == null) {
 			return null;
 		}
@@ -108,7 +108,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the {@link Image} to decorate the base image.
 	 * @return {@link Image} The resulting decorated image.
 	 */
-	public static Image decorateImage (Image baseImage, Image decorator) {
+	public static Image decorateImage(Image baseImage, Image decorator) {
 		return decorateImage(baseImage, decorator, BOTTOM_RIGHT);
 	}
 	
@@ -123,7 +123,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the corner to place decorator image.
 	 * @return the resulting decorated {@link Image}.
 	 */
-	public static Image decorateImage (final Image baseImage, final Image decorator, final int corner) {
+	public static Image decorateImage(final Image baseImage, final Image decorator, final int corner) {
 		if (corner <= 0 || corner >= LAST_CORNER_KEY) {
 			throw new IllegalArgumentException("Wrong decorate corner");
 		}
@@ -146,7 +146,7 @@ public class ResourceManager extends SWTResourceManager {
 			CompositeImageDescriptor compositImageDesc = new CompositeImageDescriptor() {
 				
 				@Override
-				protected void drawCompositeImage (int width, int height) {
+				protected void drawCompositeImage(int width, int height) {
 					drawImage(baseImage.getImageData(), 0, 0);
 					if (corner == TOP_LEFT) {
 						drawImage(decorator.getImageData(), 0, 0);
@@ -160,7 +160,7 @@ public class ResourceManager extends SWTResourceManager {
 				}
 				
 				@Override
-				protected Point getSize () {
+				protected Point getSize() {
 					return baseImageSize;
 				}
 			};
@@ -174,7 +174,7 @@ public class ResourceManager extends SWTResourceManager {
 	/**
 	 * Dispose all of the cached images.
 	 */
-	public static void disposeImages () {
+	public static void disposeImages() {
 		SWTResourceManager.disposeImages();
 		// dispose ImageDescriptor images
 		{
@@ -220,7 +220,7 @@ public class ResourceManager extends SWTResourceManager {
 	 */
 	public interface PluginResourceProvider {
 		
-		URL getEntry (String symbolicName, String path);
+		URL getEntry(String symbolicName, String path);
 	}
 	
 	/**
@@ -240,7 +240,7 @@ public class ResourceManager extends SWTResourceManager {
 	 * @deprecated Use {@link #getPluginImage(String, String)} instead.
 	 */
 	@Deprecated
-	public static Image getPluginImage (Object plugin, String name) {
+	public static Image getPluginImage(Object plugin, String name) {
 		try {
 			URL url = getPluginImageURL(plugin, name);
 			if (url != null) {
@@ -261,7 +261,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the path of the resource entry.
 	 * @return the {@link Image} stored in the file at the specified path.
 	 */
-	public static Image getPluginImage (String symbolicName, String path) {
+	public static Image getPluginImage(String symbolicName, String path) {
 		try {
 			URL url = getPluginFileURL(symbolicName, path);
 			if (url != null) {
@@ -276,7 +276,7 @@ public class ResourceManager extends SWTResourceManager {
 	/**
 	 * Returns an {@link Image} based on given {@link URL}.
 	 */
-	private static Image getPluginImageFromUrl (URL url) {
+	private static Image getPluginImageFromUrl(URL url) {
 		try {
 			try {
 				String key = url.toExternalForm();
@@ -312,7 +312,7 @@ public class ResourceManager extends SWTResourceManager {
 	 * @deprecated Use {@link #getPluginImageDescriptor(String, String)} instead.
 	 */
 	@Deprecated
-	public static ImageDescriptor getPluginImageDescriptor (Object plugin, String name) {
+	public static ImageDescriptor getPluginImageDescriptor(Object plugin, String name) {
 		try {
 			try {
 				URL url = getPluginImageURL(plugin, name);
@@ -335,7 +335,7 @@ public class ResourceManager extends SWTResourceManager {
 	 *            the path of the resource entry.
 	 * @return the {@link ImageDescriptor} based on a {@link Bundle} and resource entry path.
 	 */
-	public static ImageDescriptor getPluginImageDescriptor (String symbolicName, String path) {
+	public static ImageDescriptor getPluginImageDescriptor(String symbolicName, String path) {
 		try {
 			URL url = getPluginFileURL(symbolicName, path);
 			if (url != null) {
@@ -350,7 +350,7 @@ public class ResourceManager extends SWTResourceManager {
 	/**
 	 * Returns an {@link URL} based on a {@link Bundle} and resource entry path.
 	 */
-	public static URL getPluginFileURL (String symbolicName, String path) {
+	public static URL getPluginFileURL(String symbolicName, String path) {
 		// try runtime plugins
 		{
 			Bundle bundle = Platform.getBundle(symbolicName);
@@ -376,7 +376,7 @@ public class ResourceManager extends SWTResourceManager {
 	 * @return the {@link URL} representing the file at the specified path.
 	 * @throws Exception
 	 */
-	private static URL getPluginImageURL (Object plugin, String name) throws Exception {
+	private static URL getPluginImageURL(Object plugin, String name) throws Exception {
 		// try to work with 'plugin' as with OSGI BundleContext
 		try {
 			Class<?> BundleClass = Class.forName("org.osgi.framework.Bundle"); //$NON-NLS-1$
@@ -423,7 +423,7 @@ public class ResourceManager extends SWTResourceManager {
 	 * Dispose of cached objects and their underlying OS resources. This should only be called when the cached objects
 	 * are no longer needed (e.g. on application shutdown).
 	 */
-	public static void dispose () {
+	public static void dispose() {
 		disposeColors();
 		disposeFonts();
 		disposeImages();

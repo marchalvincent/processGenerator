@@ -14,7 +14,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 public class BpmnCrossoverOperation implements EvolutionaryOperator<BpmnProcess> {
 	
 	@Override
-	public List<BpmnProcess> apply (List<BpmnProcess> selectedCandidates, Random rng) {
+	public List<BpmnProcess> apply(List<BpmnProcess> selectedCandidates, Random rng) {
 		// TODO Auto-generated method stub
 		return selectedCandidates;
 	}

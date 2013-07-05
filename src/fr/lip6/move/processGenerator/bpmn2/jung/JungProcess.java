@@ -70,16 +70,16 @@ public class JungProcess {
 		}
 	}
 	
-	public Graph<JungVertex, JungEdge> getGraph () {
+	public Graph<JungVertex, JungEdge> getGraph() {
 		return graph;
 	}
 	
-	public JungVertex getVertex (String name) {
+	public JungVertex getVertex(String name) {
 		return allVertices.get(name);
 	}
 	
 	@Override
-	public String toString () {
+	public String toString() {
 		return "JungManager [graph=" + graph + "]";
 	}
 }

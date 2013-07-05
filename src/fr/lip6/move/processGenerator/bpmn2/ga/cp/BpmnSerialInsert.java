@@ -6,9 +6,8 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
@@ -17,10 +16,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class BpmnSerialInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnSerialInsert extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -34,7 +33,7 @@ public class BpmnSerialInsert extends AbstractBpmnChangePattern implements IBpmn
 		// on en prend un au hasard
 		SequenceFlow ancienArc = null;
 		try {
-			ancienArc = ChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
+			ancienArc = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
 			// ici on n'a trouvé aucun arc (ce n'est pas normal, il doit toujours en avoir)
 			System.err.println(getClass().getSimpleName() + e.getMessage());

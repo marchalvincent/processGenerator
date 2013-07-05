@@ -21,7 +21,7 @@ public class MyViewerFilter extends ViewerFilter {
 	}
 	
 	@Override
-	public boolean select (Viewer viewer, Object parentElement, Object element) {
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (element instanceof IFile)
 			return ((IFile) element).getFileExtension().equals(extension);
 		else

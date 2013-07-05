@@ -7,9 +7,8 @@ import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.AbstractBpmnChangePattern;
-import fr.lip6.move.processGenerator.bpmn2.ga.IBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
@@ -19,10 +18,10 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @author Vincent
  * 
  */
-public class BpmnLoopInsert extends AbstractBpmnChangePattern implements IBpmnChangePattern {
+public class BpmnLoopInsert extends AbstractChangePattern<BpmnProcess> {
 	
 	@Override
-	public BpmnProcess apply (BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
+	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
 		BpmnProcess process = null;
 		try {
@@ -36,7 +35,7 @@ public class BpmnLoopInsert extends AbstractBpmnChangePattern implements IBpmnCh
 		// on récupère une activité au hasard
 		Activity activity = null;
 		try {
-			activity = ChangePatternHelper.instance.getRandomActivity(process, rng);
+			activity = BpmnChangePatternHelper.instance.getRandomActivity(process, rng);
 		} catch (GeneticException e) {
 			// si on n'a pas d'activity
 			return process;

@@ -16,5 +16,5 @@ public interface IEnumWorkflowPattern {
 	 * @throws Exception
 	 *             lorsque l'instanciation à échouée.
 	 */
-	public IStructuralConstraint newInstance () throws Exception;
+	public IStructuralConstraint newInstance() throws Exception;
 }

@@ -53,7 +53,7 @@ public class StructuralConstraintChecker {
 	 * @throws Exception
 	 *             dans le cas ou
 	 */
-	public boolean check (Object process) throws Exception {
+	public boolean check(Object process) throws Exception {
 		if (number < 0)
 			throw new Exception("The number of the pattern must be higher or equal than 0.");
 		
@@ -78,15 +78,19 @@ public class StructuralConstraintChecker {
 		}
 	}
 	
-	public int getWeight () {
+	public IStructuralConstraint getConstraint() {
+		return constraint;
+	}
+	
+	public int getWeight() {
 		return weight;
 	}
 	
-	public boolean hasRepresentation () {
+	public boolean hasRepresentation() {
 		return this.constraint.getRepresentation() != null;
 	}
 	
-	public IWorkflowRepresentation getRepresentation () {
+	public IWorkflowRepresentation getRepresentation() {
 		return constraint.getRepresentation();
 	}
 }

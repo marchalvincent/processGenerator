@@ -22,7 +22,7 @@ public class SelectPathDirectory extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected (SelectionEvent e) {
+	public void widgetSelected(SelectionEvent e) {
 		
 		DirectoryDialog directoryD = new DirectoryDialog(new Shell());
 		String chemin = directoryD.open();

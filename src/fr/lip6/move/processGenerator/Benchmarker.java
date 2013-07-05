@@ -20,16 +20,19 @@ public class Benchmarker {
 		numbers = new TreeMap<>();
 	}
 	
-	public void start () {
+	public void start() {
 		startTime = System.nanoTime();
 	}
 	
-	public void tic (String bestS) {
+	public void tic(String bestS) {
 		long estimatedTimeMillis = (System.nanoTime() - startTime) / 1000000;
 		numbers.put(estimatedTimeMillis, bestS);
 	}
 	
-	public void stop (String string) {
+	public void stop(String string) {
+		
+		if (!Utils.BENCH)
+			return;
 		
 		Path path = Paths.get(string);
 		// append to an existing file, create file if it doesn't initially exist

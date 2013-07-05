@@ -19,15 +19,16 @@ public class BpmnStructuralConstraintFactory extends AbstractStructuralConstrain
 	private BpmnStructuralConstraintFactory() {}
 	
 	@Override
-	public IStructuralConstraint newManualOclConstraint (String query) {
+	public IStructuralConstraint newManualOclConstraint(String query) {
 		return new BpmnManualOclConstraint(query);
 	}
 	
 	@Override
-	public IStructuralConstraint newElementConstraint (IEnumElement eElement) throws BpmnException {
+	public IStructuralConstraint newElementConstraint(IEnumElement eElement) throws BpmnException {
 		if (eElement instanceof EBpmnElement) {
 			return new BpmnElementConstraint((EBpmnElement) eElement);
 		}
-		throw new BpmnException("The parameter of the newElementConstraint method is not a EBpmnElement.");
+		throw new BpmnException("The parameter of the newElementConstraint method is not a " + EBpmnElement.class.getSimpleName()
+				+ ".");
 	}
 }

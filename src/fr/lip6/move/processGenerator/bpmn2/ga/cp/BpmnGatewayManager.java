@@ -25,11 +25,10 @@ import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
  * @author Vincent
  * 
  */
-public class GatewayManager {
+public class BpmnGatewayManager {
 	
-	public static GatewayManager instance = new GatewayManager();
-	
-	private GatewayManager() {}
+	public static BpmnGatewayManager instance = new BpmnGatewayManager();
+	private BpmnGatewayManager() {}
 	
 	/**
 	 * Renvoie la {@link Gateway} jumelle correspondant à celle passée en paramètre.
@@ -40,7 +39,7 @@ public class GatewayManager {
 	 *            la {@link Gateway} dont on cherche la jumelle.
 	 * @return {@link Gateway} la twin si trouvée, null sinon.
 	 */
-	public Gateway findTwinGateway (BpmnProcess process, Gateway gateway) {
+	public Gateway findTwinGateway(BpmnProcess process, Gateway gateway) {
 		
 		// on tente de récupérer la twin par le process
 		Gateway twin = process.getTwin(gateway.getId());
@@ -79,7 +78,7 @@ public class GatewayManager {
 	 * @param gateway
 	 * @return
 	 */
-	private List<Gateway> getPotentialsCandidats (BpmnProcess process, Gateway gateway) {
+	private List<Gateway> getPotentialsCandidats(BpmnProcess process, Gateway gateway) {
 		
 		List<Gateway> candidats = new ArrayList<>();
 		
@@ -135,7 +134,7 @@ public class GatewayManager {
 	 *            une {@link List} de {@link Gateway} potentiellement twin.
 	 * @return {@link Gateway} la twin si elle est trouvée, null sinon.
 	 */
-	private Gateway searchBestCandidat (BpmnProcess process, Gateway gateway, List<Gateway> potentialsCandidats) {
+	private Gateway searchBestCandidat(BpmnProcess process, Gateway gateway, List<Gateway> potentialsCandidats) {
 		
 		boolean isDiverging = gateway.getGatewayDirection().equals(GatewayDirection.DIVERGING);
 		

@@ -17,7 +17,9 @@ import org.uncommons.watchmaker.framework.termination.UserAbort;
 import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.IEnumElement;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.ga.BpmnGeneticAlgorithmExecutor;
 import fr.lip6.move.processGenerator.constraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
@@ -25,10 +27,10 @@ import fr.lip6.move.processGenerator.ga.DecisionMaker;
 import fr.lip6.move.processGenerator.ga.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmData;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmExecutor;
-import fr.lip6.move.processGenerator.ga.GeneticException;
 import fr.lip6.move.processGenerator.ga.IChangePattern;
 import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.ga.UmlGeneticAlgorithmExecutor;
 
 /**
  * Cet adapteur est déclenché lorsque l'utilisateur click sur le bouton "run".
@@ -51,7 +53,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected (SelectionEvent e) {
+	public void widgetSelected(SelectionEvent e) {
 		
 		view.print("Initialization...");
 		
@@ -125,12 +127,12 @@ public class SelectionStartExecution extends SelectionAdapter {
 		
 		ConfigurationManager.instance.setElitism(elitism + "");
 		ConfigurationManager.instance.setSelectionStrategy(view.getComboStrategySelection().getSelectionIndex() + "");
-		
+
 		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
 		ConfigurationManager.instance.setCheckMutation(isCheckMutation);
 		
-		List<IChangePattern> changePatterns = null;
+		List<IChangePattern<?>> changePatterns = null;
 		if (isCheckMutation) {
 			try {
 				changePatterns = this.getChangePatterns();
@@ -194,36 +196,53 @@ public class SelectionStartExecution extends SelectionAdapter {
 		view.getButtonStop().addSelectionListener(new SelectionAdapter() {
 			
 			@Override
-			public void widgetSelected (SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				userAbort.abort();
 			}
 		});
 		conditions.add(userAbort);
 		
 		// Enfin on peut construire l'exécuteur de l'algo génétique
-		GeneticAlgorithmExecutor executor = new GeneticAlgorithmExecutor();
-		executor.setDecisionMaker(decisionMaker);
-		executor.setGeneticOperations(isCheckMutation, changePatterns, isCheckCrossover);
-		executor.setGeneticSelection(elitism, selectionStrategy);
-		try {
-			if (decisionMaker.isBpmn() && initialBpmnProcess != null)
-				executor.setInitialProcess(initialBpmnProcess);
-			else if (initialUmlProcess != null)
-				executor.setInitialProcess(initialUmlProcess);
-		} catch (GeneticException ex) {
-			view.printError(ex.getMessage());
-			System.err.println(ex.getMessage());
-			return;
+		if (decisionMaker.isBpmn()) {
+			
+			GeneticAlgorithmExecutor<BpmnProcess> executor = new BpmnGeneticAlgorithmExecutor();
+			
+			// on est obligé de caster les changePatterns pour qu'ils correspondent à l'éxecutor
+			List<IChangePattern<BpmnProcess>> newChangePatterns =  Utils.instance.castChangePattern(changePatterns, BpmnProcess.class);
+			
+			executor.setGeneticOperations(isCheckMutation, newChangePatterns, isCheckCrossover);
+			executor.setGeneticSelection(elitism, selectionStrategy);
+			executor.setInitialProcess(initialBpmnProcess);
+			
+			executor.setLabel(view);
+			executor.setNbPopulation(nbPopulation);
+			executor.setRunConfiguration(location, nbNode, margin);
+			executor.setStructuralsConstraintsChecker(contraintesElements, contraintesWorkflows, manualOclChecker);
+			executor.setTerminationCondition(conditions);
+			executor.setWeightHelper(weightHelper);
+			
+			executor.start();
+		} else if (decisionMaker.isUml()) {
+
+			GeneticAlgorithmExecutor<UmlProcess> executor = new UmlGeneticAlgorithmExecutor();
+			
+			// on est obligé de caster les changePatterns pour qu'ils correspondent à l'éxecutor
+			List<IChangePattern<UmlProcess>> newChangePatterns =  Utils.instance.castChangePattern(changePatterns, UmlProcess.class);
+			
+			executor.setGeneticOperations(isCheckMutation, newChangePatterns, isCheckCrossover);
+			executor.setGeneticSelection(elitism, selectionStrategy);
+			executor.setInitialProcess(initialUmlProcess);
+			
+			// désolé pour la duplication de code...
+			executor.setLabel(view);
+			executor.setNbPopulation(nbPopulation);
+			executor.setRunConfiguration(location, nbNode, margin);
+			executor.setStructuralsConstraintsChecker(contraintesElements, contraintesWorkflows, manualOclChecker);
+			executor.setTerminationCondition(conditions);
+			executor.setWeightHelper(weightHelper);
+			
+			executor.start();
 		}
-		
-		executor.setLabel(view);
-		executor.setNbPopulation(nbPopulation);
-		executor.setRunConfiguration(location, nbNode, margin);
-		executor.setStructuralsConstraintsChecker(contraintesElements, contraintesWorkflows, manualOclChecker);
-		executor.setTerminationCondition(conditions);
-		executor.setWeightHelper(weightHelper);
-		
-		executor.start();
 		
 		// on enregistre les conf
 		try {
@@ -240,18 +259,18 @@ public class SelectionStartExecution extends SelectionAdapter {
 	 * @return une {@link List} de {@link IChangePattern}.
 	 * @throws Exception
 	 */
-	private List<IChangePattern> getChangePatterns () throws Exception {
+	private List<IChangePattern<?>> getChangePatterns() throws Exception {
 		
-		List<IChangePattern> changePatterns = new ArrayList<IChangePattern>();
+		List<IChangePattern<?>> changePatterns = new ArrayList<>();
 		// le stringBuilder va servir à enregistrer les préférences utilisateurs
 		StringBuilder sb = new StringBuilder();
 		
 		// pour chaque ligne du tableau
 		for (TableItem item : view.getTableMutationParameters().getItems()) {
 			// on vérifie que l'item est bien une enum de change pattern
-			if (item.getData("0") instanceof IEnumChangePattern) {
+			if (item.getData("0") instanceof IEnumChangePattern<?>) {
 				// si oui, on instancie dynamiquement la classe
-				IChangePattern cPattern = ((IEnumChangePattern) item.getData("0")).newInstance(item.getText(1));
+				IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData("0")).newInstance(item.getText(1));
 				changePatterns.add(cPattern);
 				
 				sb.append("___");
@@ -277,7 +296,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 	 * @return
 	 * @throws Exception
 	 */
-	private List<StructuralConstraintChecker> buildStructuralConstraints (Table table, ConstraintType constraintType,
+	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType,
 			AbstractStructuralConstraintFactory factory) throws Exception {
 		
 		// ce stringBuilder va permettre d'enregistrer les préférences utilisateurs

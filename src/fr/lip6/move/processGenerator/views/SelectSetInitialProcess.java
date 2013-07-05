@@ -29,7 +29,7 @@ public class SelectSetInitialProcess extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected (SelectionEvent e) {
+	public void widgetSelected(SelectionEvent e) {
 		
 		// on vérifie quel type de fichier l'utilisateur a sélectionné
 		String typeFile = view.getComboTypeFile().getText();

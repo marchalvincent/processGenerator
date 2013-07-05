@@ -1,41 +1,34 @@
 package fr.lip6.move.processGenerator.bpmn2.ga;
 
-import java.util.Random;
-import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.ga.CandidatFactory;
 
 /**
- * Représente la factory qui va créer la population initiale de l'algorithme génétique.
+ * Représente la factory qui va créer la population initiale de l'algorithme génétique pour le type de fichier BPMN2.
  * 
  * @author Vincent
  * 
  */
-public class BpmnCandidateFactory extends AbstractCandidateFactory<BpmnProcess> {
-	
-	private BpmnProcess process;
-	
+public class BpmnCandidateFactory extends CandidatFactory<BpmnProcess> {
+
 	/**
-	 * Construit la factory sans process prédéfinit. Le candidat initial sera un simple process StartEvent -> EndEvent.
+	 * Le process initial sera ainsi : InitialNode -> FinalNode
 	 */
 	public BpmnCandidateFactory() {
 		this(null);
 	}
 	
 	/**
-	 * Construit la factory avec un process prédéfinit.
-	 * 
+	 * Le process initial sera celui passé en paramètre.
 	 * @param process
 	 */
 	public BpmnCandidateFactory(BpmnProcess process) {
-		super();
-		this.process = process;
+		super(process);
 	}
 	
 	@Override
-	public BpmnProcess generateRandomCandidate (Random rng) {
-		if (process != null)
-			return process;
+	protected BpmnProcess defaultProcess() {
 		return BpmnBuilder.instance.initialFinal();
 	}
 }

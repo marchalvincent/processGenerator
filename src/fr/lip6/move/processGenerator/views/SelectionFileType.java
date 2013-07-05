@@ -26,7 +26,7 @@ public class SelectionFileType extends SelectionAdapter {
 	}
 	
 	@Override
-	public void widgetSelected (SelectionEvent e) {
+	public void widgetSelected(SelectionEvent e) {
 		Combo combo = (Combo) e.getSource();
 		String s = combo.getText();
 		if (s.toLowerCase().contains("bpmn")) {

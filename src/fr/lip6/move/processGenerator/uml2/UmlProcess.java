@@ -35,6 +35,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé une copie du process UML passé en paramètre.
+	 * 
 	 * @param activityToCopy
 	 */
 	public UmlProcess(UmlProcess processToCopy) {
@@ -44,6 +45,7 @@ public class UmlProcess {
 	
 	/**
 	 * Constructeur avec un process déjà définit.
+	 * 
 	 * @param activity
 	 */
 	public UmlProcess(Activity activity) {
@@ -53,6 +55,7 @@ public class UmlProcess {
 	
 	/**
 	 * Lie au process et nomme le noeud passé en paramètre.
+	 * 
 	 * @param node
 	 */
 	private void linkedAndNameNode(ActivityNode node) {
@@ -63,6 +66,7 @@ public class UmlProcess {
 	
 	/**
 	 * Lie au process et nomme l'arc passé en paramètre.
+	 * 
 	 * @param edge
 	 */
 	private void linkedAndNameEdge(ActivityEdge edge) {
@@ -73,6 +77,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process une {@link Action} choisie au hasard.
+	 * 
 	 * @return
 	 */
 	public Action buildRandomAction() {
@@ -83,14 +88,16 @@ public class UmlProcess {
 	
 	/**
 	 * Renvoie une {@link Action} tirée au hasard.
+	 * 
 	 * @return
 	 */
-	private Action generateAction () {
+	public Action generateAction() {
 		return UMLFactory.eINSTANCE.createOpaqueAction();
 	}
 	
 	/**
 	 * Créé et lie au process un {@link InitialNode}.
+	 * 
 	 * @return
 	 */
 	public InitialNode buildInitialNode() {
@@ -101,6 +108,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process une {@link ActivityFinalNode}.
+	 * 
 	 * @return
 	 */
 	public ActivityFinalNode buildActivityFinalNode() {
@@ -111,6 +119,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process une {@link DecisionNode}.
+	 * 
 	 * @return
 	 */
 	public DecisionNode buildDecisionNode() {
@@ -121,6 +130,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process un {@link MergeNode}.
+	 * 
 	 * @return
 	 */
 	public MergeNode buildMergeNode() {
@@ -131,6 +141,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process un {@link ForkNode}.
+	 * 
 	 * @return
 	 */
 	public ForkNode buildForkNode() {
@@ -141,6 +152,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process un {@link JoinNode}.
+	 * 
 	 * @return
 	 */
 	public JoinNode buildJoinNode() {
@@ -151,6 +163,7 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process un {@link ControlFlow}.
+	 * 
 	 * @return
 	 */
 	public ControlFlow buildControlFlow() {
@@ -161,8 +174,11 @@ public class UmlProcess {
 	
 	/**
 	 * Créé et lie au process un {@link ControlFlow}. De plus, spécifie sa source et sa destination.
-	 * @param source la source de l'arc.
-	 * @param target la destination de l'arc.
+	 * 
+	 * @param source
+	 *            la source de l'arc.
+	 * @param target
+	 *            la destination de l'arc.
 	 * @return
 	 */
 	public ControlFlow buildControlFlow(ActivityNode source, ActivityNode target) {
@@ -174,9 +190,15 @@ public class UmlProcess {
 	
 	/**
 	 * Getter.
+	 * 
 	 * @return {@link Activity}.
 	 */
 	public Activity getActivity() {
 		return activity;
+	}
+
+	public void save(String string) {
+		// TODO Auto-generated method stub
+		
 	}
 }

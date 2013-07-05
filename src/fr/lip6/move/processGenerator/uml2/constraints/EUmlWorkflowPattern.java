@@ -20,7 +20,7 @@ public enum EUmlWorkflowPattern implements IEnumWorkflowPattern {
 	}
 	
 	@Override
-	public IStructuralConstraint newInstance () throws Exception {
+	public IStructuralConstraint newInstance() throws Exception {
 		return this.clazz.newInstance();
 	}
 }

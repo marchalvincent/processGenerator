@@ -75,7 +75,7 @@ public class ProcessGeneratorView extends ViewPart {
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
-	public void createPartControl (Composite parent) {
+	public void createPartControl(Composite parent) {
 		
 		GridData gd = null;
 		
@@ -432,7 +432,7 @@ public class ProcessGeneratorView extends ViewPart {
 		checkMutation.addMouseListener(new MouseAdapter() {
 			
 			@Override
-			public void mouseDown (MouseEvent e) {
+			public void mouseDown(MouseEvent e) {
 				groupMutationParameters.setVisible(!((Button) e.getSource()).getSelection());
 			}
 		});
@@ -600,7 +600,7 @@ public class ProcessGeneratorView extends ViewPart {
 	/**
 	 * Toutes les opérations codées à la main
 	 */
-	private void manualCode () {
+	private void manualCode() {
 		
 		// les préférences utilisateur pour la partie run
 		setPathDirectory(ConfigurationManager.instance.getLocation());
@@ -670,7 +670,7 @@ public class ProcessGeneratorView extends ViewPart {
 	 * @param elements
 	 *            un tableau d'{@link Object} représentant les éléments constituant le tableau.
 	 */
-	private void addElementToTable (Table table, Object[] elements) {
+	private void addElementToTable(Table table, Object[] elements) {
 		
 		// les préférences utilisateurs
 		String lecturePref;
@@ -759,7 +759,7 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 	}
 	
-	private void setChangePatternToTable (IEnumChangePattern[] eBpmnChangePatterns) {
+	private void setChangePatternToTable(IEnumChangePattern[] eBpmnChangePatterns) {
 		
 		// on récupère les préférences utilisateurs
 		String lecturePreferences = ConfigurationManager.instance.getChangePatternAttributes();
@@ -801,170 +801,170 @@ public class ProcessGeneratorView extends ViewPart {
 		}
 	}
 	
-	public Spinner getSpinnerNbNode () {
+	public Spinner getSpinnerNbNode() {
 		return spinner_nbNode;
 	}
 	
-	public Spinner getSpinnerMargin () {
+	public Spinner getSpinnerMargin() {
 		return spinner_marginNbNode;
 	}
 	
-	public Combo getComboTypeFile () {
+	public Combo getComboTypeFile() {
 		return comboTypeFile;
 	}
 	
-	public Table getTableElements () {
+	public Table getTableElements() {
 		return tableElements;
 	}
 	
-	public Table getTableWorkflow () {
+	public Table getTableWorkflow() {
 		return tableWorkflow;
 	}
 	
-	public Label getLabelLocation () {
+	public Label getLabelLocation() {
 		return lblpath;
 	}
 	
-	public Text getTextOclConstraint () {
+	public Text getTextOclConstraint() {
 		return text_oclConstraint;
 	}
 	
-	public Spinner getSpinnerNbPopulation () {
+	public Spinner getSpinnerNbPopulation() {
 		return spinnerNbPopulation;
 	}
 	
-	public Label getLabelSetInitialProcess () {
+	public Label getLabelSetInitialProcess() {
 		return lblFiletype;
 	}
 	
-	public BpmnProcess getInitialBpmnProcess () {
+	public BpmnProcess getInitialBpmnProcess() {
 		return bpmnInitialProcess;
 	}
 	
-	public UmlProcess getInitialUmlProcess () {
+	public UmlProcess getInitialUmlProcess() {
 		return umlInitialProcess;
 	}
 	
-	public Spinner getSpinnerElitism () {
+	public Spinner getSpinnerElitism() {
 		return spinnerElitism;
 	}
 	
-	public Combo getComboStrategySelection () {
+	public Combo getComboStrategySelection() {
 		return comboStrategySelection;
 	}
 	
-	public Button getButtonCheckMutation () {
+	public Button getButtonCheckMutation() {
 		return checkMutation;
 	}
 	
-	public Button getButtonCheckCrossover () {
+	public Button getButtonCheckCrossover() {
 		return checkCrossover;
 	}
 	
-	public Table getTableMutationParameters () {
+	public Table getTableMutationParameters() {
 		return tableMutationParameters;
 	}
 	
-	public Button getButtonUntilSolutionFound () {
+	public Button getButtonUntilSolutionFound() {
 		return btnOneSolutionFound;
 	}
 	
-	public Button getButtonDuringSeconde () {
+	public Button getButtonDuringSeconde() {
 		return btnDuringSec;
 	}
 	
-	public Spinner getSpinnerUntilSeconde () {
+	public Spinner getSpinnerUntilSeconde() {
 		return spinnerUntilSecondes;
 	}
 	
-	public Button getButtonUntilGeneration () {
+	public Button getButtonUntilGeneration() {
 		return btnGeneration;
 	}
 	
-	public Spinner getSpinnerUntilGeneration () {
+	public Spinner getSpinnerUntilGeneration() {
 		return spinnerUntilGeneration;
 	}
 	
-	public Button getButtonUntilStagnation () {
+	public Button getButtonUntilStagnation() {
 		return btnUntilStagnation;
 	}
 	
-	public Spinner getSpinnerUntilStagnation () {
+	public Spinner getSpinnerUntilStagnation() {
 		return spinnerUntilStagnation;
 	}
 	
-	public Label getLabelResult () {
+	public Label getLabelResult() {
 		return lblResult;
 	}
 	
-	public Label getLabelError () {
+	public Label getLabelError() {
 		return lblErrors;
 	}
 	
-	public Button getButtonStop () {
+	public Button getButtonStop() {
 		return btnStop;
 	}
 	
-	public Spinner getSpinnerSizeWeight () {
+	public Spinner getSpinnerSizeWeight() {
 		return spinnerSizeWeight;
 	}
 	
-	public Spinner getSpinnerElementWeight () {
+	public Spinner getSpinnerElementWeight() {
 		return spinnerElementWeight;
 	}
 	
-	public Spinner getSpinnerWorkflowWeight () {
+	public Spinner getSpinnerWorkflowWeight() {
 		return spinnerWorkflowWeight;
 	}
 	
-	public Spinner getSpinnerManualOclWeight () {
+	public Spinner getSpinnerManualOclWeight() {
 		return spinnerManualOclWeight;
 	}
 	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus () {
+	public void setFocus() {
 		form.setFocus();
 	}
 	
-	public void setBpmnInitialProcess (BpmnProcess process) {
+	public void setBpmnInitialProcess(BpmnProcess process) {
 		this.bpmnInitialProcess = process;
 	}
 	
-	public void setUmlInitialProcess (UmlProcess process) {
+	public void setUmlInitialProcess(UmlProcess process) {
 		this.umlInitialProcess = process;
 	}
 	
-	public void setPathDirectory (String path) {
+	public void setPathDirectory(String path) {
 		this.lblpath.setText(path);
 		this.lblpath.getParent().layout(true);
 	}
 	
-	public void print (String text) {
+	public void print(String text) {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblResult, text));
 	}
 	
-	public void printError (String text) {
+	public void printError(String text) {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblErrors, text));
 	}
 	
-	public void majTableOfElements (Object[] elements) {
+	public void majTableOfElements(Object[] elements) {
 		this.newTableElement();
 		this.addElementToTable(tableElements, elements);
 	}
 	
-	public void majTableOfWorkflows (IEnumWorkflowPattern[] elements) {
+	public void majTableOfWorkflows(IEnumWorkflowPattern[] elements) {
 		this.newTableWorkflow();
 		this.addElementToTable(tableWorkflow, elements);
 	}
 	
-	public void majTableOfChangePatterns (IEnumChangePattern[] eBpmnChangePatterns) {
+	public void majTableOfChangePatterns(IEnumChangePattern[] eBpmnChangePatterns) {
 		this.newTableMutation();
 		this.setChangePatternToTable(eBpmnChangePatterns);
 	}
 	
-	private void newTableElement () {
+	private void newTableElement() {
 		tableElements.dispose();
 		tableElements = new Table(grpElementsParameters, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
 		tableElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -991,7 +991,7 @@ public class ProcessGeneratorView extends ViewPart {
 		grpElementsParameters.layout(true);
 	}
 	
-	private void newTableWorkflow () {
+	private void newTableWorkflow() {
 		tableWorkflow.dispose();
 		tableWorkflow = new Table(compositeTarget2, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
 		tableWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -1019,7 +1019,7 @@ public class ProcessGeneratorView extends ViewPart {
 		compositeTarget2.layout(true);
 	}
 	
-	private void newTableMutation () {
+	private void newTableMutation() {
 		tableMutationParameters.dispose();
 		tableMutationParameters = new Table(groupMutationParameters, SWT.BORDER | SWT.FULL_SELECTION);
 		tableMutationParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

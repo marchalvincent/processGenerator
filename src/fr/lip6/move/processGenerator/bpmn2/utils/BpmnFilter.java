@@ -26,7 +26,7 @@ public class BpmnFilter extends Filter {
 	 *            la {@link GatewayDirection} que doit avoir les éléments à garder.
 	 * @return {@link List}.
 	 */
-	public static <T> List<T> byType (Class<T> clazz, List<?> elements, GatewayDirection direction) {
+	public static <T> List<T> byType(Class<T> clazz, List<?> elements, GatewayDirection direction) {
 		List<T> results = new ArrayList<T>();
 		for (Object o : elements)
 			if (clazz.isInstance(o) && o instanceof Gateway && ((Gateway) o).getGatewayDirection().equals(direction))
@@ -43,7 +43,7 @@ public class BpmnFilter extends Filter {
 	 *            les éléments à filter.
 	 * @return {@link List}.
 	 */
-	public static List<Gateway> gatewayByType (List<Class<? extends Gateway>> classes, List<?> elements) {
+	public static List<Gateway> gatewayByType(List<Class<? extends Gateway>> classes, List<?> elements) {
 		List<Gateway> results = new ArrayList<Gateway>();
 		for (Object o : elements) {
 			for (Class<? extends Gateway> clazz : classes) {
@@ -69,8 +69,7 @@ public class BpmnFilter extends Filter {
 	 *            la {@link GatewayDirection} que doivent respecter les candidats.
 	 * @return {@link List}.
 	 */
-	public static List<Gateway> gatewayByType (List<Class<? extends Gateway>> classes, List<?> elements,
-			GatewayDirection direction) {
+	public static List<Gateway> gatewayByType(List<Class<? extends Gateway>> classes, List<?> elements, GatewayDirection direction) {
 		List<Gateway> results = new ArrayList<Gateway>();
 		for (Object o : elements) {
 			for (Class<? extends Gateway> clazz : classes) {

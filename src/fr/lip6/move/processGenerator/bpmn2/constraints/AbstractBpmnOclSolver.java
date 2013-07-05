@@ -17,13 +17,13 @@ public abstract class AbstractBpmnOclSolver extends AbstractOclSolver {
 	}
 	
 	@Override
-	public int matches (Object object) throws BpmnException {
+	public int matches(Object object) throws BpmnException {
 		
 		// on fait juste deux vérifications avant de lancer le solveur
 		if (getOclQuery().isEmpty())
 			return 0;
 		if (!(object instanceof BpmnProcess))
-			throw new BpmnException("Matches method : The object is not a Bpmn Process.");
+			throw new BpmnException("Matches method : The object is not a " + BpmnProcess.class.getSimpleName() + ".");
 		
 		BpmnProcess process = (BpmnProcess) object;
 		return super.resolveQuery(process.getProcess().eClass(), process.getProcess());

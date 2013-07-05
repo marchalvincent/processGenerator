@@ -6,11 +6,13 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
 /**
- * Cette classe offre un niveau d'abstraction à tous les évaluateur de fitness, quelque soit le type de candidat
- * qu'il évaluent. 
+ * Cette classe offre un niveau d'abstraction à tous les évaluateur de fitness, quelque soit le type de candidat qu'il
+ * évaluent.
+ * 
  * @author Vincent
- *
- * @param <T> le paramètre dynamique de candidat que la classe évalue.
+ * 
+ * @param <T>
+ *            le paramètre dynamique de candidat que la classe évalue.
  */
 public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T> {
 	
@@ -35,13 +37,14 @@ public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T>
 	
 	/**
 	 * Renvoie la taille du process candidat à évaluer.
+	 * 
 	 * @return double.
 	 */
 	public abstract double getSizeCandidate(T candidate);
 	
 	@Override
-	public double getFitness (T candidate, List<? extends T> population) {
-
+	public double getFitness(T candidate, List<? extends T> population) {
+		
 		double sizeFitness = getSizeFitness(getSizeCandidate(candidate));
 		double constElements = getconstraintFitness(candidate, population, contraintesElements);
 		double constWorkflow = getconstraintFitness(candidate, population, contraintesWorkflows);
@@ -73,11 +76,11 @@ public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T>
 		
 		return (sizeFitness * weightHelper.getSizePercent() + constElements * weightHelper.getElementPercent() + constWorkflow
 				* weightHelper.getWorkflowPercent() + consManual * weightHelper.getManualOclPercent());
-	
+		
 	}
-
+	
 	@Override
-	public boolean isNatural () {
+	public boolean isNatural() {
 		return true;
 	}
 	
@@ -86,11 +89,12 @@ public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T>
 	 * l'utilisateur. Plus la taille correspond à l'attente, plus la valeur renvoyée se rapproche de 1. A contrario, la
 	 * valeur renvoyée s'approchera de 0.
 	 * 
-	 * @param size la taille actuelle du candidat.
+	 * @param size
+	 *            la taille actuelle du candidat.
 	 * @return double, la fitness du candidat par rapport à sa taille.
 	 */
-	public double getSizeFitness (double size) {
-
+	public double getSizeFitness(double size) {
+		
 		// on définit les marges
 		double marginMin = this.nbNodes - (this.nbNodes * this.margin / 100);
 		if (marginMin < 0)
@@ -126,11 +130,10 @@ public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T>
 	 *            {@link List} de {@link BpmnProcess}. Le reste de la population.
 	 * @param constraints
 	 *            la liste des {@link StructuralConstraintChecker} à valider sur le candidat.
-	 * @return double la valeur de fitness correspondant aux contraintes vérifiées sur le candidat. La valeur est entre 0
-	 *         et 1.
+	 * @return double la valeur de fitness correspondant aux contraintes vérifiées sur le candidat. La valeur est entre
+	 *         0 et 1.
 	 */
-	private double getconstraintFitness (T candidate, List<? extends T> population,
-			List<StructuralConstraintChecker> constraints) {
+	private double getconstraintFitness(T candidate, List<? extends T> population, List<StructuralConstraintChecker> constraints) {
 		
 		if (constraints.isEmpty())
 			return 1;

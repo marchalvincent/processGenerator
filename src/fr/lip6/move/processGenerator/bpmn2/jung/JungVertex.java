@@ -18,12 +18,12 @@ public class JungVertex {
 		this.id = node.getId();
 	}
 	
-	public String getId () {
+	public String getId() {
 		return id;
 	}
 	
 	@Override
-	public String toString () {
+	public String toString() {
 		return "JungNode[id=" + id + "]";
 	}
 }

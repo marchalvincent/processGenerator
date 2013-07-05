@@ -17,23 +17,23 @@ public class SequenceTest {
 	private BpmnProcess process;
 	
 	@Before
-	public void before () {
+	public void before() {
 		process = new BpmnProcess();
 	}
 	
 	@After
-	public void after () {
+	public void after() {
 		process = null;
 	}
 	
 	@Test(expected = BpmnException.class)
-	public void test0 () throws Exception {
+	public void test0() throws Exception {
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSequence(), EQuantity.EQUAL, -1);
 		checker.check(process);
 	}
 	
 	@Test
-	public void test1 () throws Exception {
+	public void test1() throws Exception {
 		
 		// init du process
 		process = BpmnBuilder.instance.initialFinal();
@@ -56,7 +56,7 @@ public class SequenceTest {
 	}
 	
 	@Test
-	public void test2 () throws Exception {
+	public void test2() throws Exception {
 		
 		// init du process
 		process = BpmnBuilder.instance.initialABFinal();
@@ -79,7 +79,7 @@ public class SequenceTest {
 	}
 	
 	@Test
-	public void test3 () throws Exception {
+	public void test3() throws Exception {
 		
 		BpmnProcess process = BpmnBuilder.instance.createExampleWithParallel();
 		

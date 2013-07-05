@@ -22,7 +22,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnGatewayManager;
 
 /**
  * Cette classe permet de parser un fichier ayant pour extension .bpmn et d'y récupérer un {@link BpmnProcess}.
@@ -43,7 +43,7 @@ public class BpmnParser {
 	 *            String, le chemin vers le fichier à parser.
 	 * @return {@link BpmnProcess}.
 	 */
-	public BpmnProcess getBpmnProcess (String path) {
+	public BpmnProcess getBpmnProcess(String path) {
 		
 		DocumentRoot documentRoot = null;
 		Process process = null;
@@ -85,7 +85,7 @@ public class BpmnParser {
 	 * @param bpmnProcess
 	 *            le {@link BpmnProcess} dont on doit renommer les ids.
 	 */
-	private void renameIds (BpmnProcess bpmnProcess) {
+	private void renameIds(BpmnProcess bpmnProcess) {
 		for (FlowElement element : bpmnProcess.getProcess().getFlowElements()) {
 			element.setId("perso_" + element.getId());
 			element.setName("perso_" + element.getName());
@@ -101,7 +101,7 @@ public class BpmnParser {
 	 * @param process
 	 *            le {@link BpmnProcess} récupéré par le 1er parsing.
 	 */
-	private void getSequenceFlowDetails (URI uri, BpmnProcess process) {
+	private void getSequenceFlowDetails(URI uri, BpmnProcess process) {
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
@@ -138,11 +138,11 @@ public class BpmnParser {
 	 * @param bpmnProcess
 	 *            le {@link BpmnProcess} à parcourir.
 	 */
-	private void linkGateways (BpmnProcess bpmnProcess) {
+	private void linkGateways(BpmnProcess bpmnProcess) {
 		for (FlowElement element : bpmnProcess.getProcess().getFlowElements()) {
 			if (element instanceof Gateway) {
 				Gateway gate = (Gateway) element;
-				Gateway twin = GatewayManager.instance.findTwinGateway(bpmnProcess, gate);
+				Gateway twin = BpmnGatewayManager.instance.findTwinGateway(bpmnProcess, gate);
 				if (twin != null) {
 					bpmnProcess.linkGateways(gate, twin);
 				}
@@ -157,7 +157,7 @@ public class BpmnParser {
 	 *            le {@link IFile} est un descripteur de fichier selon eclipse.
 	 * @return {@link BpmnProcess}.
 	 */
-	public BpmnProcess getBpmnProcess (IFile ifile) {
+	public BpmnProcess getBpmnProcess(IFile ifile) {
 		
 		if (ifile != null) {
 			return this.getBpmnProcess(ifile.getRawLocationURI().getPath());

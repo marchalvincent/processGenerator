@@ -10,7 +10,7 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  * Cette classe se charge dévaluer la fitness des candidats UML2.0.
  * 
  * @author Vincent
- *
+ * 
  */
 public class UmlFitnessEvaluator extends AbstractFitnessEvaluator<UmlProcess> {
 	
@@ -19,9 +19,9 @@ public class UmlFitnessEvaluator extends AbstractFitnessEvaluator<UmlProcess> {
 			FitnessWeightHelper weightHelper) {
 		super(nbNodes, margin, contraintesElements, contraintesWorkflows, manualOclChecker, weightHelper);
 	}
-
+	
 	@Override
-	public double getSizeCandidate (UmlProcess candidate) {
+	public double getSizeCandidate(UmlProcess candidate) {
 		try {
 			return candidate.getActivity().getNodes().size();
 		} catch (NullPointerException e) {
