@@ -790,7 +790,6 @@ public class ProcessGeneratorView extends ViewPart {
 		else {
 			newTreeItem = new TreeItem(tree, SWT.NONE);
 		}
-		
 		return newTreeItem;
 	}
 
