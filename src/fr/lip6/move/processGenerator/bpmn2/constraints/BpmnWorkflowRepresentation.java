@@ -274,12 +274,12 @@ public class BpmnWorkflowRepresentation implements IWorkflowRepresentation {
 		else
 			System.err.println("The end of the representation is not a FlowNode.");
 	}
-
+	
 	@Override
 	public List<FlowElement> getNodes() {
 		return nodes;
 	}
-
+	
 	@Override
 	public List<FlowElement> getEdges() {
 		return edges;

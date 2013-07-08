@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -391,23 +392,31 @@ public class BpmnProcess {
 	 * @throws IOException
 	 *             en cas de problème d'entrée sortie dans la création du fichier.
 	 */
-	public void save(String nameFile) throws IOException {
+	public void save(String nameFile) {
 		
 		Bpmn2ResourceFactoryImpl resourceFactory = new Bpmn2ResourceFactoryImpl();
-		File tempFile = File.createTempFile("bpmn20convert", "tmp");
+		File tempFile = null;
 		try {
+			tempFile = File.createTempFile("bpmn20convert", "tmp");
+			
 			Resource resource = resourceFactory.createResource(URI.createFileURI(tempFile.getAbsolutePath()));
-			resource.getContents().add(this.documentRoot);
+			resource.getContents().add(getDocumentRoot());
+			
 			Bpmn2XMLProcessor proc = new Bpmn2XMLProcessor();
-			Map<Object, Object> options = new HashMap<Object, Object>();
+			Map<Object, Object> options = Collections.emptyMap();
 			
 			File f = new File(nameFile);
 			f.createNewFile();
-			OutputStream outt = new FileOutputStream(f);
-			proc.save(outt, resource, options);
-			outt.close();
+			
+			OutputStream out = new FileOutputStream(f);
+			proc.save(out, resource, options);
+			out.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
-			tempFile.delete();
+			if (tempFile != null)
+				tempFile.delete();
 		}
 	}
 	

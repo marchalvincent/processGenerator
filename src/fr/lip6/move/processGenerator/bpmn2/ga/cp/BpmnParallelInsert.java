@@ -36,7 +36,7 @@ public class BpmnParallelInsert extends AbstractChangePattern<BpmnProcess> {
 		
 		// on récupère toutes les Activities et le nombre de ParallelGateway
 		int nbActivity = BpmnChangePatternHelper.instance.countActivity(process);
-		int nbParallel = BpmnChangePatternHelper.instance.countParallelGateway(process);
+		int nbParallel = BpmnChangePatternHelper.instance.countLinkedParallelGateway(process);
 		if (nbParallel % 2 != 0) {
 			System.err.println("Error, the number of ParallelGateway is odd.");
 			return process;
@@ -88,8 +88,8 @@ public class BpmnParallelInsert extends AbstractChangePattern<BpmnProcess> {
 		}
 		
 		// on récupère la parallelConverging
-		ParallelGateway parallelConverging = (ParallelGateway) BpmnGatewayManager.instance
-				.findTwinGateway(process, parallelDiverging);
+		ParallelGateway parallelConverging = (ParallelGateway) GatewayManager.instance.findTwinGateway(process,
+				parallelDiverging);
 		if (parallelConverging == null)
 			return process;
 		

@@ -11,45 +11,52 @@ import java.util.Map;
  * 
  */
 public interface IWorkflowRepresentation {
-
+	
 	/**
 	 * Getter sur le début de la représentation
+	 * 
 	 * @param begin
 	 */
 	void setBegin(Object begin);
 	
 	/**
 	 * Setter sur la fin de la représentation
+	 * 
 	 * @param end
 	 */
 	void setEnd(Object end);
 	
 	/**
 	 * Renvoie le début de la représentation du workflow
+	 * 
 	 * @return
 	 */
 	Object getBegin();
-
+	
 	/**
 	 * Renvoie la fin de la représentation du workflow
+	 * 
 	 * @return
 	 */
 	Object getEnd();
-
+	
 	/**
 	 * Renvoie les liaisons entre les gateways/controlNode
+	 * 
 	 * @return
 	 */
 	Map<String, String> getLinks();
 	
 	/**
 	 * Renvoie la liste des noeuds de la représentation
+	 * 
 	 * @return
 	 */
 	List<? extends Object> getNodes();
 	
 	/**
 	 * Renvoie la liste des arcs de la représentation
+	 * 
 	 * @return
 	 */
 	List<? extends Object> getEdges();

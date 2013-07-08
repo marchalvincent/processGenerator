@@ -12,8 +12,9 @@ import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
  * leurs probabilités.
  * 
  * @author Vincent
- *
- * @param <T> le type de candidat que doit faire évoluer cette classe.
+ * 
+ * @param <T>
+ *            le type de candidat que doit faire évoluer cette classe.
  */
 public abstract class AbstractMutationOperation<T> implements EvolutionaryOperator<T> {
 	
@@ -21,12 +22,12 @@ public abstract class AbstractMutationOperation<T> implements EvolutionaryOperat
 	private List<StructuralConstraintChecker> workflowsConstraints;
 	private Random rng;
 	
-	protected AbstractMutationOperation(List<IChangePattern<T>> changePatterns, List<StructuralConstraintChecker> contraintesWorkflows)
-			throws GeneticException {
+	protected AbstractMutationOperation(List<IChangePattern<T>> changePatterns,
+			List<StructuralConstraintChecker> contraintesWorkflows) throws GeneticException {
 		super();
 		this.changePatterns = new ArrayList<>();
 		for (IChangePattern<T> iChangePattern : changePatterns)
-				this.changePatterns.add(iChangePattern);
+			this.changePatterns.add(iChangePattern);
 		this.rng = new MersenneTwisterRNG();
 		this.workflowsConstraints = contraintesWorkflows;
 	}
@@ -46,9 +47,8 @@ public abstract class AbstractMutationOperation<T> implements EvolutionaryOperat
 	}
 	
 	/**
-	 * Sélectionne un {@link IChangePattern} au hasard selon leurs poids. Plus le poids d'un change pattern est
-	 * élevé, plus il a de chance d'être sélectionné. En revanche, la sélection se fait quand même à l'aide d'un objet
-	 * Random.
+	 * Sélectionne un {@link IChangePattern} au hasard selon leurs poids. Plus le poids d'un change pattern est élevé,
+	 * plus il a de chance d'être sélectionné. En revanche, la sélection se fait quand même à l'aide d'un objet Random.
 	 * 
 	 * @return {@link IChangePattern}.
 	 */

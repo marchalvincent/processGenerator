@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.ga.CandidatFactory;
  * 
  */
 public class BpmnCandidateFactory extends CandidatFactory<BpmnProcess> {
-
+	
 	/**
 	 * Le process initial sera ainsi : InitialNode -> FinalNode
 	 */
@@ -21,6 +21,7 @@ public class BpmnCandidateFactory extends CandidatFactory<BpmnProcess> {
 	
 	/**
 	 * Le process initial sera celui passé en paramètre.
+	 * 
 	 * @param process
 	 */
 	public BpmnCandidateFactory(BpmnProcess process) {

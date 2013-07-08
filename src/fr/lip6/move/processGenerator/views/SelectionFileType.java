@@ -31,10 +31,10 @@ public class SelectionFileType extends SelectionAdapter {
 		String s = combo.getText();
 		if (s.toLowerCase().contains("bpmn")) {
 			// les champs du tableau éléments
-			view.majTableOfElements(EBpmnElement.values());
+			view.majTreeOfElements(EBpmnElement.values());
 			
 			// on met à jour le tableau des workflow patterns
-			view.majTableOfWorkflows(EBpmnWorkflowPattern.values());
+			view.majTreeOfWorkflows(EBpmnWorkflowPattern.values());
 			
 			// on met a jour le texte à coté du bouton (set initial process)
 			view.getLabelSetInitialProcess().setText("(bpmn file)");
@@ -44,10 +44,10 @@ public class SelectionFileType extends SelectionAdapter {
 			
 		} else {
 			// on met à jour le tableau des éléments
-			view.majTableOfElements(EUmlElement.values());
+			view.majTreeOfElements(EUmlElement.values());
 			
 			// on met à jour le tableau des workflow patterns
-			view.majTableOfWorkflows(EUmlWorkflowPattern.values());
+			view.majTreeOfWorkflows(EUmlWorkflowPattern.values());
 			
 			// on met a jour le texte à coté du bouton (set initial process)
 			view.getLabelSetInitialProcess().setText("(uml file)");

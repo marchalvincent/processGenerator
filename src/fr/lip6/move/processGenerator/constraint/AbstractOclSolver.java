@@ -44,8 +44,8 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 	}
 	
 	/**
-	 * Cette méthode est générique et permet de résoudre les contraintes OCL sur un objet donné.
-	 * Attention, les paramètres passés à cette méthode doivent être vérifiés avant l'appel de cette méthode.
+	 * Cette méthode est générique et permet de résoudre les contraintes OCL sur un objet donné. Attention, les
+	 * paramètres passés à cette méthode doivent être vérifiés avant l'appel de cette méthode.
 	 * 
 	 * @param eClass
 	 *            la {@link EClass} de l'objet à évaluer.

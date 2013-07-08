@@ -1,6 +1,5 @@
 package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +25,7 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
 public class BpmnChangePatternHelper {
 	
 	public final static BpmnChangePatternHelper instance = new BpmnChangePatternHelper();
+	
 	private BpmnChangePatternHelper() {}
 	
 	/**
@@ -163,6 +163,22 @@ public class BpmnChangePatternHelper {
 	}
 	
 	/**
+	 * Renvoie le nombre de {@link ParallelGateway} linkée avec une autre contenues dans le process passé en paramètre.
+	 * 
+	 * @param process
+	 *            le {@link Bpmnprocess}.
+	 * @return int.
+	 */
+	public int countLinkedParallelGateway(BpmnProcess process) {
+		int count = 0;
+		List<ParallelGateway> list = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
+		for (ParallelGateway parallelGateway : list)
+			if (process.getTwin(parallelGateway.getId()) != null)
+				count++;
+		return count;
+	}
+	
+	/**
 	 * Renvoie le nombre de {@link ParallelGateway} contenues dans le process passé en paramètre.
 	 * 
 	 * @param process
@@ -170,12 +186,7 @@ public class BpmnChangePatternHelper {
 	 * @return int.
 	 */
 	public int countParallelGateway(BpmnProcess process) {
-		int count = 0;
-		List<ParallelGateway> list = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
-		for (ParallelGateway parallelGateway : list)
-			if (process.getTwin(parallelGateway.getId()) != null)
-				count++;
-		return count;
+		return BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements()).size();
 	}
 	
 	/**
@@ -209,7 +220,7 @@ public class BpmnChangePatternHelper {
 		for (ParallelGateway parallelGateway : listeDiverging) {
 			
 			// on cherche la parallelGateway converging qui referme le chemin
-			parallelConverging = (ParallelGateway) BpmnGatewayManager.instance.findTwinGateway(process, parallelGateway);
+			parallelConverging = (ParallelGateway) GatewayManager.instance.findTwinGateway(process, parallelGateway);
 			// petite vérification, si on a une parallel sans twin, cela peut être un nouveau thread dans le process
 			if (parallelConverging == null) {
 				this.cleanNewThread(process, parallelGateway);
@@ -332,7 +343,7 @@ public class BpmnChangePatternHelper {
 			boolean removed = false;
 			
 			// on cherche la Gateway converging qui referme le chemin
-			gatewayConverging = BpmnGatewayManager.instance.findTwinGateway(process, gatewayDiverging);
+			gatewayConverging = GatewayManager.instance.findTwinGateway(process, gatewayDiverging);
 			if (gatewayConverging == null)
 				continue;
 			
@@ -364,12 +375,9 @@ public class BpmnChangePatternHelper {
 					System.err.println(this.getClass().getSimpleName()
 							+ " : The Gateway converging does not contains only 1 incoming sequence flow. Number : "
 							+ gatewayConverging.getIncoming().size() + ", id : " + gatewayConverging.getId());
-					try {
-						if (Utils.DEBUG)
-							process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					
+					if (Utils.DEBUG)
+						process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
 				}
 				
 				// ici on peut faire la suppression des 2 Gateway

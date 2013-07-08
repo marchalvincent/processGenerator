@@ -26,7 +26,8 @@ import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
  * 
  * @author Vincent
  * 
- * @param <T> le type de candidat que fait évoluer l'algorithme génétique.
+ * @param <T>
+ *            le type de candidat que fait évoluer l'algorithme génétique.
  */
 public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	
@@ -103,9 +104,8 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	public boolean isReady() {
 		return (this.isCheckCrossover == null) || (this.isCheckMutation == null) || (this.changePatterns == null)
 				|| (this.contraintesElements == null) || (this.contraintesWorkflows == null) || (this.elitism == null)
-				|| (this.location == null) || (this.manualOclChecker == null)
-				|| (this.margin == null) || (this.nbNodes == null) || (this.nbPopulation == null)
-				|| (this.selectionStrategy == null) || (this.terminationCondition == null)
+				|| (this.location == null) || (this.manualOclChecker == null) || (this.margin == null) || (this.nbNodes == null)
+				|| (this.nbPopulation == null) || (this.selectionStrategy == null) || (this.terminationCondition == null)
 				|| (view == null) || (weightHelper == null);
 	}
 	
@@ -150,8 +150,8 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 		EvolutionaryOperator<T> pipeline = new EvolutionPipeline<T>(operations);
 		
 		// la classe calculant le fitness
-		FitnessEvaluator<T> fitnessEvaluator = getFitnessEvaluator(nbNodes, margin, contraintesElements,
-				contraintesWorkflows, manualOclChecker, weightHelper);
+		FitnessEvaluator<T> fitnessEvaluator = getFitnessEvaluator(nbNodes, margin, contraintesElements, contraintesWorkflows,
+				manualOclChecker, weightHelper);
 		
 		// le random rapide et juste de watchmaker
 		Random random = new MersenneTwisterRNG();
@@ -170,7 +170,7 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 			throw new GeneticException("The selection strategy selected is not know.");
 		
 		// le moteur d'évolution avec tous les paramètres ci-dessus
-		EvolutionEngine<T> engine = new GenerationalEvolutionEngine<>(getCandidateFactory(initialProcess), pipeline, 
+		EvolutionEngine<T> engine = new GenerationalEvolutionEngine<>(getCandidateFactory(initialProcess), pipeline,
 				fitnessEvaluator, selection, random);
 		
 		// un petit observeur pour voir ce qu'il se passe
@@ -200,20 +200,32 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	
 	/**
 	 * Sauvegarde le candidat sélectionné à la fin de la génération du process.
-	 * @param winner le candidat sélectionné.
-	 * @param location le chemin du dossier de travail
-	 * @throws IOException lorsque l'enregistrement à échoué
+	 * 
+	 * @param winner
+	 *            le candidat sélectionné.
+	 * @param location
+	 *            le chemin du dossier de travail
+	 * @throws IOException
+	 *             lorsque l'enregistrement à échoué
 	 */
 	protected abstract void saveWinner(T winner, String location) throws IOException;
 	
 	/**
-	 * Renvoie la classe chargée de l'évaluation "fitness" de chaque candidat selon les contraintes spécifiée par l'utilisateur.
-	 * @param nbNodes le nombre de noeuds que doivent avoir les candidats.
-	 * @param margin la marge qu'ils ont pour la taille.
-	 * @param contraintesElements les contraintes sur le nombre de chaque élément.
-	 * @param contraintesWorkflows les contraintes sur les workflows patterns qu'ils doivent respecter.
-	 * @param manualOclChecker la contrainte manuelle que l'utilisateur a saisie.
-	 * @param weightHelper le poids associé à chaque type de contrainte.
+	 * Renvoie la classe chargée de l'évaluation "fitness" de chaque candidat selon les contraintes spécifiée par
+	 * l'utilisateur.
+	 * 
+	 * @param nbNodes
+	 *            le nombre de noeuds que doivent avoir les candidats.
+	 * @param margin
+	 *            la marge qu'ils ont pour la taille.
+	 * @param contraintesElements
+	 *            les contraintes sur le nombre de chaque élément.
+	 * @param contraintesWorkflows
+	 *            les contraintes sur les workflows patterns qu'ils doivent respecter.
+	 * @param manualOclChecker
+	 *            la contrainte manuelle que l'utilisateur a saisie.
+	 * @param weightHelper
+	 *            le poids associé à chaque type de contrainte.
 	 * @return {@link FitnessEvaluator}.
 	 */
 	protected abstract FitnessEvaluator<T> getFitnessEvaluator(Integer nbNodes, Integer margin,
@@ -222,23 +234,30 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	
 	/**
 	 * Renvoie la classe chargée de la mutation des candidats entre deux génération.
-	 * @param changePatterns la liste des {@link IChangePattern} que l'on doit appliquer aux candidats.
-	 * @param contraintesWorkflows la liste des {@link StructuralConstraintChecker} que doivent vérifier les candidats.
+	 * 
+	 * @param changePatterns
+	 *            la liste des {@link IChangePattern} que l'on doit appliquer aux candidats.
+	 * @param contraintesWorkflows
+	 *            la liste des {@link StructuralConstraintChecker} que doivent vérifier les candidats.
 	 * @return {@link EvolutionaryOperator}.
-	 * @throws GeneticException lorsque les paramètres ne sont pas corrects.
+	 * @throws GeneticException
+	 *             lorsque les paramètres ne sont pas corrects.
 	 */
 	protected abstract EvolutionaryOperator<T> getMutationOperation(List<IChangePattern<T>> changePatterns,
 			List<StructuralConstraintChecker> contraintesWorkflows) throws GeneticException;
 	
 	/**
 	 * Renvoie la classe chargée du croisement des candidats entre deux générations.
+	 * 
 	 * @return {@link EvolutionaryOperator}.
 	 */
 	protected abstract EvolutionaryOperator<T> getCrossoverOperation();
 	
 	/**
 	 * Renvoie la factory qui construit les candidats initiaux pour l'algorithme génétique.
-	 * @param initialProcess le process initial ou null s'il n'existe pas.
+	 * 
+	 * @param initialProcess
+	 *            le process initial ou null s'il n'existe pas.
 	 * @return {@link CandidatFactory}.
 	 */
 	protected abstract CandidatFactory<T> getCandidateFactory(T initialProcess);

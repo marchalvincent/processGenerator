@@ -88,7 +88,7 @@ public class BpmnConditionalInsert extends AbstractChangePattern<BpmnProcess> {
 		}
 		
 		// on récupère l'exclusive converging
-		Gateway gatewayConverging = BpmnGatewayManager.instance.findTwinGateway(process, gatewayDiverging);
+		Gateway gatewayConverging = GatewayManager.instance.findTwinGateway(process, gatewayDiverging);
 		if (gatewayConverging == null)
 			return process;
 		

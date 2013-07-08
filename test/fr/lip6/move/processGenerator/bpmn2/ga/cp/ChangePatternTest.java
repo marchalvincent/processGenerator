@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
+package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import static org.junit.Assert.assertTrue;
 import java.io.File;
@@ -17,11 +17,6 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnArbitraryCycle;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnExclusiveChoice;
 import fr.lip6.move.processGenerator.bpmn2.ga.BpmnMutationOperation;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnParallelInsert;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnSerialInsert;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnThreadInsert;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnWorkflowInsert;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.EBpmnChangePattern;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.ga.IChangePattern;

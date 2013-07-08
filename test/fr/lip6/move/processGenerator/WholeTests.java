@@ -3,22 +3,18 @@ package fr.lip6.move.processGenerator;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungManagerTest;
-import fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.BpmnFitnessEvaluatorTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ArbitraryCyclesTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ExclusiveChoiceTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.MultiChoiceTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.MultiMergeTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.ParallelSplitTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SequenceTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SimpleMergeTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.StructuredSynchronizingMergeTest;
-import fr.lip6.move.processGenerator.structuralConstraint.bpmn.SynchronizationTest;
+import fr.lip6.move.processGenerator.bpmn2.constraints.AllBpmnConstraintsTests;
+import fr.lip6.move.processGenerator.bpmn2.ga.AllBpmnGaTests;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.AllBpmnCpTests;
+import fr.lip6.move.processGenerator.bpmn2.jung.AllBpmnJungTests;
 
 @RunWith(Suite.class)
-@SuiteClasses({SequenceTest.class, ParallelSplitTest.class, SynchronizationTest.class, ExclusiveChoiceTest.class,
-		SimpleMergeTest.class, BpmnFitnessEvaluatorTest.class, StructuredSynchronizingMergeTest.class, MultiChoiceTest.class,
-		MultiMergeTest.class, ArbitraryCyclesTest.class, JungManagerTest.class})
-public class WholeTests {
+@SuiteClasses({
+	AllBpmnConstraintsTests.class,
+	AllBpmnGaTests.class, 
+	AllBpmnCpTests.class,
+	AllBpmnJungTests.class,
+	//TODO uml2.0
 	
-}
+})
+public class WholeTests {}

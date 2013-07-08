@@ -17,11 +17,17 @@ public class Utils {
 	public static final boolean DEBUG = true;
 	public static final boolean BENCH = false;
 	
+	public static final String DEFAULT_CHECK = "0";
+	public static final String DEFAULT_QUANTITY = "3";
+	public static final String DEFAULT_NUMBER = "1";
+	public static final String DEFAULT_WEIGHT = "1";
+	
 	public static Utils instance = new Utils();
+	
 	private Utils() {}
 	
 	@SuppressWarnings("unchecked")
-	public <T> List<IChangePattern<T>> castChangePattern(List<IChangePattern<?>> changePatterns,  Class<T> clazz) {
+	public <T> List<IChangePattern<T>> castChangePattern(List<IChangePattern<?>> changePatterns, Class<T> clazz) {
 		List<IChangePattern<T>> list = new ArrayList<>();
 		for (IChangePattern<?> iChangePattern : changePatterns) {
 			try {

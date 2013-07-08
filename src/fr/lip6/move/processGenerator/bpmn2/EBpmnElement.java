@@ -1,13 +1,21 @@
 package fr.lip6.move.processGenerator.bpmn2;
 
 import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.InclusiveGateway;
+import org.eclipse.bpmn2.ManualTask;
 import org.eclipse.bpmn2.ParallelGateway;
+import org.eclipse.bpmn2.ReceiveTask;
+import org.eclipse.bpmn2.ScriptTask;
+import org.eclipse.bpmn2.ServiceTask;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.UserTask;
 import fr.lip6.move.processGenerator.IEnumElement;
+import fr.lip6.move.processGenerator.IHierarchicalEnum;
 
 /**
  * Cette énumération représente les éléments que peut sélectionner l'utilisateur sur l'interface graphique afin de
@@ -18,21 +26,37 @@ import fr.lip6.move.processGenerator.IEnumElement;
  */
 public enum EBpmnElement implements IEnumElement {
 	
-	START_EVENT(StartEvent.class),
-	END_EVENT(EndEvent.class),
-	TASK(Task.class),
-	PARALLEL_GATEWAY(ParallelGateway.class),
-	EXCLUSIVE_GATEWAY(ExclusiveGateway.class),
-	INCLUSIVE_GATEWAY(InclusiveGateway.class);
+	EVENT(null, Event.class),
+	START_EVENT(EVENT, StartEvent.class),
+	END_EVENT(EVENT, EndEvent.class),
+
+	TASK(null, Task.class),
+	MANUAL_TASK(TASK, ManualTask.class),
+	RECEIVE_TASK(TASK, ReceiveTask.class),
+	SCRIPT_TASK(TASK, ScriptTask.class),
+	SERVICE_TASK(TASK, ServiceTask.class),
+	USER_TASK(TASK, UserTask.class),
 	
-	private Class<? extends FlowNode> clazz;
+	GATEWAY(null, Gateway.class),
+	PARALLEL_GATEWAY(GATEWAY, ParallelGateway.class),
+	EXCLUSIVE_GATEWAY(GATEWAY, ExclusiveGateway.class),
+	INCLUSIVE_GATEWAY(GATEWAY, InclusiveGateway.class);
+
+	private EBpmnElement parent;
+	private Class<? extends FlowElement> clazz;
 	
-	private EBpmnElement(Class<? extends FlowNode> clazz) {
+	private EBpmnElement(EBpmnElement parent, Class<? extends FlowElement> clazz) {
+		this.parent = parent;
 		this.clazz = clazz;
 	}
 	
 	@Override
 	public String toString() {
 		return this.clazz.getSimpleName();
+	}
+
+	@Override
+	public IHierarchicalEnum getParent() {
+		return parent;
 	}
 }

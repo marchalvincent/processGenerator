@@ -10,4 +10,4 @@ import fr.lip6.move.processGenerator.uml2.EUmlElement;
  * @author Vincent
  * 
  */
-public interface IEnumElement {}
+public interface IEnumElement extends IHierarchicalEnum {}

@@ -8,7 +8,8 @@ import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
  * 
  * @author Vincent
  * 
- * @param <T> le type de candidat que doit créer cette factory.
+ * @param <T>
+ *            le type de candidat que doit créer cette factory.
  */
 public abstract class CandidatFactory<T> extends AbstractCandidateFactory<T> {
 	
@@ -23,6 +24,7 @@ public abstract class CandidatFactory<T> extends AbstractCandidateFactory<T> {
 	
 	/**
 	 * Construit la factory avec un process de départ précis.
+	 * 
 	 * @param process
 	 */
 	public CandidatFactory(T process) {
@@ -36,6 +38,6 @@ public abstract class CandidatFactory<T> extends AbstractCandidateFactory<T> {
 			return process;
 		return defaultProcess();
 	}
-
+	
 	protected abstract T defaultProcess();
 }

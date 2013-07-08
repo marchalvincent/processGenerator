@@ -25,10 +25,11 @@ import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
  * @author Vincent
  * 
  */
-public class BpmnGatewayManager {
+public class GatewayManager {
 	
-	public static BpmnGatewayManager instance = new BpmnGatewayManager();
-	private BpmnGatewayManager() {}
+	public static GatewayManager instance = new GatewayManager();
+	
+	private GatewayManager() {}
 	
 	/**
 	 * Renvoie la {@link Gateway} jumelle correspondant à celle passée en paramètre.

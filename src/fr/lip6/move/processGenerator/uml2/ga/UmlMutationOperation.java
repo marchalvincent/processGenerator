@@ -15,7 +15,7 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  */
 public class UmlMutationOperation extends AbstractMutationOperation<UmlProcess> {
 	
-	public UmlMutationOperation(List<IChangePattern<UmlProcess>> changePatterns, 
+	public UmlMutationOperation(List<IChangePattern<UmlProcess>> changePatterns,
 			List<StructuralConstraintChecker> contraintesWorkflows) throws GeneticException {
 		super(changePatterns, contraintesWorkflows);
 	}

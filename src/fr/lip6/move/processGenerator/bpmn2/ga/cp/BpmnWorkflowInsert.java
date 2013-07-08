@@ -63,9 +63,9 @@ public class BpmnWorkflowInsert extends AbstractChangePattern<BpmnProcess> {
 		IWorkflowRepresentation rep = checker.getRepresentation();
 		
 		// si la représentation n'est pas correcte
-		if (rep == null || !(rep instanceof BpmnWorkflowRepresentation)){
-			System.err.println("The bpmn representation of the constraints " +
-					checker.getConstraint().getClass().getSimpleName() + "is not correct.");
+		if (rep == null || !(rep instanceof BpmnWorkflowRepresentation)) {
+			System.err.println("The bpmn representation of the constraints " + checker.getConstraint().getClass().getSimpleName()
+					+ "is not correct.");
 			return process;
 		}
 		

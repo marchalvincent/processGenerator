@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.structuralConstraint.bpmn;
+package fr.lip6.move.processGenerator.bpmn2.constraints;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnSequence;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
@@ -26,7 +25,8 @@ public class SequenceTest {
 		process = null;
 	}
 	
-	@Test(expected = BpmnException.class)
+	@Test(
+			expected = Exception.class)
 	public void test0() throws Exception {
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSequence(), EQuantity.EQUAL, -1);
 		checker.check(process);

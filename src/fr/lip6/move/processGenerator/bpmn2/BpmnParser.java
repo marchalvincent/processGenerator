@@ -22,7 +22,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnGatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 
 /**
  * Cette classe permet de parser un fichier ayant pour extension .bpmn et d'y récupérer un {@link BpmnProcess}.
@@ -142,7 +142,7 @@ public class BpmnParser {
 		for (FlowElement element : bpmnProcess.getProcess().getFlowElements()) {
 			if (element instanceof Gateway) {
 				Gateway gate = (Gateway) element;
-				Gateway twin = BpmnGatewayManager.instance.findTwinGateway(bpmnProcess, gate);
+				Gateway twin = GatewayManager.instance.findTwinGateway(bpmnProcess, gate);
 				if (twin != null) {
 					bpmnProcess.linkGateways(gate, twin);
 				}

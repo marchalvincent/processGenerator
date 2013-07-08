@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -22,6 +23,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -29,6 +33,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.EQuantity;
+import fr.lip6.move.processGenerator.IEnumElement;
+import fr.lip6.move.processGenerator.IHierarchicalEnum;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 import fr.lip6.move.processGenerator.bpmn2.constraints.EBpmnWorkflowPattern;
@@ -51,7 +58,7 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	public static final String ID = "ProcessGenerator.views.ProcessGeneratorView";
 	private ScrolledForm form;
-	private Table tableWorkflow, tableMutationParameters, tableElements;
+	private Table tableMutationParameters;
 	private Group groupMutationParameters, grpElementsParameters;
 	private Text text_oclConstraint;
 	private Combo comboTypeFile, comboStrategySelection;
@@ -66,6 +73,7 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	private BpmnProcess bpmnInitialProcess;
 	private UmlProcess umlInitialProcess;
+	private Tree treeElements, treeWorkflows;
 	
 	/**
 	 * The constructor.
@@ -121,6 +129,7 @@ public class ProcessGeneratorView extends ViewPart {
 		lblSaveLocation.setText("Save location : ");
 		
 		lblpath = new Label(composite_1, SWT.NONE);
+		lblpath.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(lblpath, true, true);
 		lblpath.setText("/model/");
 		
@@ -220,7 +229,7 @@ public class ProcessGeneratorView extends ViewPart {
 		
 		Composite composite_3 = new Composite(compositeTarget1, SWT.NONE);
 		composite_3.setLayout(new GridLayout(2, false));
-		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		toolkit.adapt(composite_3);
 		toolkit.paintBordersFor(composite_3);
 		
@@ -243,31 +252,28 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(grpElementsParameters);
 		toolkit.paintBordersFor(grpElementsParameters);
 		
-		tableElements = new Table(grpElementsParameters, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-		tableElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableElements.setLinesVisible(true);
-		tableElements.setHeaderVisible(true);
-		toolkit.adapt(tableElements);
-		toolkit.paintBordersFor(tableElements);
+		treeElements = new Tree(grpElementsParameters, SWT.BORDER | SWT.CHECK);
+		treeElements.setLinesVisible(true);
+		treeElements.setHeaderVisible(true);
+		treeElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		toolkit.adapt(treeElements);
+		toolkit.paintBordersFor(treeElements);
 		
-		TableColumn tableColumn = new TableColumn(tableElements, SWT.NONE);
-		tableColumn.setWidth(28);
+		TreeColumn trclmnElementName = new TreeColumn(treeElements, SWT.NONE);
+		trclmnElementName.setWidth(140);
+		trclmnElementName.setText("Element name");
 		
-		TableColumn tableColumn_6 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_6.setWidth(150);
-		tableColumn_6.setText("Element name");
+		TreeColumn trclmnQuantity = new TreeColumn(treeElements, SWT.NONE);
+		trclmnQuantity.setWidth(140);
+		trclmnQuantity.setText("Quantity");
 		
-		TableColumn tableColumn_7 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_7.setWidth(100);
-		tableColumn_7.setText("Quantity");
+		TreeColumn trclmnNumber = new TreeColumn(treeElements, SWT.NONE);
+		trclmnNumber.setWidth(55);
+		trclmnNumber.setText("Number");
 		
-		TableColumn tableColumn_8 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_8.setWidth(60);
-		tableColumn_8.setText("Number");
-		
-		TableColumn tblclmnWeight = new TableColumn(tableElements, SWT.NONE);
-		tblclmnWeight.setWidth(50);
-		tblclmnWeight.setText("Weight");
+		TreeColumn trclmnWeight = new TreeColumn(treeElements, SWT.NONE);
+		trclmnWeight.setWidth(55);
+		trclmnWeight.setText("Weight");
 		
 		Section sctnWorkflow = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2));
@@ -283,32 +289,28 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnWorkflow.setClient(compositeTarget2);
 		compositeTarget2.setLayout(new GridLayout(1, false));
 		
-		tableWorkflow = new Table(compositeTarget2, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-		tableWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableWorkflow.setLinesVisible(true);
-		tableWorkflow.setHeaderVisible(true);
-		tableWorkflow.setBounds(0, 0, 85, 85);
-		toolkit.adapt(tableWorkflow);
-		toolkit.paintBordersFor(tableWorkflow);
+		treeWorkflows = new Tree(compositeTarget2, SWT.BORDER | SWT.CHECK);
+		treeWorkflows.setLinesVisible(true);
+		treeWorkflows.setHeaderVisible(true);
+		treeWorkflows.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		toolkit.adapt(treeWorkflows);
+		toolkit.paintBordersFor(treeWorkflows);
 		
-		TableColumn tableColumn_1_checkbox = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumn_1_checkbox.setWidth(28);
+		TreeColumn trclmnWorkflowName = new TreeColumn(treeWorkflows, SWT.NONE);
+		trclmnWorkflowName.setWidth(140);
+		trclmnWorkflowName.setText("Workflow name");
 		
-		TableColumn tableColumnName = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumnName.setWidth(170);
-		tableColumnName.setText("Workflow name");
+		TreeColumn treeColumn_1 = new TreeColumn(treeWorkflows, SWT.NONE);
+		treeColumn_1.setWidth(140);
+		treeColumn_1.setText("Quantity");
 		
-		TableColumn tableColumnQuantity = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumnQuantity.setWidth(115);
-		tableColumnQuantity.setText("Quantity");
+		TreeColumn treeColumn_2 = new TreeColumn(treeWorkflows, SWT.NONE);
+		treeColumn_2.setWidth(40);
+		treeColumn_2.setText("Number");
 		
-		TableColumn tblclmnNumber = new TableColumn(tableWorkflow, SWT.NONE);
-		tblclmnNumber.setWidth(60);
-		tblclmnNumber.setText("Number");
-		
-		TableColumn tblclmnWeight_1 = new TableColumn(tableWorkflow, SWT.NONE);
-		tblclmnWeight_1.setWidth(50);
-		tblclmnWeight_1.setText("Weight");
+		TreeColumn treeColumn_3 = new TreeColumn(treeWorkflows, SWT.NONE);
+		treeColumn_3.setWidth(55);
+		treeColumn_3.setText("Weight");
 		
 		Section sctnOclConstraints = toolkit.createSection(scrolledFormTarget.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnOclConstraints.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -601,7 +603,7 @@ public class ProcessGeneratorView extends ViewPart {
 	 * Toutes les opérations codées à la main
 	 */
 	private void manualCode() {
-		
+
 		// les préférences utilisateur pour la partie run
 		setPathDirectory(ConfigurationManager.instance.getLocation());
 		getSpinnerNbNode().setSelection(ConfigurationManager.instance.getNbNodes());
@@ -611,12 +613,12 @@ public class ProcessGeneratorView extends ViewPart {
 		// on remplit les tableaux d'éléments, de workflows et de change pattern par défaut
 		String typeFile = getComboTypeFile().getText();
 		if (typeFile.toLowerCase().contains("bpmn")) {
-			addElementToTable(tableElements, EBpmnElement.values());
-			addElementToTable(tableWorkflow, EBpmnWorkflowPattern.values());
+			addElementsToTree(treeElements, EBpmnElement.values());
+			addElementsToTree(treeWorkflows, EBpmnWorkflowPattern.values());
 			setChangePatternToTable(EBpmnChangePattern.values());
 		} else {
-			addElementToTable(tableElements, EUmlElement.values());
-			addElementToTable(tableWorkflow, EUmlWorkflowPattern.values());
+			addElementsToTree(treeElements, EUmlElement.values());
+			addElementsToTree(treeWorkflows, EUmlWorkflowPattern.values());
 			setChangePatternToTable(EUmlChangePattern.values());
 		}
 		
@@ -663,18 +665,19 @@ public class ProcessGeneratorView extends ViewPart {
 	}
 	
 	/**
-	 * Remplit un tableau selon la liste des éléments passés en paramètre.
+	 * Remplit un Tree selon la liste des éléments passés en paramètre.
 	 * 
 	 * @param table
 	 *            le {@link Table} à remplir.
 	 * @param elements
 	 *            un tableau d'{@link Object} représentant les éléments constituant le tableau.
 	 */
-	private void addElementToTable(Table table, Object[] elements) {
-		
+	private void addElementsToTree(Tree tree, IHierarchicalEnum[] elements) {
+
+
 		// les préférences utilisateurs
 		String lecturePref;
-		if (table == tableElements) {
+		if (tree == treeElements) {
 			lecturePref = ConfigurationManager.instance.getElementsAttributes();
 		} else {
 			lecturePref = ConfigurationManager.instance.getWorkflowsAttributes();
@@ -689,38 +692,35 @@ public class ProcessGeneratorView extends ViewPart {
 			}
 		}
 		
-		// on construit les lignes
-		for (int i = 0; i < elements.length; i++) {
-			new TableItem(table, SWT.NONE);
-		}
-		
-		// pour chaque ligne...
-		TableItem[] lignes = table.getItems();
-		for (int i = 0; i < lignes.length; i++) {
+		// 
+		for (IHierarchicalEnum elem : elements) {
+			// on créé le TreeItem
+			TreeItem newTreeItem = addToTree(tree, elem);
 			
+			// maintenant on peut ajouter le menu déroulant etc.
 			// on récupère les préférences utilisateurs
-			String[] infos = preferences.get(elements[i].toString());
+			String[] infos = preferences.get(elem.toString());
 			// si infos est null, on met les valeurs par défaut
 			if (infos == null) {
 				infos = new String[5];
 				infos[0] = "";
-				infos[1] = "0";
-				infos[2] = "3";
-				infos[3] = "1";
-				infos[4] = "1";
+				infos[1] = Utils.DEFAULT_CHECK;
+				infos[2] = Utils.DEFAULT_QUANTITY;
+				infos[3] = Utils.DEFAULT_NUMBER;
+				infos[4] = Utils.DEFAULT_WEIGHT;
 			}
 			
-			// empalcement 0 : la case a cocher est déjà intégrée par le tableau
+			newTreeItem.setExpanded(true);
 			if (infos[1].equals("1"))
-				lignes[i].setChecked(true);
+				newTreeItem.setChecked(true);
 			
-			// emplacement 1 : le nom de l'élément
-			lignes[i].setText(1, elements[i].toString());
-			lignes[i].setData("1", elements[i]);
+			// emplacement 0 : le nom de l'élément
+			newTreeItem.setText(0, elem.toString());
+			newTreeItem.setData("0", elem);
 			
-			// emplacement 2 : le combobox
-			TableEditor editor = new TableEditor(table);
-			Combo combo = new Combo(table, SWT.READ_ONLY);
+			// emplacement 1 : le combobox
+			TreeEditor editor = new TreeEditor(tree);
+			Combo combo = new Combo(tree, SWT.READ_ONLY);
 			// on remplit le combo box
 			for (EQuantity quantity : EQuantity.values()) {
 				combo.add(quantity.toString().toLowerCase());
@@ -732,34 +732,95 @@ public class ProcessGeneratorView extends ViewPart {
 				combo.select(3);
 			}
 			editor.grabHorizontal = true;
-			editor.setEditor(combo, lignes[i], 2);
+			editor.setEditor(combo, newTreeItem, 1);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction de la selection du combo
-			combo.addSelectionListener(new SelectionComboInTable(lignes[i], combo));
-			lignes[i].setText(2, combo.getText());
+			combo.addSelectionListener(new SelectionComboInTree(newTreeItem, combo, 1));
+			newTreeItem.setText(1, combo.getText());
 			
-			// emplacement 3 : le nombre
-			editor = new TableEditor(table);
-			Text text = new Text(table, SWT.NONE);
+			// emplacement 2 : le nombre
+			editor = new TreeEditor(tree);
+			Text text = new Text(tree, SWT.NONE);
 			text.setText(infos[3]);
 			editor.grabHorizontal = true;
-			editor.setEditor(text, lignes[i], 3);
+			editor.setEditor(text, newTreeItem, 2);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
-			text.addModifyListener(new ModifyTextInTable(lignes[i], text, 3));
-			lignes[i].setText(3, text.getText());
+			text.addModifyListener(new ModifyTextInTree(newTreeItem, text, 2));
+			newTreeItem.setText(2, text.getText());
 			
-			// emplacement 4 : le poids associé
-			editor = new TableEditor(table);
-			text = new Text(table, SWT.NONE);
+			// emplacement 3 : le poids associé
+			editor = new TreeEditor(tree);
+			text = new Text(tree, SWT.NONE);
 			text.setText(infos[4]);
 			editor.grabHorizontal = true;
-			editor.setEditor(text, lignes[i], 4);
+			editor.setEditor(text, newTreeItem, 3);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
-			text.addModifyListener(new ModifyTextInTable(lignes[i], text, 4));
-			lignes[i].setText(4, text.getText());
+			text.addModifyListener(new ModifyTextInTree(newTreeItem, text, 3));
+			newTreeItem.setText(3, text.getText());
+		
 		}
 	}
 	
-	private void setChangePatternToTable(IEnumChangePattern[] eBpmnChangePatterns) {
+	/**
+	 * Cette fonction ajoute un élément dans un arbre. Si son élément parent n'existe pas encore, alors celui ci est 
+	 * automatiquement ajouté récursivement.
+	 * @param tree l'arbre.
+	 * @param elem l'élément à ajouter.
+	 * @return {@link TreeItem} le nouvel item ajouté.
+	 */
+	private TreeItem addToTree(Tree tree, IHierarchicalEnum elem) {
+		
+		// 1ère vérif, si l'élément existe déjà, on le renvoie directement
+		TreeItem newTreeItem = findItem(tree.getItems(), elem.toString());
+		if (newTreeItem != null)
+			return newTreeItem;
+		
+		// S'il n'existe pas, on cherche si le parent existe
+		if (elem.getParent() != null) {
+			String name = elem.getParent().toString();
+			TreeItem parentItem = findItem(tree.getItems(), name);
+			
+			// si le parent est null c'est qu'il n'existe pas encore donc on l'ajoute récursivement
+			if (parentItem == null)
+				parentItem = addToTree(tree, elem.getParent());
+			
+			// et enfin on peut créer notre TreeItem
+			newTreeItem = new TreeItem(parentItem, SWT.NONE);
+		} 
+		// sinon, on peut ajouter l'élément directement sur l'arbre
+		else {
+			newTreeItem = new TreeItem(tree, SWT.NONE);
+		}
+		
+		return newTreeItem;
+	}
+
+	/**
+	 * Cherche un {@link TreeItem} parmis ceux passé en paramètre ou parmis leurs fils selon leur nom.
+	 * @param items les items ainsi que leurs fils qu'il faut parcourir.
+	 * @param elem le nom dont on cherche l'item.
+	 * @return {@link TreeItem}.
+	 */
+	private TreeItem findItem(TreeItem[] items, String elem) {
+		
+		if (items.length == 0)
+			return null;
+		
+		for (TreeItem item : items) {
+			// si on trouve l'élément dans le tree, on renvoie vrai
+			if (item.getText(0).equals(elem))
+				return item;
+			
+			// sinon on cherche dans les fils de item
+			TreeItem findItem = findItem(item.getItems(), elem);
+			if (findItem != null)
+				return findItem;
+		}
+		
+		// si on a rien trouvé, on renvoie faux
+		return null;
+	}
+
+	private void setChangePatternToTable(IEnumChangePattern<?>[] eBpmnChangePatterns) {
 		
 		// on récupère les préférences utilisateurs
 		String lecturePreferences = ConfigurationManager.instance.getChangePatternAttributes();
@@ -796,7 +857,7 @@ public class ProcessGeneratorView extends ViewPart {
 			editor.grabHorizontal = true;
 			editor.setEditor(text, lignes[i], 1);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
-			text.addModifyListener(new ModifyTextInTable(lignes[i], text, 1));
+			text.addModifyListener(new ModifyTextInTree(lignes[i], text, 1));
 			lignes[i].setText(1, text.getText());
 		}
 	}
@@ -812,13 +873,13 @@ public class ProcessGeneratorView extends ViewPart {
 	public Combo getComboTypeFile() {
 		return comboTypeFile;
 	}
-	
-	public Table getTableElements() {
-		return tableElements;
+
+	public Tree getTreeElements() {
+		return treeElements;
 	}
-	
-	public Table getTableWorkflow() {
-		return tableWorkflow;
+
+	public Tree getTreeWorkflows() {
+		return treeWorkflows;
 	}
 	
 	public Label getLabelLocation() {
@@ -949,72 +1010,86 @@ public class ProcessGeneratorView extends ViewPart {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblErrors, text));
 	}
 	
-	public void majTableOfElements(Object[] elements) {
-		this.newTableElement();
-		this.addElementToTable(tableElements, elements);
+	/**
+	 * Met à jour l'arbre des éléments
+	 * @param elements
+	 */
+	public void majTreeOfElements(IEnumElement[] elements) {
+		this.newTreeElement();
+		this.addElementsToTree(treeElements, elements);
 	}
 	
-	public void majTableOfWorkflows(IEnumWorkflowPattern[] elements) {
-		this.newTableWorkflow();
-		this.addElementToTable(tableWorkflow, elements);
+	/**
+	 * Met à jour l'arbre des workflows
+	 * @param elements
+	 */
+	public void majTreeOfWorkflows(IEnumWorkflowPattern[] elements) {
+		this.newTreeWorkflow();
+		this.addElementsToTree(treeWorkflows, elements);
 	}
 	
-	public void majTableOfChangePatterns(IEnumChangePattern[] eBpmnChangePatterns) {
+	/**
+	 * Met à jour l'arbre des changes patterns
+	 * @param eBpmnChangePatterns
+	 */
+	public void majTableOfChangePatterns(IEnumChangePattern<?>[] eBpmnChangePatterns) {
 		this.newTableMutation();
 		this.setChangePatternToTable(eBpmnChangePatterns);
 	}
 	
-	private void newTableElement() {
-		tableElements.dispose();
-		tableElements = new Table(grpElementsParameters, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-		tableElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableElements.setLinesVisible(true);
-		tableElements.setHeaderVisible(true);
-		toolkit.adapt(tableElements);
-		toolkit.paintBordersFor(tableElements);
+	private void newTreeElement() {
+		treeElements.dispose();
+		treeElements = new Tree(grpElementsParameters, SWT.BORDER | SWT.CHECK);
+		treeElements.setLinesVisible(true);
+		treeElements.setHeaderVisible(true);
+		treeElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		toolkit.adapt(treeElements);
+		toolkit.paintBordersFor(treeElements);
 		
-		TableColumn tableColumn = new TableColumn(tableElements, SWT.NONE);
-		tableColumn.setWidth(28);
+		TreeColumn trclmnElementName = new TreeColumn(treeElements, SWT.NONE);
+		trclmnElementName.setWidth(140);
+		trclmnElementName.setText("Element name");
 		
-		TableColumn tableColumn_6 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_6.setWidth(150);
-		tableColumn_6.setText("Element name");
+		TreeColumn trclmnQuantity = new TreeColumn(treeElements, SWT.NONE);
+		trclmnQuantity.setWidth(140);
+		trclmnQuantity.setText("Quantity");
 		
-		TableColumn tableColumn_7 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_7.setWidth(100);
-		tableColumn_7.setText("Quantity");
+		TreeColumn trclmnNumber = new TreeColumn(treeElements, SWT.NONE);
+		trclmnNumber.setWidth(40);
+		trclmnNumber.setText("Number");
 		
-		TableColumn tableColumn_8 = new TableColumn(tableElements, SWT.NONE);
-		tableColumn_8.setWidth(100);
-		tableColumn_8.setText("Number");
+		TreeColumn trclmnWeight = new TreeColumn(treeElements, SWT.NONE);
+		trclmnWeight.setWidth(40);
+		trclmnWeight.setText("Weight");
 		
 		grpElementsParameters.layout(true);
 	}
 	
-	private void newTableWorkflow() {
-		tableWorkflow.dispose();
-		tableWorkflow = new Table(compositeTarget2, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-		tableWorkflow.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableWorkflow.setLinesVisible(true);
-		tableWorkflow.setHeaderVisible(true);
-		tableWorkflow.setBounds(0, 0, 85, 85);
-		toolkit.adapt(tableWorkflow);
-		toolkit.paintBordersFor(tableWorkflow);
+	private void newTreeWorkflow() {
 		
-		TableColumn tableColumn_1_checkbox = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumn_1_checkbox.setWidth(28);
+		treeWorkflows.dispose();
+		treeWorkflows = new Tree(compositeTarget2, SWT.BORDER | SWT.CHECK);
+		treeWorkflows.setLinesVisible(true);
+		treeWorkflows.setHeaderVisible(true);
+		treeWorkflows.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		toolkit.adapt(treeWorkflows);
+		toolkit.paintBordersFor(treeWorkflows);
 		
-		TableColumn tableColumnName = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumnName.setWidth(148);
-		tableColumnName.setText("Workflow name");
+		TreeColumn trclmnWorkflowName = new TreeColumn(treeWorkflows, SWT.NONE);
+		trclmnWorkflowName.setWidth(140);
+		trclmnWorkflowName.setText("Workflow name");
 		
-		TableColumn tableColumnQuantity = new TableColumn(tableWorkflow, SWT.NONE);
-		tableColumnQuantity.setWidth(115);
-		tableColumnQuantity.setText("Quantity");
+		TreeColumn treeColumn_1 = new TreeColumn(treeWorkflows, SWT.NONE);
+		treeColumn_1.setWidth(140);
+		treeColumn_1.setText("Quantity");
 		
-		TableColumn tblclmnNumber = new TableColumn(tableWorkflow, SWT.NONE);
-		tblclmnNumber.setWidth(100);
-		tblclmnNumber.setText("Number");
+		TreeColumn treeColumn_2 = new TreeColumn(treeWorkflows, SWT.NONE);
+		treeColumn_2.setWidth(40);
+		treeColumn_2.setText("Number");
+		
+		TreeColumn treeColumn_3 = new TreeColumn(treeWorkflows, SWT.NONE);
+		treeColumn_3.setWidth(40);
+		treeColumn_3.setText("Weight");
 		
 		compositeTarget2.layout(true);
 	}

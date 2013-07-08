@@ -4,6 +4,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * Ce listener est déclenché lorsque l'utilisateur change une valeur dans un tableau. Il va permettre de forcer
@@ -12,19 +13,32 @@ import org.eclipse.swt.widgets.Text;
  * @author Vincent
  * 
  */
-public class ModifyTextInTable implements ModifyListener {
+public class ModifyTextInTree implements ModifyListener {
 	
-	private TableItem item;
+	private TreeItem item;
+	private TableItem table;
 	private Text text;
 	private int indexOfTable;
 	
-	public ModifyTextInTable(TableItem item, Text text, int indexOfTable) {
+	public ModifyTextInTree(TreeItem item, Text text, int indexOfTable) {
 		super();
 		this.item = item;
 		this.text = text;
 		this.indexOfTable = indexOfTable;
 	}
 	
+	/**
+	 * Temporaire, les change patterns vont être dans un arbre eux aussi (cf. constructeur précédent)
+	 * @param tableItem
+	 * @param text2
+	 * @param indexOfTable2
+	 */
+	public ModifyTextInTree(TableItem tableItem, Text text, int indexOfTable) {
+		super();
+		this.table = tableItem;
+		this.text = text;
+		this.indexOfTable = indexOfTable;}
+
 	@Override
 	public void modifyText(ModifyEvent me) {
 		// on n'accepte que les nombres
@@ -34,6 +48,9 @@ public class ModifyTextInTable implements ModifyListener {
 			text.setText("1");
 		}
 		// puis on met à jour la valeur du Tableitem
-		item.setText(indexOfTable, text.getText());
+		if (item != null)
+			item.setText(indexOfTable, text.getText());
+		else
+			table.setText(indexOfTable, text.getText());
 	}
 }

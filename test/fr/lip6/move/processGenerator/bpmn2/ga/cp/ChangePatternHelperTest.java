@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn.changePattern;
+package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import static org.junit.Assert.assertTrue;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnRemove;
 
 public class ChangePatternHelperTest {
 	

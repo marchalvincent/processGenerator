@@ -12,10 +12,10 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Cette classe permet de représenter un morceau de process UML2.0. C'est une version simplifiée d'un process.
  * 
  * @author Vincent
- *
+ * 
  */
 public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
-
+	
 	/**
 	 * Représente le début du morceau de process
 	 */
@@ -42,38 +42,38 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	public void setBegin(Object begin) {
 		if (begin instanceof ActivityNode)
 			this.begin = (ActivityNode) begin;
-		else 
+		else
 			System.err.println("The begining of the representation is not an ActivityNode.");
 	}
-
+	
 	@Override
 	public void setEnd(Object end) {
 		if (end instanceof ActivityNode)
 			this.end = (ActivityNode) end;
-		else 
+		else
 			System.err.println("The end of the representation is not an ActivityNode");
 	}
-
+	
 	@Override
 	public ActivityNode getBegin() {
 		return begin;
 	}
-
+	
 	@Override
 	public ActivityNode getEnd() {
 		return end;
 	}
-
+	
 	@Override
 	public Map<String, String> getLinks() {
 		return controlTwins;
 	}
-
+	
 	@Override
 	public List<ActivityNode> getNodes() {
 		return nodes;
 	}
-
+	
 	@Override
 	public List<ActivityEdge> getEdges() {
 		return edges;

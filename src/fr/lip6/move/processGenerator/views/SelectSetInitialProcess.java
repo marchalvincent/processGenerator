@@ -1,6 +1,5 @@
 package fr.lip6.move.processGenerator.views;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
@@ -52,11 +51,6 @@ public class SelectSetInitialProcess extends SelectionAdapter {
 			if (typeFile.toLowerCase().contains("bpmn")) {
 				BpmnProcess process = BpmnParser.instance.getBpmnProcess(files[0]);
 				view.setBpmnInitialProcess(process);
-				try {
-					process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/initial.bpmn");
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			} else if (typeFile.toLowerCase().contains("uml")) {
 				view.setUmlInitialProcess(UmlParser.instance.getUmlProcess(files[0]));
 			}

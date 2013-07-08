@@ -25,7 +25,7 @@ public interface IChangePattern<T> {
 	 * @return
 	 */
 	int getProba();
-
+	
 	/**
 	 * Cette méthode permet au change pattern de modifier un candidat.
 	 * 

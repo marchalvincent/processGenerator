@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.geneticAlgorithm.bpmn;
+package fr.lip6.move.processGenerator.bpmn2.ga;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;

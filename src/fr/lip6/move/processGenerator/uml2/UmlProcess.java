@@ -1,18 +1,32 @@
 package fr.lip6.move.processGenerator.uml2;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Map;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Factory;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityFinalNode;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
+import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
 import org.eclipse.uml2.uml.MergeNode;
+import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.resource.UMLResource;
 
 /**
  * Représente un process UML.
@@ -23,6 +37,8 @@ import org.eclipse.uml2.uml.UMLFactory;
 public class UmlProcess {
 	
 	private Activity activity;
+	
+	private Map<String, String> twins;
 	
 	/**
 	 * Créé un process UML vide.
@@ -196,9 +212,77 @@ public class UmlProcess {
 	public Activity getActivity() {
 		return activity;
 	}
-
-	public void save(String string) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Sauvegarde le process dans un fichier dont le path est spécifié en paramètre.
+	 * 
+	 * @param path
+	 *            String, le path du fichier à enregistrer.
+	 */
+	public void save(String path) {
 		
+		Model model = UMLFactory.eINSTANCE.createModel();
+		model.getPackagedElements().add(getActivity());
+		
+		Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION, UMLResource.Factory.INSTANCE);
+		
+		Resource resource = new ResourceSetImpl().createResource(URI.createPlatformResourceURI(path, true));
+		resource.getContents().add(model);
+		
+		XMLProcessor proc = new XMLProcessor();
+		Map<Object, Object> options = Collections.emptyMap();
+		
+		File f = new File(path);
+		OutputStream out = null;
+		try {
+			f.createNewFile();
+			out = new FileOutputStream(f);
+			proc.save(out, resource, options);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {}
+		}
+	}
+	
+	/**
+	 * Lie deux {@link ControlNode}s.
+	 * 
+	 * @param diverging
+	 * @param converging
+	 */
+	public void linkControlNodes(ControlNode diverging, ControlNode converging) {
+		twins.put(diverging.getName(), converging.getName());
+		twins.put(converging.getName(), diverging.getName());
+	}
+	
+	/**
+	 * Ajoute plusieurs liens entre deux {@link ControlNode}. La Map manipulée contient les noms des ControlNodes.
+	 * 
+	 * @param links
+	 */
+	public void addLinksControlNodes(Map<String, String> links) {
+		twins.putAll(links);
+	}
+	
+	/**
+	 * Renvoie le {@link ControlNode} jumeau de celui dont l'id est passé en paramètre.
+	 * 
+	 * @param controlNodeName
+	 *            l'id
+	 * @return {@link ControlNode}.
+	 */
+	public ControlNode getTwin(String controlNodeName) {
+		String twinId = twins.get(controlNodeName);
+		if (twinId != null) {
+			for (ActivityNode node : getActivity().getNodes()) {
+				if (node instanceof ControlNode && node.getName().equals(twinId))
+					return (ControlNode) node;
+			}
+		}
+		return null;
 	}
 }

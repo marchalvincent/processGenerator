@@ -1,6 +1,5 @@
 package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import org.eclipse.bpmn2.Activity;
@@ -52,11 +51,7 @@ public class BpmnRemove extends AbstractChangePattern<BpmnProcess> {
 		if (sequencesIn.size() != 1) {
 			System.err.println(getClass().getSimpleName() + " : The number of incoming sequenceFlows is not correct : "
 					+ sequencesIn.size() + ". " + ancienneTask.getClass());
-			try {
-				process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
 		}
 		if (sequencesOut.size() > 1)
 			System.err.println(getClass().getSimpleName() + " : The number of outgoing sequenceFlows is not correct : "

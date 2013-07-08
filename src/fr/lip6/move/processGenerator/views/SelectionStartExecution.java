@@ -3,11 +3,13 @@ package fr.lip6.move.processGenerator.views;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.uncommons.watchmaker.framework.TerminationCondition;
 import org.uncommons.watchmaker.framework.termination.ElapsedTime;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
@@ -88,15 +90,15 @@ public class SelectionStartExecution extends SelectionAdapter {
 		typeFile = decisionMaker.getTypeFile();
 		
 		// les elements et workflows sélectionnés
-		Table tableElements = view.getTableElements();
-		Table tableWorkflow = view.getTableWorkflow();
+		Tree treeElements = view.getTreeElements();
+		Tree treeWorkflows = view.getTreeWorkflows();
 		
 		// les listes de contraintes structurelles en fonction des tableaux
 		List<StructuralConstraintChecker> contraintesElements = null;
 		List<StructuralConstraintChecker> contraintesWorkflows = null;
 		try {
-			contraintesElements = this.buildStructuralConstraints(tableElements, ConstraintType.Element, factory);
-			contraintesWorkflows = this.buildStructuralConstraints(tableWorkflow, ConstraintType.Workflow, factory);
+			contraintesElements = this.buildStructuralConstraints(treeElements.getItems(), ConstraintType.Element, factory, null);
+			contraintesWorkflows = this.buildStructuralConstraints(treeWorkflows.getItems(), ConstraintType.Workflow, factory, null);
 		} catch (Exception ex) {
 			view.printError(ex.getMessage());
 			System.err.println(ex.getMessage());
@@ -127,7 +129,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		
 		ConfigurationManager.instance.setElitism(elitism + "");
 		ConfigurationManager.instance.setSelectionStrategy(view.getComboStrategySelection().getSelectionIndex() + "");
-
+		
 		// les opérations d'évolution
 		boolean isCheckMutation = view.getButtonCheckMutation().getSelection();
 		ConfigurationManager.instance.setCheckMutation(isCheckMutation);
@@ -208,7 +210,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 			GeneticAlgorithmExecutor<BpmnProcess> executor = new BpmnGeneticAlgorithmExecutor();
 			
 			// on est obligé de caster les changePatterns pour qu'ils correspondent à l'éxecutor
-			List<IChangePattern<BpmnProcess>> newChangePatterns =  Utils.instance.castChangePattern(changePatterns, BpmnProcess.class);
+			List<IChangePattern<BpmnProcess>> newChangePatterns = Utils.instance.castChangePattern(changePatterns,
+					BpmnProcess.class);
 			
 			executor.setGeneticOperations(isCheckMutation, newChangePatterns, isCheckCrossover);
 			executor.setGeneticSelection(elitism, selectionStrategy);
@@ -223,11 +226,12 @@ public class SelectionStartExecution extends SelectionAdapter {
 			
 			executor.start();
 		} else if (decisionMaker.isUml()) {
-
+			
 			GeneticAlgorithmExecutor<UmlProcess> executor = new UmlGeneticAlgorithmExecutor();
 			
 			// on est obligé de caster les changePatterns pour qu'ils correspondent à l'éxecutor
-			List<IChangePattern<UmlProcess>> newChangePatterns =  Utils.instance.castChangePattern(changePatterns, UmlProcess.class);
+			List<IChangePattern<UmlProcess>> newChangePatterns = Utils.instance.castChangePattern(changePatterns,
+					UmlProcess.class);
 			
 			executor.setGeneticOperations(isCheckMutation, newChangePatterns, isCheckCrossover);
 			executor.setGeneticSelection(elitism, selectionStrategy);
@@ -287,27 +291,36 @@ public class SelectionStartExecution extends SelectionAdapter {
 	}
 	
 	/**
-	 * Construit une liste de {@link StructuralConstraintChecker} en fonction du tableau passé en paramètre. Cette
-	 * méthode fonctionne à la fois pour le tableau des éléments mais aussi pour le tableau des workflow patterns.
+	 * Construit une liste de {@link StructuralConstraintChecker} en fonction de l'arbre passé en paramètre. Cette
+	 * méthode fonctionne à la fois pour l'arbre des éléments mais aussi pour l'arbre des workflow patterns.
 	 * 
-	 * @param table
+	 * @param treeElements l'arbre à parser pour construire les checkeurs contraintes.
 	 * @param constraintType
 	 * @param factory
 	 * @return
 	 * @throws Exception
 	 */
-	private List<StructuralConstraintChecker> buildStructuralConstraints(Table table, ConstraintType constraintType,
-			AbstractStructuralConstraintFactory factory) throws Exception {
+	private List<StructuralConstraintChecker> buildStructuralConstraints(TreeItem[] items, ConstraintType constraintType,
+			AbstractStructuralConstraintFactory factory, StringBuilder sb) throws Exception {
+		
+		if (items.length == 0)
+			return Collections.emptyList();
 		
 		// ce stringBuilder va permettre d'enregistrer les préférences utilisateurs
-		StringBuilder sb = new StringBuilder();
+		if (sb == null)
+			sb = new StringBuilder();
 		
-		List<StructuralConstraintChecker> liste = new ArrayList<StructuralConstraintChecker>();
+		List<StructuralConstraintChecker> liste = new ArrayList<>();
 		// pour chaque ligne du tableau
-		for (TableItem item : table.getItems()) {
+		for (TreeItem item : items) {
+			
+			// on applique la récusrivité sur les fils
+			List<StructuralConstraintChecker> listTemp = this.buildStructuralConstraints(item.getItems(), constraintType, factory, sb);
+			liste.addAll(listTemp);
+			
 			
 			sb.append("___");
-			sb.append(item.getText(1));
+			sb.append(item.getText(0));
 			
 			// on n'ajoute la condition que lorsqu'elle est cochée
 			if (item.getChecked()) {
@@ -315,7 +328,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// on construit la StructuralConstraint dyamiquement en fonction du type
 				IStructuralConstraint contrainte;
 				if (constraintType.equals(ConstraintType.Element)) {
-					Object o = item.getData("1");
+					Object o = item.getData("0");
 					if (o instanceof IEnumElement)
 						contrainte = factory.newElementConstraint((IEnumElement) o);
 					else {
@@ -323,20 +336,20 @@ public class SelectionStartExecution extends SelectionAdapter {
 						continue;
 					}
 				} else {
-					contrainte = factory.newWorkflowPatternConstraint(item.getData("1"));
+					contrainte = factory.newWorkflowPatternConstraint(item.getData("0"));
 				}
 				
 				// on récupère la quantité
-				EQuantity quantity = EQuantity.getQuantityByString(item.getText(2));
+				EQuantity quantity = EQuantity.getQuantityByString(item.getText(1));
 				
 				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à
 				// la volée
 				int number = 1, weight = 1;
 				try {
-					number = Integer.parseInt(item.getText(3));
+					number = Integer.parseInt(item.getText(2));
 					
 					// ainsi que le poids
-					weight = Integer.parseInt(item.getText(4));
+					weight = Integer.parseInt(item.getText(3));
 					
 					// on construit le checker puis on l'ajoute à la liste
 					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
@@ -359,7 +372,18 @@ public class SelectionStartExecution extends SelectionAdapter {
 				
 			} else {
 				// les valeurs par défaut sont mises lorsque l'utilisateur n'a pas coché la case
-				sb.append("%0%3%1%1");
+				sb.append("%");
+				// la case a coché
+				sb.append(Utils.DEFAULT_CHECK);
+				sb.append("%");
+				// le numéro suivant représente la sélection de la quantité
+				sb.append(Utils.DEFAULT_QUANTITY);
+				sb.append("%");
+				// ensuite le nombre
+				sb.append(Utils.DEFAULT_NUMBER);
+				sb.append("%");
+				// puis enfin le poids
+				sb.append(Utils.DEFAULT_WEIGHT);
 			}
 		}
 		

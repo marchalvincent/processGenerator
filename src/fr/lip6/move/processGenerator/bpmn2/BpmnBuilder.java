@@ -7,7 +7,7 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnChangePatternHelper;
-import fr.lip6.move.processGenerator.bpmn2.ga.cp.BpmnGatewayManager;
+import fr.lip6.move.processGenerator.bpmn2.ga.cp.GatewayManager;
 
 /**
  * Cette classe permet de construire rapidement des {@link BpmnProcess}.
@@ -518,7 +518,7 @@ public class BpmnBuilder {
 	}
 	
 	/**
-	 * Créé un exemple pour les tests sur le {@link BpmnGatewayManager}.
+	 * Créé un exemple pour les tests sur le {@link GatewayManager}.
 	 * 
 	 * @return
 	 */

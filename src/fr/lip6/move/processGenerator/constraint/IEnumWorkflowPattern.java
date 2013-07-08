@@ -1,5 +1,7 @@
 package fr.lip6.move.processGenerator.constraint;
 
+import fr.lip6.move.processGenerator.IHierarchicalEnum;
+
 /**
  * Représente le comportement que doit avoir une énumération de workflow pattern. Chaque énumération se voit attribué
  * une classe représentant la contrainte du workflow pattern.
@@ -7,7 +9,7 @@ package fr.lip6.move.processGenerator.constraint;
  * @author Vincent
  * 
  */
-public interface IEnumWorkflowPattern {
+public interface IEnumWorkflowPattern extends IHierarchicalEnum {
 	
 	/**
 	 * Chaque énumération doit être capable d'instancier le workflow pattern auquelle elle est associée.
