@@ -460,7 +460,7 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.paintBordersFor(treeChangePatterns);
 		
 		TreeColumn trclmnChangePattern = new TreeColumn(treeChangePatterns, SWT.NONE);
-		trclmnChangePattern.setWidth(160);
+		trclmnChangePattern.setWidth(260);
 		trclmnChangePattern.setText("Change pattern");
 		
 		TreeColumn treeColumn_5 = new TreeColumn(treeChangePatterns, SWT.NONE);
@@ -780,6 +780,10 @@ public class ProcessGeneratorView extends ViewPart {
 			// et enfin on peut créer notre TreeItem
 			newTreeItem = new TreeItem(parentItem, SWT.NONE);
 			parentItem.setExpanded(true);
+			
+			// exception pour l'arbre des change pattern, on n'expande pas
+			if (tree == treeChangePatterns)
+				parentItem.setExpanded(false);
 		} 
 		// sinon, on peut ajouter l'élément directement sur l'arbre
 		else {
@@ -840,8 +844,8 @@ public class ProcessGeneratorView extends ViewPart {
 			if (infos == null || infos.length != 3) {
 				infos = new String[3];
 				infos[0] = "";
-				// check ou pas
-				infos[1] = "1";
+				// check ou pas (pour les childs on ne les coche pas par défaut)
+				infos[1] = (cp.getParent() != null) ? "0" : "1";
 				// proba
 				infos[2] = "1";
 			}

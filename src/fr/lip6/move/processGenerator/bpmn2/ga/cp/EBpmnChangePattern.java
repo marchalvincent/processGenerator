@@ -15,8 +15,15 @@ import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
 public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 	
 	WORKFLOW_INSERT(null, BpmnWorkflowInsert.class),
-	CONDITIONAL_INSERT(null, BpmnConditionalInsert.class),
-	PARALLEL_INSERT(null, BpmnParallelInsert.class),
+	
+	CONDITIONAL_INSERT(null, BpmnConditionalInsertRandom.class),
+	CONDITIONAL_ON_SEQUENCE(CONDITIONAL_INSERT, BpmnConditionalInsertSequence.class),
+	CONDITIONAL_ON_GATEWAY(CONDITIONAL_INSERT, BpmnConditionalInsertGateway.class),
+	
+	PARALLEL_INSERT(null, BpmnParallelInsertRandom.class),
+	PARALLEL_ON_ACTIVITY(PARALLEL_INSERT, BpmnParallelInsertActivity.class),
+	PARALLEL_ON_GATEWAY(PARALLEL_INSERT, BpmnParallelInsertGateway.class),
+	
 	SERIAL_INSERT(null, BpmnSerialInsert.class),
 	REMOVE(null, BpmnRemove.class),
 	LOOP_INSERT(null, BpmnLoopInsert.class),

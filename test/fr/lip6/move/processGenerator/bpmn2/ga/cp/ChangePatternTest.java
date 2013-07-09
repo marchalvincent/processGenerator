@@ -52,12 +52,12 @@ public class ChangePatternTest {
 	public void Appliquer3fois() throws IOException {
 		// test(new BpmnSerialInsert());
 		// test(new BpmnConditionalInsert());
-		test(new BpmnParallelInsert());
+		test(new BpmnParallelInsertRandom());
 	}
 	
 	@Test
 	public void test1() throws IOException {
-		IChangePattern<BpmnProcess> parallel = new BpmnParallelInsert();
+		IChangePattern<BpmnProcess> parallel = new BpmnParallelInsertRandom();
 		IChangePattern<BpmnProcess> serial = new BpmnSerialInsert();
 		IChangePattern<BpmnProcess> thread = new BpmnThreadInsert();
 		

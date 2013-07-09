@@ -24,7 +24,7 @@ public class BpmnParallelInsertTest {
 		assertTrue(BpmnChangePatternHelper.instance.countConditionalGateway(process) == 0);
 		assertTrue(BpmnChangePatternHelper.instance.countLinkedParallelGateway(process) == 0);
 		
-		BpmnParallelInsert insert = new BpmnParallelInsert();
+		BpmnParallelInsertRandom insert = new BpmnParallelInsertRandom();
 		process = insert.apply(process, rng, null);
 
 		assertTrue(BpmnChangePatternHelper.instance.countActivity(process) == 4);

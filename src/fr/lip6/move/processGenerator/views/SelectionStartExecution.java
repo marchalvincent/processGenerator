@@ -136,7 +136,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		List<IChangePattern<?>> changePatterns = null;
 		if (isCheckMutation) {
 			try {
-				changePatterns = this.getChangePatterns();
+				changePatterns = this.getChangePatterns(view.getTreeMutationParameters().getItems(), null);
 			} catch (Exception ex) {
 				view.printError(ex.getMessage());
 				System.err.println(ex.getMessage());
@@ -262,30 +262,46 @@ public class SelectionStartExecution extends SelectionAdapter {
 	 * @return une {@link List} de {@link IChangePattern}.
 	 * @throws Exception
 	 */
-	private List<IChangePattern<?>> getChangePatterns() throws Exception {
+	private List<IChangePattern<?>> getChangePatterns(TreeItem[] items, StringBuilder sb) throws Exception {
+		
+		if (items == null || items.length == 0)
+			return Collections.emptyList();
 		
 		List<IChangePattern<?>> changePatterns = new ArrayList<>();
 		// le stringBuilder va servir à enregistrer les préférences utilisateurs
-		StringBuilder sb = new StringBuilder();
+		if (sb == null)
+			sb = new StringBuilder();
 		
 		// pour chaque ligne du tableau
-		for (TreeItem item : view.getTreeMutationParameters().getItems()) {
-			// on vérifie que l'item est bien une enum de change pattern
-			if (item.getData(Utils.NAME_KEY) instanceof IEnumChangePattern<?>) {
-				// si oui, on instancie dynamiquement la classe
-				IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData(Utils.NAME_KEY)).newInstance((String) item.getData(Utils.NUMBER_KEY));
-				changePatterns.add(cPattern);
-				
-				sb.append("___");
-				sb.append(item.getData(Utils.NAME_KEY).toString());
-				sb.append("%");
-				if (item.getChecked())
-					sb.append("1%");
-				else
-					sb.append("0%");
-				sb.append(item.getData(Utils.NUMBER_KEY));
-			} else {
-				System.err.println("Carreful, the item data is not a " + IEnumChangePattern.class.getSimpleName() + ".");
+		for (TreeItem item : items) {
+
+			// on applique la récursivité sur les fils
+			List<IChangePattern<?>> listTemp = this.getChangePatterns(item.getItems(), sb);
+			changePatterns.addAll(listTemp);
+			
+			// les préférences utilisateurs
+			sb.append("___");
+			sb.append(item.getData(Utils.NAME_KEY).toString());
+			sb.append("%");
+			if (item.getChecked())
+				sb.append("1%");
+			else
+				sb.append("0%");
+			sb.append(item.getData(Utils.NUMBER_KEY));
+			
+			// si le change pattern est coché
+			if (item.getChecked()) {
+				// on vérifie que l'item est bien une enum de change pattern
+				if (item.getData(Utils.NAME_KEY) instanceof IEnumChangePattern<?>) {
+					// si oui, on instancie dynamiquement la classe
+					IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData(Utils.NAME_KEY)).newInstance((String) item.getData(Utils.NUMBER_KEY));
+					changePatterns.add(cPattern);
+				} else {
+					System.err.println("Carreful, the item data is not a " + IEnumChangePattern.class.getSimpleName() + ".");
+				}
+			}
+			else {
+				System.out.println(item.getData(Utils.NAME_KEY) + " n'est pas coché");
 			}
 		}
 		
@@ -317,16 +333,45 @@ public class SelectionStartExecution extends SelectionAdapter {
 		// pour chaque ligne du tableau
 		for (TreeItem item : items) {
 			
-			// on applique la récusrivité sur les fils
+			// on applique la récursivité sur les fils
 			List<StructuralConstraintChecker> listTemp = this.buildStructuralConstraints(item.getItems(), constraintType, factory, sb);
 			liste.addAll(listTemp);
 			
+			// on récupère la quantité
+			EQuantity quantity = EQuantity.getQuantityByString((String) item.getData(Utils.QUANTITY_KEY));
+			
+			int number = 1, weight = 1;
+			try {
+				/*
+				 * puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à la volée)
+				 */
+				number = Integer.parseInt((String) item.getData(Utils.NUMBER_KEY));
+				// ainsi que le poids
+				weight = Integer.parseInt((String) item.getData(Utils.WEIGHT_KEY));
+				
+			} catch (Exception e) {
+				// une erreur ici ne devrait pas arriver car le traitement est déjà fait dans le listener
+				e.printStackTrace();
+			}
+			
+			// pour les préférences utilisateurs
 			sb.append("___");
 			sb.append(item.getText(0));
+			// la case à cochée
+			sb.append("%");
+			sb.append((item.getChecked()) ? "1" : "0");
+			// la sélection de la quantité
+			sb.append("%");
+			sb.append(quantity.getPosition());
+			// ensuite le nombre
+			sb.append("%");
+			sb.append(number);
+			// puis enfin le poids
+			sb.append("%");
+			sb.append(weight);
 			
 			// on n'ajoute la condition que lorsqu'elle est cochée
 			if (item.getChecked()) {
-				
 				// on construit la StructuralConstraint dyamiquement en fonction du type
 				IStructuralConstraint contrainte;
 				if (constraintType.equals(ConstraintType.Element)) {
@@ -340,52 +385,10 @@ public class SelectionStartExecution extends SelectionAdapter {
 				} else {
 					contrainte = factory.newWorkflowPatternConstraint(item.getData(Utils.NAME_KEY));
 				}
-				
-				// on récupère la quantité
-				EQuantity quantity = EQuantity.getQuantityByString((String) item.getData(Utils.QUANTITY_KEY));
-				
-				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à
-				// la volée
-				int number = 1, weight = 1;
-				try {
-					number = Integer.parseInt((String) item.getData(Utils.NUMBER_KEY));
-					
-					// ainsi que le poids
-					weight = Integer.parseInt((String) item.getData(Utils.WEIGHT_KEY));
-					
-					// on construit le checker puis on l'ajoute à la liste
-					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
-					liste.add(checker);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				// pour les préférences utilisateurs
-				// 1 car la case est cochée
-				sb.append("%1%");
-				// le numéro suivant représente la sélection de la quantité
-				sb.append(quantity.getPosition());
-				sb.append("%");
-				// ensuite le nombre
-				sb.append(number);
-				sb.append("%");
-				// puis enfin le poids
-				sb.append(weight);
-				
-			} else {
-				// les valeurs par défaut sont mises lorsque l'utilisateur n'a pas coché la case
-				sb.append("%");
-				// la case a coché
-				sb.append(Utils.DEFAULT_CHECK);
-				sb.append("%");
-				// le numéro suivant représente la sélection de la quantité
-				sb.append(Utils.DEFAULT_QUANTITY);
-				sb.append("%");
-				// ensuite le nombre
-				sb.append(Utils.DEFAULT_NUMBER);
-				sb.append("%");
-				// puis enfin le poids
-				sb.append(Utils.DEFAULT_WEIGHT);
+
+				// on construit le checker puis on l'ajoute à la liste
+				StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
+				liste.add(checker);
 			}
 		}
 		
