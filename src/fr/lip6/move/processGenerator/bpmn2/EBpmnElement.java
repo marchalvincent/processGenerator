@@ -42,10 +42,10 @@ public enum EBpmnElement implements IEnumElement {
 	EXCLUSIVE_GATEWAY(GATEWAY, ExclusiveGateway.class),
 	INCLUSIVE_GATEWAY(GATEWAY, InclusiveGateway.class);
 
-	private EBpmnElement parent;
+	private IHierarchicalEnum parent;
 	private Class<? extends FlowElement> clazz;
 	
-	private EBpmnElement(EBpmnElement parent, Class<? extends FlowElement> clazz) {
+	private EBpmnElement(IHierarchicalEnum parent, Class<? extends FlowElement> clazz) {
 		this.parent = parent;
 		this.clazz = clazz;
 	}

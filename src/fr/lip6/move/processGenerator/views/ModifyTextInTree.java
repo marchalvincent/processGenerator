@@ -1,7 +1,7 @@
 package fr.lip6.move.processGenerator.views;
 
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
@@ -13,18 +13,19 @@ import org.eclipse.swt.widgets.TreeItem;
  * @author Vincent
  * 
  */
-public class ModifyTextInTree implements ModifyListener {
+public class ModifyTextInTree implements FocusListener {
 	
 	private TreeItem item;
 	private TableItem table;
 	private Text text;
 	private int indexOfTable;
+	private String keyData;
 	
-	public ModifyTextInTree(TreeItem item, Text text, int indexOfTable) {
+	public ModifyTextInTree(TreeItem item, Text text, String keyData) {
 		super();
 		this.item = item;
 		this.text = text;
-		this.indexOfTable = indexOfTable;
+		this.keyData = keyData;
 	}
 	
 	/**
@@ -37,10 +38,11 @@ public class ModifyTextInTree implements ModifyListener {
 		super();
 		this.table = tableItem;
 		this.text = text;
-		this.indexOfTable = indexOfTable;}
+		this.indexOfTable = indexOfTable;
+	}
 
 	@Override
-	public void modifyText(ModifyEvent me) {
+	public void focusLost(FocusEvent me) {
 		// on n'accepte que les nombres
 		try {
 			Integer.parseInt(text.getText());
@@ -49,8 +51,11 @@ public class ModifyTextInTree implements ModifyListener {
 		}
 		// puis on met à jour la valeur du Tableitem
 		if (item != null)
-			item.setText(indexOfTable, text.getText());
+			item.setData(keyData, text.getText());
 		else
 			table.setText(indexOfTable, text.getText());
 	}
+
+	@Override
+	public void focusGained(FocusEvent e) {}
 }

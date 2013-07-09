@@ -1,7 +1,6 @@
 package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import static org.junit.Assert.assertTrue;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import fr.lip6.move.processGenerator.EQuantity;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
@@ -38,13 +38,13 @@ public class ChangePatternTest {
 	private void test(IChangePattern<BpmnProcess> changePattern) throws IOException {
 		
 		BpmnProcess process = BpmnBuilder.instance.createExampleWithParallel();
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/vincent.bpmn");
 		process = changePattern.apply(process, rng, null);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test.bpmn");
 		process = changePattern.apply(process, rng, null);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test2.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test2.bpmn");
 		process = changePattern.apply(process, rng, null);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test3.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test3.bpmn");
 		assertTrue(true);
 	}
 	
@@ -63,11 +63,11 @@ public class ChangePatternTest {
 		
 		BpmnProcess process = BpmnBuilder.instance.initialFinal();
 		process = serial.apply(process, rng, null);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test1.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test1.bpmn");
 		process = parallel.apply(process, rng, null);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test2.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test2.bpmn");
 		process = thread.apply(process, rng, null);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test3.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test3.bpmn");
 		assertTrue(true);
 	}
 	
@@ -89,14 +89,14 @@ public class ChangePatternTest {
 		listeCandidat = mutation.apply(listeCandidat, rng);
 		
 		listeCandidat.get(0)
-				.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test.bpmn");
+				.save(System.getProperty("user.home") + Utils.projectPath + "gen/test.bpmn");
 	}
 	
 	// @Test
 	public void testWorkflowInsert() throws IOException, BpmnException {
 		
 		BpmnProcess process = BpmnBuilder.instance.initialABFinal();
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test.bpmn");
 		
 		IStructuralConstraint contrainte = new BpmnArbitraryCycle();
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, EQuantity.EQUAL, 1, 1);
@@ -108,7 +108,7 @@ public class ChangePatternTest {
 		list.add(checker2);
 		
 		process = new BpmnWorkflowInsert().apply(process, rng, list);
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/test2.bpmn");
+		process.save(System.getProperty("user.home") + Utils.projectPath + "gen/test2.bpmn");
 		assertTrue(true);
 	}
 }

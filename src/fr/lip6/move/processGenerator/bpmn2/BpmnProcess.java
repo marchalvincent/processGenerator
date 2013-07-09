@@ -122,6 +122,10 @@ public class BpmnProcess {
 		return process;
 	}
 	
+	public void setProcess(Process process) {
+		this.process = process;
+	}
+	
 	/**
 	 * Créé et associé un {@link StartEvent} au process.
 	 */

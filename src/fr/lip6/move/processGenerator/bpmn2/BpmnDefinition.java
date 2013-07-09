@@ -23,7 +23,6 @@ public class BpmnDefinition {
 		xmlInformation.put("dc", "http://www.omg.org/spec/DD/20100524/DC");
 		xmlInformation.put("di", "http://www.omg.org/spec/DD/20100524/DI");
 		xmlInformation.put("tns", "http://www.jboss.org/drools");
-		xmlInformation.put("xmlns", "http://www.jboss.org/drools");
 		xmlInformation
 				.put("schemaLocation",
 						"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");

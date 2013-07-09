@@ -1,14 +1,13 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints;
 
 import static org.junit.Assert.assertTrue;
-import java.io.File;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import fr.lip6.move.processGenerator.EQuantity;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnArbitraryCycle;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
 public class ArbitraryCyclesTest {
@@ -59,8 +58,6 @@ public class ArbitraryCyclesTest {
 		
 		// init du process
 		process = BpmnBuilder.instance.getComplexLoopExample();
-		// process.save(System.getProperty("user.home") + File.separator +
-		// "./workspace/processGenerator/gen/vincent.bpmn");
 		
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 1);
@@ -72,7 +69,7 @@ public class ArbitraryCyclesTest {
 		
 		// init du process
 		process = BpmnBuilder.instance.getDoubleLoopExample();
-		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
+		process.save(System.getProperty("user.home") + Utils.bugPathBpmn + "vincent.bpmn");
 		
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 2);

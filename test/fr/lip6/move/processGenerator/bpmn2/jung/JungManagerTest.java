@@ -16,8 +16,6 @@ public class JungManagerTest {
 	@Test
 	public void test1() throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.getLoopExample();
-		// process.save(System.getProperty("user.home") + File.separator +
-		// "./workspace/processGenerator/gen/vincent.bpmn");
 		
 		JungProcess jung = new JungProcess(process);
 		

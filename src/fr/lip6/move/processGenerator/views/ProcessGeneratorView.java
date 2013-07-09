@@ -3,7 +3,6 @@ package fr.lip6.move.processGenerator.views;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -20,8 +19,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -58,7 +55,6 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	public static final String ID = "ProcessGenerator.views.ProcessGeneratorView";
 	private ScrolledForm form;
-	private Table tableMutationParameters;
 	private Group groupMutationParameters, grpElementsParameters;
 	private Text text_oclConstraint;
 	private Combo comboTypeFile, comboStrategySelection;
@@ -73,7 +69,7 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	private BpmnProcess bpmnInitialProcess;
 	private UmlProcess umlInitialProcess;
-	private Tree treeElements, treeWorkflows;
+	private Tree treeElements, treeWorkflows, treeChangePatterns;
 	
 	/**
 	 * The constructor.
@@ -305,7 +301,7 @@ public class ProcessGeneratorView extends ViewPart {
 		treeColumn_1.setText("Quantity");
 		
 		TreeColumn treeColumn_2 = new TreeColumn(treeWorkflows, SWT.NONE);
-		treeColumn_2.setWidth(40);
+		treeColumn_2.setWidth(55);
 		treeColumn_2.setText("Number");
 		
 		TreeColumn treeColumn_3 = new TreeColumn(treeWorkflows, SWT.NONE);
@@ -456,20 +452,20 @@ public class ProcessGeneratorView extends ViewPart {
 		toolkit.adapt(groupMutationParameters);
 		toolkit.paintBordersFor(groupMutationParameters);
 		
-		tableMutationParameters = new Table(groupMutationParameters, SWT.BORDER | SWT.FULL_SELECTION);
-		tableMutationParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableMutationParameters.setLinesVisible(true);
-		tableMutationParameters.setHeaderVisible(true);
-		toolkit.adapt(tableMutationParameters);
-		toolkit.paintBordersFor(tableMutationParameters);
+		treeChangePatterns = new Tree(groupMutationParameters, SWT.BORDER | SWT.CHECK);
+		treeChangePatterns.setLinesVisible(true);
+		treeChangePatterns.setHeaderVisible(true);
+		treeChangePatterns.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		toolkit.adapt(treeChangePatterns);
+		toolkit.paintBordersFor(treeChangePatterns);
 		
-		TableColumn tableColumnChangePatternName = new TableColumn(tableMutationParameters, SWT.NONE);
-		tableColumnChangePatternName.setWidth(200);
-		tableColumnChangePatternName.setText("Change pattern");
+		TreeColumn trclmnChangePattern = new TreeColumn(treeChangePatterns, SWT.NONE);
+		trclmnChangePattern.setWidth(160);
+		trclmnChangePattern.setText("Change pattern");
 		
-		TableColumn tableColumnProbability = new TableColumn(tableMutationParameters, SWT.NONE);
-		tableColumnProbability.setWidth(100);
-		tableColumnProbability.setText("Probability");
+		TreeColumn treeColumn_5 = new TreeColumn(treeChangePatterns, SWT.NONE);
+		treeColumn_5.setWidth(60);
+		treeColumn_5.setText("Probability");
 		
 		Section sctnTermination = toolkit.createSection(scrolledForm.getBody(), Section.TWISTIE | Section.TITLE_BAR);
 		sctnTermination.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -615,11 +611,11 @@ public class ProcessGeneratorView extends ViewPart {
 		if (typeFile.toLowerCase().contains("bpmn")) {
 			addElementsToTree(treeElements, EBpmnElement.values());
 			addElementsToTree(treeWorkflows, EBpmnWorkflowPattern.values());
-			setChangePatternToTable(EBpmnChangePattern.values());
+			addChangePatternToTree(EBpmnChangePattern.values());
 		} else {
 			addElementsToTree(treeElements, EUmlElement.values());
 			addElementsToTree(treeWorkflows, EUmlWorkflowPattern.values());
-			setChangePatternToTable(EUmlChangePattern.values());
+			addChangePatternToTree(EUmlChangePattern.values());
 		}
 		
 		// le nombre de population, elitism et stratégie de séléction
@@ -673,8 +669,7 @@ public class ProcessGeneratorView extends ViewPart {
 	 *            un tableau d'{@link Object} représentant les éléments constituant le tableau.
 	 */
 	private void addElementsToTree(Tree tree, IHierarchicalEnum[] elements) {
-
-
+		
 		// les préférences utilisateurs
 		String lecturePref;
 		if (tree == treeElements) {
@@ -692,7 +687,7 @@ public class ProcessGeneratorView extends ViewPart {
 			}
 		}
 		
-		// 
+		// pour chaque élément
 		for (IHierarchicalEnum elem : elements) {
 			// on créé le TreeItem
 			TreeItem newTreeItem = addToTree(tree, elem);
@@ -700,8 +695,9 @@ public class ProcessGeneratorView extends ViewPart {
 			// maintenant on peut ajouter le menu déroulant etc.
 			// on récupère les préférences utilisateurs
 			String[] infos = preferences.get(elem.toString());
+			
 			// si infos est null, on met les valeurs par défaut
-			if (infos == null) {
+			if (infos == null || infos.length != 5) {
 				infos = new String[5];
 				infos[0] = "";
 				infos[1] = Utils.DEFAULT_CHECK;
@@ -710,13 +706,12 @@ public class ProcessGeneratorView extends ViewPart {
 				infos[4] = Utils.DEFAULT_WEIGHT;
 			}
 			
-			newTreeItem.setExpanded(true);
-			if (infos[1].equals("1"))
-				newTreeItem.setChecked(true);
+			// le check
+			newTreeItem.setChecked(infos[1].equals("1"));
 			
 			// emplacement 0 : le nom de l'élément
 			newTreeItem.setText(0, elem.toString());
-			newTreeItem.setData("0", elem);
+			newTreeItem.setData(Utils.NAME_KEY, elem);
 			
 			// emplacement 1 : le combobox
 			TreeEditor editor = new TreeEditor(tree);
@@ -734,8 +729,8 @@ public class ProcessGeneratorView extends ViewPart {
 			editor.grabHorizontal = true;
 			editor.setEditor(combo, newTreeItem, 1);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction de la selection du combo
-			combo.addSelectionListener(new SelectionComboInTree(newTreeItem, combo, 1));
-			newTreeItem.setText(1, combo.getText());
+			combo.addSelectionListener(new SelectionComboInTree(newTreeItem, combo));
+			newTreeItem.setData(Utils.QUANTITY_KEY, combo.getText());
 			
 			// emplacement 2 : le nombre
 			editor = new TreeEditor(tree);
@@ -744,8 +739,8 @@ public class ProcessGeneratorView extends ViewPart {
 			editor.grabHorizontal = true;
 			editor.setEditor(text, newTreeItem, 2);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
-			text.addModifyListener(new ModifyTextInTree(newTreeItem, text, 2));
-			newTreeItem.setText(2, text.getText());
+			text.addFocusListener(new ModifyTextInTree(newTreeItem, text, Utils.NUMBER_KEY));
+			newTreeItem.setData(Utils.NUMBER_KEY, text.getText());
 			
 			// emplacement 3 : le poids associé
 			editor = new TreeEditor(tree);
@@ -754,9 +749,8 @@ public class ProcessGeneratorView extends ViewPart {
 			editor.grabHorizontal = true;
 			editor.setEditor(text, newTreeItem, 3);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
-			text.addModifyListener(new ModifyTextInTree(newTreeItem, text, 3));
-			newTreeItem.setText(3, text.getText());
-		
+			text.addFocusListener(new ModifyTextInTree(newTreeItem, text, Utils.WEIGHT_KEY));
+			newTreeItem.setData(Utils.WEIGHT_KEY, text.getText());
 		}
 	}
 	
@@ -785,11 +779,13 @@ public class ProcessGeneratorView extends ViewPart {
 			
 			// et enfin on peut créer notre TreeItem
 			newTreeItem = new TreeItem(parentItem, SWT.NONE);
+			parentItem.setExpanded(true);
 		} 
 		// sinon, on peut ajouter l'élément directement sur l'arbre
 		else {
 			newTreeItem = new TreeItem(tree, SWT.NONE);
 		}
+		
 		return newTreeItem;
 	}
 
@@ -819,45 +815,53 @@ public class ProcessGeneratorView extends ViewPart {
 		return null;
 	}
 
-	private void setChangePatternToTable(IEnumChangePattern<?>[] eBpmnChangePatterns) {
-		
+	/**
+	 * Rempli le Tree des change patterns selon les {@link IHierarchicalEnum} passés en paramètres.
+	 * @param changePatterns les {@link IHierarchicalEnum} représentant les change patterns.
+	 */
+	private void addChangePatternToTree(IHierarchicalEnum[] changePatterns) {
+
 		// on récupère les préférences utilisateurs
 		String lecturePreferences = ConfigurationManager.instance.getChangePatternAttributes();
-		Map<String, String> preferences = new HashMap<String, String>();
+		Map<String, String[]> preferences = new HashMap<>();
 		for (String ligne : lecturePreferences.split("___")) {
 			if (!ligne.isEmpty()) {
-				String[] split = ligne.split("%");
-				preferences.put(split[0], split[1]);
+				String[] infos = ligne.split("%");
+				preferences.put(infos[0], infos);
 			}
 		}
 		
-		// on construit les lignes
-		for (int i = 0; i < eBpmnChangePatterns.length; i++) {
-			new TableItem(tableMutationParameters, SWT.NONE);
-		}
-		
-		// pour chaque ligne...
-		TableItem[] lignes = tableMutationParameters.getItems();
-		for (int i = 0; i < lignes.length; i++) {
+		for (IHierarchicalEnum cp : changePatterns) {
+			// on créé le TreeItem
+			TreeItem newTreeItem = addToTree(treeChangePatterns, cp);
 			
-			// la préférence utilisateur
-			String proba = preferences.get(eBpmnChangePatterns[i].toString());
-			if (proba == null)
-				proba = "1";
+			// les préférences utilisateur
+			String[] infos = preferences.get(cp.toString());
+			if (infos == null || infos.length != 3) {
+				infos = new String[3];
+				infos[0] = "";
+				// check ou pas
+				infos[1] = "1";
+				// proba
+				infos[2] = "1";
+			}
+			
+			// le check
+			newTreeItem.setChecked(infos[1].equals("1"));
 			
 			// emplacement 0 : le nom
-			lignes[i].setText(0, eBpmnChangePatterns[i].toString());
-			lignes[i].setData("0", eBpmnChangePatterns[i]);
+			newTreeItem.setText(0, cp.toString());
+			newTreeItem.setData(Utils.NAME_KEY, cp);
 			
 			// emplacement 1 : le nombre de proba
-			TableEditor editor = new TableEditor(tableMutationParameters);
-			Text text = new Text(tableMutationParameters, SWT.NONE);
-			text.setText(proba);
+			TreeEditor editor = new TreeEditor(treeChangePatterns);
+			Text text = new Text(treeChangePatterns, SWT.NONE);
+			text.setText(infos[2]);
 			editor.grabHorizontal = true;
-			editor.setEditor(text, lignes[i], 1);
+			editor.setEditor(text, newTreeItem, 1);
 			// un listener nous permettra de mettre a jour la valeur du TableItem en fonction du Text
-			text.addModifyListener(new ModifyTextInTree(lignes[i], text, 1));
-			lignes[i].setText(1, text.getText());
+			text.addFocusListener(new ModifyTextInTree(newTreeItem, text, Utils.NUMBER_KEY));
+			newTreeItem.setData(Utils.NUMBER_KEY, text.getText());
 		}
 	}
 	
@@ -921,8 +925,8 @@ public class ProcessGeneratorView extends ViewPart {
 		return checkCrossover;
 	}
 	
-	public Table getTableMutationParameters() {
-		return tableMutationParameters;
+	public Tree getTreeMutationParameters() {
+		return treeChangePatterns;
 	}
 	
 	public Button getButtonUntilSolutionFound() {
@@ -1032,10 +1036,10 @@ public class ProcessGeneratorView extends ViewPart {
 	 * @param eBpmnChangePatterns
 	 */
 	public void majTableOfChangePatterns(IEnumChangePattern<?>[] eBpmnChangePatterns) {
-		this.newTableMutation();
-		this.setChangePatternToTable(eBpmnChangePatterns);
+		this.newTreeChangePattern();
+		this.addChangePatternToTree(eBpmnChangePatterns);
 	}
-	
+
 	private void newTreeElement() {
 		treeElements.dispose();
 		treeElements = new Tree(grpElementsParameters, SWT.BORDER | SWT.CHECK);
@@ -1093,22 +1097,23 @@ public class ProcessGeneratorView extends ViewPart {
 		compositeTarget2.layout(true);
 	}
 	
-	private void newTableMutation() {
-		tableMutationParameters.dispose();
-		tableMutationParameters = new Table(groupMutationParameters, SWT.BORDER | SWT.FULL_SELECTION);
-		tableMutationParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableMutationParameters.setLinesVisible(true);
-		tableMutationParameters.setHeaderVisible(true);
-		toolkit.adapt(tableMutationParameters);
-		toolkit.paintBordersFor(tableMutationParameters);
+	private void newTreeChangePattern() {
+		treeChangePatterns.dispose();
 		
-		TableColumn tableColumnChangePatternName = new TableColumn(tableMutationParameters, SWT.NONE);
-		tableColumnChangePatternName.setWidth(150);
-		tableColumnChangePatternName.setText("Change pattern");
+		treeChangePatterns = new Tree(groupMutationParameters, SWT.BORDER | SWT.CHECK);
+		treeChangePatterns.setLinesVisible(true);
+		treeChangePatterns.setHeaderVisible(true);
+		treeChangePatterns.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		toolkit.adapt(treeChangePatterns);
+		toolkit.paintBordersFor(treeChangePatterns);
 		
-		TableColumn tableColumnProbability = new TableColumn(tableMutationParameters, SWT.NONE);
-		tableColumnProbability.setWidth(100);
-		tableColumnProbability.setText("Probability");
+		TreeColumn trclmnChangePattern = new TreeColumn(treeChangePatterns, SWT.NONE);
+		trclmnChangePattern.setWidth(160);
+		trclmnChangePattern.setText("Change pattern");
+
+		TreeColumn treeColumn_5 = new TreeColumn(treeChangePatterns, SWT.NONE);
+		treeColumn_5.setWidth(60);
+		treeColumn_5.setText("Probability");
 		
 		groupMutationParameters.layout(true);
 	}

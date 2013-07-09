@@ -52,7 +52,7 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 						+ converging.getOutgoing().size() + ", id : " + converging.getId());
 				
 				if (Utils.DEBUG)
-					process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
+					process.save(System.getProperty("user.home") + Utils.bugPathBpmn);
 			}
 			
 			SequenceFlow sequence = converging.getOutgoing().get(0);

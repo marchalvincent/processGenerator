@@ -1,5 +1,7 @@
 package fr.lip6.move.processGenerator.ga;
 
+import fr.lip6.move.processGenerator.IHierarchicalEnum;
+
 /**
  * Cette interface permet de définir le comportement que doit avoir chaque énumération représentant les
  * {@link IChangePattern} que peut sélectionner l'utilisateur sur l'interface graphique.
@@ -7,7 +9,7 @@ package fr.lip6.move.processGenerator.ga;
  * @author Vincent
  * 
  */
-public interface IEnumChangePattern<T> {
+public interface IEnumChangePattern<T> extends IHierarchicalEnum {
 	
 	/**
 	 * A chaque énumération est associé un {@link IChangePattern}. C'est pourquoi cette énumération doit être capable

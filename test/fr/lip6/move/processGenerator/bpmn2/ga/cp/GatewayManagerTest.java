@@ -14,7 +14,6 @@ public class GatewayManagerTest {
 	@Test
 	public void test() throws IOException {
 		BpmnProcess process = BpmnBuilder.instance.getExampleForSESE2();
-//		process.save(System.getProperty("user.home") + File.separator + "./workspace/processGenerator/gen/vincent.bpmn");
 		List<Gateway> list = BpmnFilter.byType(Gateway.class, process.getProcess().getFlowElements());
 		
 		int countTwin = 0, countNoTwin = 0;

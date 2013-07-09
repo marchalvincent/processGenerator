@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.uml2.ga.cp;
 
+import fr.lip6.move.processGenerator.IHierarchicalEnum;
 import fr.lip6.move.processGenerator.ga.IChangePattern;
 import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
@@ -13,12 +14,14 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  */
 public enum EUmlChangePattern implements IEnumChangePattern<UmlProcess> {
 	
-	SERIAL_INSERT(UmlSerialInsert.class);
+	SERIAL_INSERT(null, UmlSerialInsert.class);
 	
 	private Class<? extends IChangePattern<UmlProcess>> clazz;
+	private IHierarchicalEnum parent;
 	
-	private EUmlChangePattern(Class<? extends IChangePattern<UmlProcess>> clazz) {
+	private EUmlChangePattern(IHierarchicalEnum parent, Class<? extends IChangePattern<UmlProcess>> clazz) {
 		this.clazz = clazz;
+		this.parent = parent;
 	}
 	
 	@Override
@@ -26,5 +29,10 @@ public enum EUmlChangePattern implements IEnumChangePattern<UmlProcess> {
 		IChangePattern<UmlProcess> cp = this.clazz.newInstance();
 		cp.setProba(proba);
 		return cp;
+	}
+
+	@Override
+	public IHierarchicalEnum getParent() {
+		return parent;
 	}
 }

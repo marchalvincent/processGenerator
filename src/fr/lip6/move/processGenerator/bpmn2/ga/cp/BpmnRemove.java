@@ -7,6 +7,7 @@ import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.SequenceFlow;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
@@ -51,7 +52,7 @@ public class BpmnRemove extends AbstractChangePattern<BpmnProcess> {
 		if (sequencesIn.size() != 1) {
 			System.err.println(getClass().getSimpleName() + " : The number of incoming sequenceFlows is not correct : "
 					+ sequencesIn.size() + ". " + ancienneTask.getClass());
-			process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
+			process.save(System.getProperty("user.home") + Utils.bugPathBpmn);
 		}
 		if (sequencesOut.size() > 1)
 			System.err.println(getClass().getSimpleName() + " : The number of outgoing sequenceFlows is not correct : "

@@ -17,10 +17,22 @@ public class Utils {
 	public static final boolean DEBUG = true;
 	public static final boolean BENCH = false;
 	
+	/*
+	 * Toutes ces constantes sont utilisées pour la construction et la manipulation des Tree.
+	 */
+	public static final String NAME_KEY = "name";
 	public static final String DEFAULT_CHECK = "0";
+	public static final String QUANTITY_KEY = "quantityKey";
 	public static final String DEFAULT_QUANTITY = "3";
+	public static final String NUMBER_KEY = "numberKey";
 	public static final String DEFAULT_NUMBER = "1";
+	public static final String WEIGHT_KEY = "weightKey";
 	public static final String DEFAULT_WEIGHT = "1";
+
+	public static final String projectPath = "/Documents/workspace/processGenerator/";
+	public static final String bugPathBpmn = projectPath + "gen/bug.bpmn";
+	public static final String bugPathUml = projectPath + "gen/bug.uml";
+	
 	
 	public static Utils instance = new Utils();
 	

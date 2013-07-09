@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.constraint;
 
+import org.eclipse.bpmn2.Process;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -10,6 +11,8 @@ import org.eclipse.ocl.ecore.Constraint;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
+import fr.lip6.move.processGenerator.Utils;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
  * Cette classe offre un niveau d'abstraction aux solveurs de contraintes OCL.
@@ -69,6 +72,12 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		try {
 			oclExpession = helper.createQuery(oclQuery);
 		} catch (ParserException e) {
+			if (object instanceof Process) {
+				BpmnProcess process = new BpmnProcess();
+				process.setProcess((Process) object);
+				process.save(System.getProperty("user.home") + Utils.bugPathBpmn);
+			}
+			
 			System.err.println("Error with the following query : " + oclQuery);
 			e.printStackTrace();
 			return 0;

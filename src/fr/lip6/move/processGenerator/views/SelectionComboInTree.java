@@ -4,6 +4,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.TreeItem;
+import fr.lip6.move.processGenerator.Utils;
 
 /**
  * Cet adapteur est déclenché lorsque l'utilisateur modifie la valeur d'un combobox dans un tableau. Afin de garder la
@@ -16,17 +17,15 @@ public class SelectionComboInTree extends SelectionAdapter {
 	
 	private TreeItem item;
 	private Combo combo;
-	private int indexOfTree;
 	
-	public SelectionComboInTree(TreeItem item, Combo combo, int indexOfTree) {
+	public SelectionComboInTree(TreeItem item, Combo combo) {
 		super();
 		this.item = item;
 		this.combo = combo;
-		this.indexOfTree = indexOfTree;
 	}
 	
 	@Override
 	public void widgetSelected(SelectionEvent e) {
-		item.setText(indexOfTree, combo.getText());
+		item.setData(Utils.QUANTITY_KEY, combo.getText());
 	}
 }

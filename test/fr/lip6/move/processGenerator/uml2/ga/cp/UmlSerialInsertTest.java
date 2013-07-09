@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Random;
 import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
+import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.uml2.UmlBuilder;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
@@ -39,6 +40,6 @@ public class UmlSerialInsertTest {
 	
 	@Test
 	public void t() {
-		UmlBuilder.instance.initialFinal().save(System.getProperty("user.home") + "/documents/workspace/processGenerator/gen/vincent.uml");
+		UmlBuilder.instance.initialFinal().save(System.getProperty("user.home") + Utils.projectPath + "gen/vincent.uml");
 	}
 }

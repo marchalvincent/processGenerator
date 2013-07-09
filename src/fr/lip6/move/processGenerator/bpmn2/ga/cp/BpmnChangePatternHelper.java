@@ -377,7 +377,7 @@ public class BpmnChangePatternHelper {
 							+ gatewayConverging.getIncoming().size() + ", id : " + gatewayConverging.getId());
 					
 					if (Utils.DEBUG)
-						process.save(System.getProperty("user.home") + "/workspace/processGenerator/gen/bug.bpmn");
+						process.save(System.getProperty("user.home") + Utils.bugPathBpmn);
 				}
 				
 				// ici on peut faire la suppression des 2 Gateway

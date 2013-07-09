@@ -32,10 +32,10 @@ public enum EUmlElement implements IEnumElement {
 	EXECUTABLE_NODE(null, ExecutableNode.class),
 	OPAQUE_ACTION(EXECUTABLE_NODE, OpaqueAction.class);
 	
-	private EUmlElement parent;
+	private IHierarchicalEnum parent;
 	private Class<? extends Element> clazz;
 	
-	private EUmlElement(EUmlElement parent, Class<? extends Element> clazz) {
+	private EUmlElement(IHierarchicalEnum parent, Class<? extends Element> clazz) {
 		this.parent = parent;
 		this.clazz = clazz;
 	}

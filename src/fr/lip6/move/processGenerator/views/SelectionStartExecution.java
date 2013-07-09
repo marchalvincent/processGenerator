@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.uncommons.watchmaker.framework.TerminationCondition;
@@ -270,17 +269,21 @@ public class SelectionStartExecution extends SelectionAdapter {
 		StringBuilder sb = new StringBuilder();
 		
 		// pour chaque ligne du tableau
-		for (TableItem item : view.getTableMutationParameters().getItems()) {
+		for (TreeItem item : view.getTreeMutationParameters().getItems()) {
 			// on vérifie que l'item est bien une enum de change pattern
-			if (item.getData("0") instanceof IEnumChangePattern<?>) {
+			if (item.getData(Utils.NAME_KEY) instanceof IEnumChangePattern<?>) {
 				// si oui, on instancie dynamiquement la classe
-				IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData("0")).newInstance(item.getText(1));
+				IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData(Utils.NAME_KEY)).newInstance((String) item.getData(Utils.NUMBER_KEY));
 				changePatterns.add(cPattern);
 				
 				sb.append("___");
-				sb.append(item.getData("0").toString());
+				sb.append(item.getData(Utils.NAME_KEY).toString());
 				sb.append("%");
-				sb.append(item.getText(1));
+				if (item.getChecked())
+					sb.append("1%");
+				else
+					sb.append("0%");
+				sb.append(item.getData(Utils.NUMBER_KEY));
 			} else {
 				System.err.println("Carreful, the item data is not a " + IEnumChangePattern.class.getSimpleName() + ".");
 			}
@@ -318,7 +321,6 @@ public class SelectionStartExecution extends SelectionAdapter {
 			List<StructuralConstraintChecker> listTemp = this.buildStructuralConstraints(item.getItems(), constraintType, factory, sb);
 			liste.addAll(listTemp);
 			
-			
 			sb.append("___");
 			sb.append(item.getText(0));
 			
@@ -328,7 +330,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// on construit la StructuralConstraint dyamiquement en fonction du type
 				IStructuralConstraint contrainte;
 				if (constraintType.equals(ConstraintType.Element)) {
-					Object o = item.getData("0");
+					Object o = item.getData(Utils.NAME_KEY);
 					if (o instanceof IEnumElement)
 						contrainte = factory.newElementConstraint((IEnumElement) o);
 					else {
@@ -336,20 +338,20 @@ public class SelectionStartExecution extends SelectionAdapter {
 						continue;
 					}
 				} else {
-					contrainte = factory.newWorkflowPatternConstraint(item.getData("0"));
+					contrainte = factory.newWorkflowPatternConstraint(item.getData(Utils.NAME_KEY));
 				}
 				
 				// on récupère la quantité
-				EQuantity quantity = EQuantity.getQuantityByString(item.getText(1));
+				EQuantity quantity = EQuantity.getQuantityByString((String) item.getData(Utils.QUANTITY_KEY));
 				
 				// puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à
 				// la volée
 				int number = 1, weight = 1;
 				try {
-					number = Integer.parseInt(item.getText(2));
+					number = Integer.parseInt((String) item.getData(Utils.NUMBER_KEY));
 					
 					// ainsi que le poids
-					weight = Integer.parseInt(item.getText(3));
+					weight = Integer.parseInt((String) item.getData(Utils.WEIGHT_KEY));
 					
 					// on construit le checker puis on l'ajoute à la liste
 					StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
