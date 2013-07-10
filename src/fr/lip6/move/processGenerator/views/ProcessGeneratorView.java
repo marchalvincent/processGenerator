@@ -314,7 +314,6 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnOclConstraints.marginHeight = 0;
 		toolkit.paintBordersFor(sctnOclConstraints);
 		sctnOclConstraints.setText("Add OCL constraints");
-		sctnOclConstraints.setExpanded(true);
 		
 		Composite compositeTarget3 = new Composite(sctnOclConstraints, SWT.NONE);
 		toolkit.adapt(compositeTarget3);
@@ -449,6 +448,7 @@ public class ProcessGeneratorView extends ViewPart {
 		groupMutationParameters.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		groupMutationParameters.setText("Mutation parameters");
 		groupMutationParameters.setBounds(0, 0, 70, 82);
+		
 		toolkit.adapt(groupMutationParameters);
 		toolkit.paintBordersFor(groupMutationParameters);
 		
@@ -456,6 +456,7 @@ public class ProcessGeneratorView extends ViewPart {
 		treeChangePatterns.setLinesVisible(true);
 		treeChangePatterns.setHeaderVisible(true);
 		treeChangePatterns.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
 		toolkit.adapt(treeChangePatterns);
 		toolkit.paintBordersFor(treeChangePatterns);
 		
@@ -540,6 +541,7 @@ public class ProcessGeneratorView extends ViewPart {
 		sctnCustomFitness.marginHeight = 0;
 		toolkit.paintBordersFor(sctnCustomFitness);
 		sctnCustomFitness.setText("Custom fitness function (globals weights)");
+		sctnCustomFitness.setExpanded(true);
 		
 		Composite composite_4 = new Composite(sctnCustomFitness, SWT.NONE);
 		toolkit.adapt(composite_4);
@@ -637,7 +639,7 @@ public class ProcessGeneratorView extends ViewPart {
 		getButtonCheckCrossover().setSelection(bool);
 		
 		// les préférences sur les conditions de terminaisons
-		getButtonUntilSolutionFound().setSelection(ConfigurationManager.instance.isSolutionFound());
+		getButtonUntilSolutionFound().setSelection(ConfigurationManager.instance.isUntilSolutionFound());
 		getButtonDuringSeconde().setSelection(ConfigurationManager.instance.isDuringSecondes());
 		getButtonUntilGeneration().setSelection(ConfigurationManager.instance.isUntilGenerations());
 		getButtonUntilStagnation().setSelection(ConfigurationManager.instance.isUntilStagnations());
@@ -650,7 +652,7 @@ public class ProcessGeneratorView extends ViewPart {
 		getSpinnerSizeWeight().setSelection(ConfigurationManager.instance.getSizeWeight());
 		getSpinnerElementWeight().setSelection(ConfigurationManager.instance.getElementsWeight());
 		getSpinnerWorkflowWeight().setSelection(ConfigurationManager.instance.getWorkflowsWeight());
-		getSpinnerManualOclWeight().setSelection(ConfigurationManager.instance.getManualOCLWeight());
+		getSpinnerManualOclWeight().setSelection(ConfigurationManager.instance.getManualOclWeight());
 		
 		// les listeners
 		// selection du type de fichier de sortie (bpmn, uml, etc.)
@@ -1039,13 +1041,17 @@ public class ProcessGeneratorView extends ViewPart {
 	 * Met à jour l'arbre des changes patterns
 	 * @param eBpmnChangePatterns
 	 */
-	public void majTableOfChangePatterns(IEnumChangePattern<?>[] eBpmnChangePatterns) {
+	public void majTreeOfChangePatterns(IEnumChangePattern<?>[] eBpmnChangePatterns) {
 		this.newTreeChangePattern();
 		this.addChangePatternToTree(eBpmnChangePatterns);
+//		grpElementsParameters.layout(true);
+		treeChangePatterns.layout(true);
 	}
 
 	private void newTreeElement() {
+		treeElements.removeAll();
 		treeElements.dispose();
+		
 		treeElements = new Tree(grpElementsParameters, SWT.BORDER | SWT.CHECK);
 		treeElements.setLinesVisible(true);
 		treeElements.setHeaderVisible(true);
@@ -1073,8 +1079,9 @@ public class ProcessGeneratorView extends ViewPart {
 	}
 	
 	private void newTreeWorkflow() {
-		
+		treeWorkflows.removeAll();
 		treeWorkflows.dispose();
+		
 		treeWorkflows = new Tree(compositeTarget2, SWT.BORDER | SWT.CHECK);
 		treeWorkflows.setLinesVisible(true);
 		treeWorkflows.setHeaderVisible(true);
@@ -1102,6 +1109,7 @@ public class ProcessGeneratorView extends ViewPart {
 	}
 	
 	private void newTreeChangePattern() {
+		treeChangePatterns.removeAll();
 		treeChangePatterns.dispose();
 		
 		treeChangePatterns = new Tree(groupMutationParameters, SWT.BORDER | SWT.CHECK);
@@ -1120,5 +1128,33 @@ public class ProcessGeneratorView extends ViewPart {
 		treeColumn_5.setText("Probability");
 		
 		groupMutationParameters.layout(true);
+	}
+
+	public void majGeneticAlgorithmInfos() {
+		// on met également les infos path, nbNode et margin au passage...
+		getLabelLocation().setText(ConfigurationManager.instance.getLocation());
+		getSpinnerNbNode().setSelection(ConfigurationManager.instance.getNbNodes());
+		getSpinnerMargin().setSelection(ConfigurationManager.instance.getMargin());
+		
+		getSpinnerNbPopulation().setSelection(ConfigurationManager.instance.getPopulation());
+		
+		getSpinnerElitism().setSelection(ConfigurationManager.instance.getElitism());
+		getComboStrategySelection().select(ConfigurationManager.instance.getSelectionStrategy());
+		
+		getButtonCheckMutation().setSelection(ConfigurationManager.instance.isCheckMutation());
+		getButtonCheckCrossover().setSelection(ConfigurationManager.instance.isCheckCrossover());
+		
+		getButtonUntilSolutionFound().setSelection(ConfigurationManager.instance.isUntilSolutionFound());
+		getButtonDuringSeconde().setSelection(ConfigurationManager.instance.isDuringSecondes());
+		getSpinnerUntilSeconde().setSelection(ConfigurationManager.instance.getNbSecondes());
+		getButtonUntilGeneration().setSelection(ConfigurationManager.instance.isUntilGenerations());
+		getSpinnerUntilGeneration().setSelection(ConfigurationManager.instance.getNbGenerations());
+		getButtonUntilStagnation().setSelection(ConfigurationManager.instance.isUntilStagnations());
+		getSpinnerUntilStagnation().setSelection(ConfigurationManager.instance.getNbStagnations());
+		
+		getSpinnerSizeWeight().setSelection(ConfigurationManager.instance.getSizeWeight());
+		getSpinnerElementWeight().setSelection(ConfigurationManager.instance.getElementsWeight());
+		getSpinnerWorkflowWeight().setSelection(ConfigurationManager.instance.getWorkflowsWeight());
+		getSpinnerManualOclWeight().setSelection(ConfigurationManager.instance.getManualOclWeight());
 	}
 }

@@ -7,7 +7,7 @@ import org.junit.Test;
 import fr.lip6.move.processGenerator.EQuantity;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnMultiChoice;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnMultiChoice;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
 public class MultiChoiceTest {

@@ -85,7 +85,7 @@ public class BpmnWorkflowRepresentation implements IWorkflowRepresentation {
 	 * @return
 	 */
 	public Task buildTask() {
-		Task task = this.buildRandomSubTask();
+		Task task = this.buildRandomTask();
 		
 		String name = BpmnNameManager.instance.getTaskName();
 		task.setId("id_" + name);
@@ -100,8 +100,8 @@ public class BpmnWorkflowRepresentation implements IWorkflowRepresentation {
 	 * 
 	 * @return
 	 */
-	private Task buildRandomSubTask() {
-		return BpmnProcess.buildRandomSubTask();
+	private Task buildRandomTask() {
+		return BpmnProcess.buildRandomTask();
 	}
 	
 	/**

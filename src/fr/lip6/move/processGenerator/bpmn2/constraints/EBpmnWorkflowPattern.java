@@ -1,6 +1,17 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints;
 
 import fr.lip6.move.processGenerator.IHierarchicalEnum;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnArbitraryCycle;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnExclusiveChoice;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnExpliciteTermination;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnImplicitTermination;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnMultiChoice;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnMultiMerge;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnParallelSplit;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnSequence;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnSimpleMerge;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnStructuredSynchronizingMerge;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnSynchronization;
 import fr.lip6.move.processGenerator.constraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 

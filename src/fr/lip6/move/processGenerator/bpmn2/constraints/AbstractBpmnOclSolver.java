@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints;
 
+import org.eclipse.ocl.ParserException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.AbstractOclSolver;
@@ -17,7 +18,7 @@ public abstract class AbstractBpmnOclSolver extends AbstractOclSolver {
 	}
 	
 	@Override
-	public int matches(Object object) throws BpmnException {
+	public int matches(Object object) throws BpmnException, ParserException {
 		
 		// on fait juste deux vérifications avant de lancer le solveur
 		if (getOclQuery().isEmpty())

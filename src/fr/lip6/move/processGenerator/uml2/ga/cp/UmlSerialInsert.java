@@ -34,7 +34,7 @@ public class UmlSerialInsert extends AbstractChangePattern<UmlProcess> {
 		}
 		
 		// on créé le nouveau noeud
-		ActivityNode node = process.buildRandomAction();
+		ActivityNode node = process.buildRandomExecutableNode();
 		process.buildControlFlow(node, edge.getTarget());
 		
 		// on modifie la destination de notre arc

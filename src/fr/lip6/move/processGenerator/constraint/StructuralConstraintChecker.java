@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.constraint;
 
+import org.eclipse.ocl.ParserException;
 import fr.lip6.move.processGenerator.EQuantity;
 
 /**
@@ -51,28 +52,29 @@ public class StructuralConstraintChecker {
 	 *            Object, la représentation du process à évaluer.
 	 * @return boolean vrai si le process vérifie la contrainte selon la quantité et le nombre. Faux sinon.
 	 * @throws Exception
-	 *             dans le cas ou
 	 */
 	public boolean check(Object process) throws Exception {
 		if (number < 0)
 			throw new Exception("The number of the pattern must be higher or equal than 0.");
 		
-		Object result = constraint.matches(process);
-		if (!(result instanceof Integer))
+		int result = 0;
+		try {
+			result = constraint.matches(process);
+		} catch (ParserException e) {
 			return false;
+		}
 		
-		int resultat = ((Integer) result).intValue();
 		switch (quantity) {
 			case MORE:
-				return resultat > number;
+				return result > number;
 			case LESS:
-				return resultat < number;
+				return result < number;
 			case EQUAL:
-				return resultat == number;
+				return result == number;
 			case MORE_OR_EQUAL:
-				return resultat >= number;
+				return result >= number;
 			case LESS_OR_EQUAL:
-				return resultat <= number;
+				return result <= number;
 			default:
 				return false;
 		}

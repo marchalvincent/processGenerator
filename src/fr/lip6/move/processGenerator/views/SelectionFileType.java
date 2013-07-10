@@ -3,6 +3,7 @@ package fr.lip6.move.processGenerator.views;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
+import fr.lip6.move.processGenerator.ConfigurationManager;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 import fr.lip6.move.processGenerator.bpmn2.constraints.EBpmnWorkflowPattern;
 import fr.lip6.move.processGenerator.bpmn2.ga.cp.EBpmnChangePattern;
@@ -30,6 +31,9 @@ public class SelectionFileType extends SelectionAdapter {
 		Combo combo = (Combo) e.getSource();
 		String s = combo.getText();
 		if (s.toLowerCase().contains("bpmn")) {
+			// first, on met à jour le type de fichier dans les préférences
+			ConfigurationManager.instance.setTypeFile("0");
+			
 			// les champs du tableau éléments
 			view.majTreeOfElements(EBpmnElement.values());
 			
@@ -40,9 +44,12 @@ public class SelectionFileType extends SelectionAdapter {
 			view.getLabelSetInitialProcess().setText("(bpmn file)");
 			
 			// on affiche le bon tableau des mutations change patterns
-			view.majTableOfChangePatterns(EBpmnChangePattern.values());
+			view.majTreeOfChangePatterns(EBpmnChangePattern.values());
 			
 		} else {
+			// first, on met à jour le type dans les préférences
+			ConfigurationManager.instance.setTypeFile("1");
+			
 			// on met à jour le tableau des éléments
 			view.majTreeOfElements(EUmlElement.values());
 			
@@ -53,7 +60,8 @@ public class SelectionFileType extends SelectionAdapter {
 			view.getLabelSetInitialProcess().setText("(uml file)");
 			
 			// on affiche le bon tableau des mutations change patterns
-			view.majTableOfChangePatterns(EUmlChangePattern.values());
+			view.majTreeOfChangePatterns(EUmlChangePattern.values());
 		}
+		view.majGeneticAlgorithmInfos();
 	}
 }

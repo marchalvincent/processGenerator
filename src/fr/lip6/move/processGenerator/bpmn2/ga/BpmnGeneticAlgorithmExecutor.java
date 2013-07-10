@@ -24,9 +24,9 @@ public class BpmnGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<BpmnP
 	@Override
 	protected void saveWinner(BpmnProcess winner, String location) throws IOException {
 		int i = 0;
-		while (new File(location + "gen" + i + ".bpmn").exists())
+		while (new File(location + "bGen" + i + ".bpmn").exists())
 			i++;
-		winner.save(location + "gen" + i + ".bpmn");
+		winner.save(location + "bGen" + i + ".bpmn");
 	}
 	
 	@Override

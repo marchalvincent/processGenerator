@@ -1,6 +1,7 @@
-package fr.lip6.move.processGenerator.bpmn2.constraints;
+package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import java.util.List;
+import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.ParallelGateway;
@@ -8,19 +9,20 @@ import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TerminateEventDefinition;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
- * Représente le WP11 - Implicite Termination.
+ * Représente le WP43 - Explicite Termination.
  * 
  * @author Vincent
  * 
  */
-public class BpmnImplicitTermination extends AbstractJavaSolver {
+public class BpmnExpliciteTermination extends AbstractJavaSolver {
 	
-	public BpmnImplicitTermination() throws BpmnException {
+	public BpmnExpliciteTermination() throws BpmnException {
 		super();
 	}
 	
@@ -35,23 +37,18 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 		}
 		
 		BpmnProcess process = (BpmnProcess) object;
-		// on compte le nombre de EndEvent qui n'ont pas de TerminateEventDefinition moins 1
+		// on compte le nombre de EndEvent qui ont une TerminateEventDefinition
 		List<EndEvent> list = BpmnFilter.byType(EndEvent.class, process.getProcess().getFlowElements());
-		boolean isTermination = false;
 		for (EndEvent endEvent : list) {
-			isTermination = false;
 			for (EventDefinition eventDef : endEvent.getEventDefinitions()) {
 				if (eventDef instanceof TerminateEventDefinition) {
-					isTermination = true;
+					count++;
 					break;
 				}
 			}
-			if (!isTermination)
-				count++;
 		}
 		
-		// on soustrait 1 car il ne faut pas compter le EndEvent par défaut
-		return Math.max(0, count - 1);
+		return count;
 	}
 	
 	@Override
@@ -62,6 +59,7 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 		ParallelGateway gateway = representation.buildParallelGatewayDiverging();
 		Task a = representation.buildTask();
 		EndEvent end = representation.buildEndEvent();
+		end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
 		Task b = representation.buildTask();
 		
 		// puis on construit les arcs
@@ -75,4 +73,5 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 		
 		return representation;
 	}
+	
 }

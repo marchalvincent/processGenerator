@@ -1,23 +1,25 @@
-package fr.lip6.move.processGenerator.bpmn2.constraints;
+package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
- * Représente le WP4 - Exclusive Choice.
+ * Représente le WP5 - Simple Merge.
  * 
  * @author Vincent
  * 
  */
-public class BpmnExclusiveChoice extends AbstractBpmnOclSolver {
+public class BpmnSimpleMerge extends AbstractBpmnOclSolver {
 	
-	public BpmnExclusiveChoice() throws BpmnException {
+	public BpmnSimpleMerge() throws BpmnException {
 		super();
 		StringBuilder sb = new StringBuilder();
 		sb.append("ExclusiveGateway.allInstances()->select(");
-		sb.append("gate : ExclusiveGateway | gate.gatewayDirection = GatewayDirection::Diverging");
+		sb.append("gate : ExclusiveGateway | gate.gatewayDirection = GatewayDirection::Converging");
 		sb.append(")->size()");
 		super.setOclQuery(sb.toString());
 	}

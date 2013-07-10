@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2.constraints;
+package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import org.eclipse.bpmn2.Task;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
 import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;

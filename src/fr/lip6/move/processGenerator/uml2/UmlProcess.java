@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.resource.Resource.Factory;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
-import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityFinalNode;
@@ -20,6 +19,7 @@ import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
 import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
+import org.eclipse.uml2.uml.ExecutableNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -92,22 +92,22 @@ public class UmlProcess {
 	}
 	
 	/**
-	 * Créé et lie au process une {@link Action} choisie au hasard.
+	 * Créé et lie au process un {@link ExecutableNode} choisi au hasard.
 	 * 
 	 * @return
 	 */
-	public Action buildRandomAction() {
-		Action action = this.generateAction();
-		linkedAndNameNode(action);
-		return action;
+	public ExecutableNode buildRandomExecutableNode() {
+		ExecutableNode node = generateExecutableNode();
+		linkedAndNameNode(node);
+		return node;
 	}
 	
 	/**
-	 * Renvoie une {@link Action} tirée au hasard.
+	 * Renvoie un {@link ExecutableNode} tiré au hasard.
 	 * 
 	 * @return
 	 */
-	public Action generateAction() {
+	public static ExecutableNode generateExecutableNode() {
 		return UMLFactory.eINSTANCE.createOpaqueAction();
 	}
 	
@@ -182,7 +182,7 @@ public class UmlProcess {
 	 * 
 	 * @return
 	 */
-	public ControlFlow buildControlFlow() {
+	private ControlFlow buildControlFlow() {
 		ControlFlow controlFlow = UMLFactory.eINSTANCE.createControlFlow();
 		linkedAndNameEdge(controlFlow);
 		return controlFlow;

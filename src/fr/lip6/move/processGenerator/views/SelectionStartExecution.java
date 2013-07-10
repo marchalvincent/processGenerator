@@ -300,9 +300,6 @@ public class SelectionStartExecution extends SelectionAdapter {
 					System.err.println("Carreful, the item data is not a " + IEnumChangePattern.class.getSimpleName() + ".");
 				}
 			}
-			else {
-				System.out.println(item.getData(Utils.NAME_KEY) + " n'est pas coché");
-			}
 		}
 		
 		ConfigurationManager.instance.setChangePatternAttributes(sb.toString());

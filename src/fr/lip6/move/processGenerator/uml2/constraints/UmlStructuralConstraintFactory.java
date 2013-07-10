@@ -5,6 +5,8 @@ import fr.lip6.move.processGenerator.constraint.AbstractStructuralConstraintFact
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.uml2.EUmlElement;
 import fr.lip6.move.processGenerator.uml2.UmlException;
+import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlElementConstraint;
+import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlManualOclConstraint;
 
 /**
  * Représente la factory des contraintes structurelles pour les fichiers de type UML2.0.

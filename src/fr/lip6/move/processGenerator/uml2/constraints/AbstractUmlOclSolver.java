@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.uml2.constraints;
 
+import org.eclipse.ocl.ParserException;
 import fr.lip6.move.processGenerator.constraint.AbstractOclSolver;
 import fr.lip6.move.processGenerator.uml2.UmlException;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
@@ -17,7 +18,7 @@ public class AbstractUmlOclSolver extends AbstractOclSolver {
 	}
 	
 	@Override
-	public int matches(Object object) throws UmlException {
+	public int matches(Object object) throws UmlException, ParserException {
 		
 		// on fait juste deux vérifications avant de lancer le solveur
 		if (getOclQuery().isEmpty())

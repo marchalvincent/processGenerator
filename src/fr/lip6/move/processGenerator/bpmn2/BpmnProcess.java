@@ -159,7 +159,7 @@ public class BpmnProcess {
 	 */
 	public Task buildTask() {
 		
-		Task task = BpmnProcess.buildRandomSubTask();
+		Task task = BpmnProcess.buildRandomTask();
 		
 		String name = BpmnNameManager.instance.getTaskName();
 		task.setId("id_" + name);
@@ -172,7 +172,7 @@ public class BpmnProcess {
 	/**
 	 * Renvoie une {@link Task} au hasard parmis celle existante dans BPMN.
 	 */
-	public static Task buildRandomSubTask() {
+	public static Task buildRandomTask() {
 		// TODO voir si possible sendTask, BusinessRuleTask
 		switch (rng.nextInt(5)) {
 			case 0:
@@ -296,7 +296,7 @@ public class BpmnProcess {
 	/**
 	 * Créé et associé un {@link SequenceFlow} sans source ni destination au process.
 	 */
-	public SequenceFlow buildSequenceFlow() {
+	private SequenceFlow buildSequenceFlow() {
 		SequenceFlow sequence = Bpmn2Factory.eINSTANCE.createSequenceFlow();
 		
 		String name = BpmnNameManager.instance.getSequenceName();

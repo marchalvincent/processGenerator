@@ -1,23 +1,25 @@
-package fr.lip6.move.processGenerator.bpmn2.constraints;
+package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
- * Représente le WP3 - Synchronisation.
+ * Représente le WP2 - Parallel Split.
  * 
  * @author Vincent
  * 
  */
-public class BpmnSynchronization extends AbstractBpmnOclSolver {
+public class BpmnParallelSplit extends AbstractBpmnOclSolver {
 	
-	public BpmnSynchronization() throws BpmnException {
+	public BpmnParallelSplit() throws BpmnException {
 		super();
 		StringBuilder sb = new StringBuilder();
 		sb.append("ParallelGateway.allInstances()->select(");
-		sb.append("gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Converging");
+		sb.append("gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Diverging");
 		sb.append(")->size()");
 		super.setOclQuery(sb.toString());
 	}

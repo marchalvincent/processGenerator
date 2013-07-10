@@ -5,9 +5,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import fr.lip6.move.processGenerator.EQuantity;
-import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnArbitraryCycle;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
 public class ArbitraryCyclesTest {
@@ -69,7 +69,6 @@ public class ArbitraryCyclesTest {
 		
 		// init du process
 		process = BpmnBuilder.instance.getDoubleLoopExample();
-		process.save(System.getProperty("user.home") + Utils.bugPathBpmn + "vincent.bpmn");
 		
 		// init du workflow checker
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnArbitraryCycle(), EQuantity.EQUAL, 2);

@@ -15,11 +15,11 @@ import java.util.Properties;
  * 
  */
 public class ConfigurationManager {
-	
+
+	private final String TYPE_FILE = "0";
 	private final String LOCATION = Utils.configurationFolder;
 	private final String NODES = "30";
 	private final String MARGIN = "10";
-	private final String TYPE_FILE = "0";
 	
 	private final String WORKFLOWS = "";
 	private final String ELEMENTS = "";
@@ -72,33 +72,37 @@ public class ConfigurationManager {
 			in.close();
 			
 			// on créé les valeurs par défaut s'il elle n'y sont pas
-			this.checkProperty("LOCATION", LOCATION);
-			this.checkProperty("NODES", NODES);
-			this.checkProperty("MARGIN", MARGIN);
 			this.checkProperty("TYPE_FILE", TYPE_FILE);
 			
-			this.checkProperty("WORKFLOWS", WORKFLOWS);
-			this.checkProperty("ELEMENTS", ELEMENTS);
-			
-			this.checkProperty("POPULATION", POPULATION);
-			this.checkProperty("ELITISM", ELITISM);
-			this.checkProperty("SELECTION_STRATEGY", SELECTION_STRATEGY);
-			this.checkProperty("MUTATION", MUTATION);
-			this.checkProperty("CHANGE_PATTERN", CHANGE_PATTERN);
-			this.checkProperty("CROSSOVER", CROSSOVER);
-			
-			this.checkProperty("SOLUTION_FOUND", SOLUTION_FOUND);
-			this.checkProperty("DURING_SECONDES", DURING_SECONDES);
-			this.checkProperty("NB_SECONDES", NB_SECONDES);
-			this.checkProperty("UNTIL_GENERATIONS", UNTIL_GENERATIONS);
-			this.checkProperty("NB_GENERATIONS", NB_GENERATIONS);
-			this.checkProperty("UNTIL_STAGNATIONS", UNTIL_STAGNATIONS);
-			this.checkProperty("NB_STAGNATIONS", NB_STAGNATIONS);
-			
-			this.checkProperty("SIZE_W", SIZE_W);
-			this.checkProperty("ELEMENT_W", ELEMENT_W);
-			this.checkProperty("WORKFLOW_W", WORKFLOW_W);
-			this.checkProperty("MANUAL_OCL_W", MANUAL_OCL_W);
+			for (int i = 0; i < 2; i++) {
+				
+				this.checkProperty("LOCATION" + i, LOCATION);
+				this.checkProperty("NODES" + i, NODES);
+				this.checkProperty("MARGIN" + i, MARGIN);
+				
+				this.checkProperty("WORKFLOWS" + i, WORKFLOWS);
+				this.checkProperty("ELEMENTS" + i, ELEMENTS);
+				
+				this.checkProperty("POPULATION" + i, POPULATION);
+				this.checkProperty("ELITISM" + i, ELITISM);
+				this.checkProperty("SELECTION_STRATEGY" + i, SELECTION_STRATEGY);
+				this.checkProperty("MUTATION" + i, MUTATION);
+				this.checkProperty("CHANGE_PATTERN" + i, CHANGE_PATTERN);
+				this.checkProperty("CROSSOVER" + i, CROSSOVER);
+				
+				this.checkProperty("SOLUTION_FOUND" + i, SOLUTION_FOUND);
+				this.checkProperty("DURING_SECONDES" + i, DURING_SECONDES);
+				this.checkProperty("NB_SECONDES" + i, NB_SECONDES);
+				this.checkProperty("UNTIL_GENERATIONS" + i, UNTIL_GENERATIONS);
+				this.checkProperty("NB_GENERATIONS" + i, NB_GENERATIONS);
+				this.checkProperty("UNTIL_STAGNATIONS" + i, UNTIL_STAGNATIONS);
+				this.checkProperty("NB_STAGNATIONS" + i, NB_STAGNATIONS);
+				
+				this.checkProperty("SIZE_W" + i, SIZE_W);
+				this.checkProperty("ELEMENT_W" + i, ELEMENT_W);
+				this.checkProperty("WORKFLOW_W" + i, WORKFLOW_W);
+				this.checkProperty("MANUAL_OCL_W" + i, MANUAL_OCL_W);
+			}
 			
 			this.store();
 			
@@ -155,27 +159,27 @@ public class ConfigurationManager {
 	}
 	
 	public String getLocation() {
-		return properties.getProperty("LOCATION");
+		return properties.getProperty("LOCATION" + getTypeFile());
 	}
 	
 	public void setLocation(String value) {
-		properties.put("LOCATION", value);
+		properties.put("LOCATION" + getTypeFile(), value);
 	}
 	
 	public int getNbNodes() {
-		return getInteger("NODES", 30);
+		return getInteger("NODES" + getTypeFile(), 30);
 	}
 	
 	public void setNbNodes(String value) {
-		properties.put("NODES", value);
+		properties.put("NODES" + getTypeFile(), value);
 	}
 	
 	public int getMargin() {
-		return getInteger("MARGIN", 10);
+		return getInteger("MARGIN" + getTypeFile(), 10);
 	}
 	
 	public void setMargin(String value) {
-		properties.put("MARGIN", value);
+		properties.put("MARGIN" + getTypeFile(), value);
 	}
 	
 	public int getTypeFile() {
@@ -187,154 +191,154 @@ public class ConfigurationManager {
 	}
 	
 	public int getPopulation() {
-		return getInteger("POPULATION", 50);
+		return getInteger("POPULATION" + getTypeFile(), 50);
 	}
 	
 	public void setPopulation(String value) {
-		properties.put("POPULATION", value);
+		properties.put("POPULATION" + getTypeFile(), value);
 	}
 	
 	public int getElitism() {
-		return getInteger("ELITISM", 5);
+		return getInteger("ELITISM" + getTypeFile(), 5);
 	}
 	
 	public void setElitism(String value) {
-		properties.put("ELITISM", value);
+		properties.put("ELITISM" + getTypeFile(), value);
 	}
 	
 	public int getSelectionStrategy() {
-		return getInteger("SELECTION_STRATEGY", 1);
+		return getInteger("SELECTION_STRATEGY" + getTypeFile(), 1);
 	}
 	
 	public void setSelectionStrategy(String value) {
-		properties.put("SELECTION_STRATEGY", value);
+		properties.put("SELECTION_STRATEGY" + getTypeFile(), value);
 	}
 	
 	public boolean isCheckMutation() {
-		return getBoolean("MUTATION", true);
+		return getBoolean("MUTATION" + getTypeFile(), true);
 	}
 	
 	public void setCheckMutation(boolean bool) {
-		properties.put("MUTATION", bool + "");
+		properties.put("MUTATION" + getTypeFile(), bool + "");
 	}
 	
 	public boolean isCheckCrossover() {
-		return getBoolean("CROSSOVER", false);
+		return getBoolean("CROSSOVER" + getTypeFile(), false);
 	}
 	
 	public void setCheckCrossover(boolean bool) {
-		properties.put("CROSSOVER", bool + "");
+		properties.put("CROSSOVER" + getTypeFile(), bool + "");
 	}
 	
 	public int getSizeWeight() {
-		return getInteger("SIZE_W", 1);
+		return getInteger("SIZE_W" + getTypeFile(), 1);
 	}
 	
 	public void setSizeWeight(String value) {
-		properties.put("SIZE_W", value);
+		properties.put("SIZE_W" + getTypeFile(), value);
 	}
 	
 	public int getElementsWeight() {
-		return getInteger("ELEMENT_W", 1);
+		return getInteger("ELEMENT_W" + getTypeFile(), 1);
 	}
 	
 	public void setElementsWeight(String value) {
-		properties.put("ELEMENT_W", value);
+		properties.put("ELEMENT_W" + getTypeFile(), value);
 	}
 	
 	public int getWorkflowsWeight() {
-		return getInteger("WORKFLOW_W", 1);
+		return getInteger("WORKFLOW_W" + getTypeFile(), 1);
 	}
 	
 	public void setWorkflowsWeight(String value) {
-		properties.put("WORKFLOW_W", value);
+		properties.put("WORKFLOW_W" + getTypeFile(), value);
 	}
 	
-	public int getManualOCLWeight() {
-		return getInteger("MANUAL_OCL_W", 1);
+	public int getManualOclWeight() {
+		return getInteger("MANUAL_OCL_W" + getTypeFile(), 1);
 	}
 	
 	public void setManualOCLWeight(String value) {
-		properties.put("MANUAL_OCL_W", value);
+		properties.put("MANUAL_OCL_W" + getTypeFile(), value);
 	}
 	
 	public String getWorkflowsAttributes() {
-		return properties.getProperty("WORKFLOWS");
+		return properties.getProperty("WORKFLOWS" + getTypeFile());
 	}
 	
 	public void setWorkflowsAttributes(String value) {
-		properties.put("WORKFLOWS", value);
+		properties.put("WORKFLOWS" + getTypeFile(), value);
 	}
 	
 	public String getElementsAttributes() {
-		return properties.getProperty("ELEMENTS");
+		return properties.getProperty("ELEMENTS" + getTypeFile());
 	}
 	
 	public void setElementsAttributes(String value) {
-		properties.put("ELEMENTS", value);
+		properties.put("ELEMENTS" + getTypeFile(), value);
 	}
 	
 	public String getChangePatternAttributes() {
-		return properties.getProperty("CHANGE_PATTERN");
+		return properties.getProperty("CHANGE_PATTERN" + getTypeFile());
 	}
 	
 	public void setChangePatternAttributes(String value) {
-		properties.put("CHANGE_PATTERN", value);
+		properties.put("CHANGE_PATTERN" + getTypeFile(), value);
 	}
 	
-	public boolean isSolutionFound() {
-		return getBoolean("SOLUTION_FOUND", false);
+	public boolean isUntilSolutionFound() {
+		return getBoolean("SOLUTION_FOUND" + getTypeFile(), false);
 	}
 	
 	public void setSolutionFound(boolean bool) {
-		properties.put("SOLUTION_FOUND", bool + "");
+		properties.put("SOLUTION_FOUND" + getTypeFile(), bool + "");
 	}
 	
 	public boolean isDuringSecondes() {
-		return getBoolean("DURING_SECONDES", false);
+		return getBoolean("DURING_SECONDES" + getTypeFile(), false);
 	}
 	
 	public void setDuringSecondes(boolean bool) {
-		properties.put("DURING_SECONDES", bool + "");
+		properties.put("DURING_SECONDES" + getTypeFile(), bool + "");
 	}
 	
 	public boolean isUntilGenerations() {
-		return getBoolean("UNTIL_GENERATIONS", false);
+		return getBoolean("UNTIL_GENERATIONS" + getTypeFile(), false);
 	}
 	
 	public void setUntilGenerations(boolean bool) {
-		properties.put("UNTIL_GENERATIONS", bool + "");
+		properties.put("UNTIL_GENERATIONS" + getTypeFile(), bool + "");
 	}
 	
 	public boolean isUntilStagnations() {
-		return getBoolean("UNTIL_STAGNATIONS", false);
+		return getBoolean("UNTIL_STAGNATIONS" + getTypeFile(), false);
 	}
 	
 	public void setUntilStagnations(boolean bool) {
-		properties.put("UNTIL_STAGNATIONS", bool + "");
+		properties.put("UNTIL_STAGNATIONS" + getTypeFile(), bool + "");
 	}
 	
 	public int getNbSecondes() {
-		return getInteger("NB_SECONDES", 60);
+		return getInteger("NB_SECONDES" + getTypeFile(), 60);
 	}
 	
 	public void setNbSecondes(int nb) {
-		properties.put("NB_SECONDES", nb + "");
+		properties.put("NB_SECONDES" + getTypeFile(), nb + "");
 	}
 	
 	public int getNbGenerations() {
-		return getInteger("NB_GENERATIONS", 100);
+		return getInteger("NB_GENERATIONS" + getTypeFile(), 100);
 	}
 	
 	public void setNbGenerations(int nb) {
-		properties.put("NB_GENERATIONS", nb + "");
+		properties.put("NB_GENERATIONS" + getTypeFile(), nb + "");
 	}
 	
 	public int getNbStagnations() {
-		return getInteger("NB_STAGNATIONS", 100);
+		return getInteger("NB_STAGNATIONS" + getTypeFile(), 100);
 	}
 	
 	public void setNbStagnations(int nb) {
-		properties.put("NB_STAGNATIONS", nb + "");
+		properties.put("NB_STAGNATIONS" + getTypeFile(), nb + "");
 	}
 }

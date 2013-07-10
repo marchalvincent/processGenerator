@@ -3,6 +3,8 @@ package fr.lip6.move.processGenerator.bpmn2.constraints;
 import fr.lip6.move.processGenerator.IEnumElement;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnElementConstraint;
+import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnManualOclConstraint;
 import fr.lip6.move.processGenerator.constraint.AbstractStructuralConstraintFactory;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 

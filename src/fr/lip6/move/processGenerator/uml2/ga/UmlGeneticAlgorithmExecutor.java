@@ -28,10 +28,9 @@ public class UmlGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<UmlPro
 	@Override
 	protected void saveWinner(UmlProcess winner, String location) throws IOException {
 		int i = 0;
-		while (new File(location + "gen" + i + ".uml").exists()) {
+		while (new File(location + "uGen" + i + ".uml").exists())
 			i++;
-		}
-		winner.save(location + "gen" + i + ".uml");
+		winner.save(location + "uGen" + i + ".uml");
 	}
 	
 	@Override

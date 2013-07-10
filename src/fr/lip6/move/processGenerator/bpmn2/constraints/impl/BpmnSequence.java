@@ -1,7 +1,9 @@
-package fr.lip6.move.processGenerator.bpmn2.constraints;
+package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import org.eclipse.bpmn2.Task;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
