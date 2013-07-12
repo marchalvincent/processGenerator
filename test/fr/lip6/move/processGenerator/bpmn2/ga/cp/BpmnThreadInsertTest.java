@@ -26,7 +26,7 @@ public class BpmnThreadInsertTest {
 		assertTrue(BpmnChangePatternHelper.instance.countConditionalGateway(process) == 0);
 		assertTrue(BpmnChangePatternHelper.instance.countParallelGateway(process) == 0);
 		
-		BpmnThreadInsert insert = new BpmnThreadInsert();
+		BpmnThreadInsertRandom insert = new BpmnThreadInsertRandom();
 		process = insert.apply(process, rng, null);
 
 		assertTrue(process.getProcess().getFlowElements().size() == 15);

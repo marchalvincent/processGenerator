@@ -2,7 +2,6 @@ package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import java.util.List;
 import java.util.Random;
-import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
@@ -15,12 +14,17 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
  * Ce change pattern applique l'insertion d'un nouveau thread au process. Ce nouveau thread s'aboutira sur un nouveau
- * noeud EndEvent soit explicitement (met fin au process) soit implicitement (continue l'éxecution des autres threads).
+ * noeud EndEvent implicite.
  * 
  * @author Vincent
  * 
+ * @see {@link BpmnThreadInsertExplicite} ajout d'un nouveau thread explicite.
+ * @see {@link BpmnThreadInsertRandom} ajout d'un nouveau thread implicite ou explicite.
  */
-public class BpmnThreadInsert extends AbstractChangePattern<BpmnProcess> {
+public class BpmnThreadInsertImplicite extends AbstractChangePattern<BpmnProcess> {
+
+	// pour éviter trop d'instanciation de la part du thread insert random
+	public static BpmnThreadInsertImplicite instance = new BpmnThreadInsertImplicite();
 	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
@@ -49,18 +53,9 @@ public class BpmnThreadInsert extends AbstractChangePattern<BpmnProcess> {
 			process.buildSequenceFlow(fork, a);
 			process.buildSequenceFlow(a, end);
 			
-			// une fois sur deux, on va créer un thread de terminaison explicite
-			if (rng.nextBoolean()) {
-				// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event
-				end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
-			}
-			
 		} catch (GeneticException e) {
 			e.printStackTrace();
-			return process;
 		}
-		
 		return process;
 	}
-	
 }

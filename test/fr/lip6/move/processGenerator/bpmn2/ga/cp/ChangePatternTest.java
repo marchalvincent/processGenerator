@@ -59,7 +59,7 @@ public class ChangePatternTest {
 	public void test1() throws IOException {
 		IChangePattern<BpmnProcess> parallel = new BpmnParallelInsertRandom();
 		IChangePattern<BpmnProcess> serial = new BpmnSerialInsert();
-		IChangePattern<BpmnProcess> thread = new BpmnThreadInsert();
+		IChangePattern<BpmnProcess> thread = new BpmnThreadInsertRandom();
 		
 		BpmnProcess process = BpmnBuilder.instance.initialFinal();
 		process = serial.apply(process, rng, null);

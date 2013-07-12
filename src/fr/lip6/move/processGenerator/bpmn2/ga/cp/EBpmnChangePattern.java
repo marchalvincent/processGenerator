@@ -14,7 +14,7 @@ import fr.lip6.move.processGenerator.ga.IEnumChangePattern;
  */
 public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 	
-	WORKFLOW_INSERT(null, BpmnWorkflowInsert.class),
+	WORKFLOW_PATTERN_INSERT(null, BpmnWorkflowInsert.class),
 	
 	CONDITIONAL_INSERT(null, BpmnConditionalInsertRandom.class),
 	CONDITIONAL_ON_SEQUENCE(CONDITIONAL_INSERT, BpmnConditionalInsertSequence.class),
@@ -27,7 +27,10 @@ public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 	SERIAL_INSERT(null, BpmnSerialInsert.class),
 	REMOVE(null, BpmnRemove.class),
 	LOOP_INSERT(null, BpmnLoopInsert.class),
-	THREAD_INSERT(null, BpmnThreadInsert.class);
+
+	THREAD_INSERT(null, BpmnThreadInsertRandom.class),
+	THREAD_IMPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertImplicite.class),
+	THREAD_EXPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertExplicite.class);
 	
 	private Class<? extends IChangePattern<BpmnProcess>> clazz;
 	private IHierarchicalEnum parent;
