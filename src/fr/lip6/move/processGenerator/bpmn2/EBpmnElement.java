@@ -59,4 +59,9 @@ public enum EBpmnElement implements IEnumElement {
 	public IHierarchicalEnum getParent() {
 		return parent;
 	}
+
+	@Override
+	public Class<?> getAssociatedClass() {
+		return clazz;
+	}
 }

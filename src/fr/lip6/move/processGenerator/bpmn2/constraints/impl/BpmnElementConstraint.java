@@ -1,8 +1,9 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
-import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 
 /**
  * Cette contrainte compte le nombre d'élément donné qu'il y a dans un process. Par exemple : le nombre de Task.
@@ -10,10 +11,22 @@ import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
  * @author Vincent
  * 
  */
-public class BpmnElementConstraint extends AbstractBpmnOclSolver {
+public class BpmnElementConstraint extends AbstractJavaSolver {
 	
-	public BpmnElementConstraint(EBpmnElement data) throws BpmnException {
+	private EBpmnElement element;
+	
+	public BpmnElementConstraint(EBpmnElement data) {
 		super();
-		super.setOclQuery(data.toString() + ".allInstances()->size()");
+		element = data;
+	}
+	
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof BpmnProcess)) {
+			System.err.println("Matches method : The object is not a " + BpmnProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		BpmnProcess process = (BpmnProcess) object;
+		return BpmnFilter.byType(element.getAssociatedClass(), process.getProcess().getFlowElements()).size();
 	}
 }

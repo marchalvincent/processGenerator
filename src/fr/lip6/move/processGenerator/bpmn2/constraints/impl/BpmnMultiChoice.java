@@ -1,11 +1,13 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Task;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
@@ -14,15 +16,16 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * @author Vincent
  * 
  */
-public class BpmnMultiChoice extends AbstractBpmnOclSolver {
+public class BpmnMultiChoice extends AbstractJavaSolver {
 	
-	public BpmnMultiChoice() throws BpmnException {
-		super();
-		StringBuilder sb = new StringBuilder();
-		sb.append("InclusiveGateway.allInstances()->select(");
-		sb.append("gate : InclusiveGateway | gate.gatewayDirection = GatewayDirection::Diverging");
-		sb.append(")->size()");
-		super.setOclQuery(sb.toString());
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof BpmnProcess)) {
+			System.err.println("Matches method : The object is not a " + BpmnProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		BpmnProcess process = (BpmnProcess) object;
+		return BpmnFilter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING).size();
 	}
 	
 	@Override

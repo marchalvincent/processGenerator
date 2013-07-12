@@ -2,7 +2,6 @@ package fr.lip6.move.processGenerator.uml2.constraints.impl;
 
 import org.eclipse.uml2.uml.ExecutableNode;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.UmlException;
 import fr.lip6.move.processGenerator.uml2.constraints.AbstractUmlOclSolver;
 import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
 
@@ -14,7 +13,7 @@ import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
  */
 public class UmlSequence extends AbstractUmlOclSolver {
 	
-	public UmlSequence() throws UmlException {
+	public UmlSequence() {
 		super();
 		StringBuilder sb = new StringBuilder();
 		sb.append("ExecutableNode.allInstances()->select(");
@@ -36,7 +35,7 @@ public class UmlSequence extends AbstractUmlOclSolver {
 		// puis l'arc entre les deux
 		representation.buildControlFlow(a, b);
 		
-		// et enfin on set le début et la fin de la représentation.s
+		// et enfin on set le début et la fin de la représentation.
 		representation.setBegin(a);
 		representation.setEnd(b);
 		

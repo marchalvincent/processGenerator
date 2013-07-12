@@ -10,4 +10,11 @@ import fr.lip6.move.processGenerator.uml2.EUmlElement;
  * @author Vincent
  * 
  */
-public interface IEnumElement extends IHierarchicalEnum {}
+public interface IEnumElement extends IHierarchicalEnum {
+	
+	/**
+	 * Renvoie la classe associée à l'énumération.
+	 * @return
+	 */
+	Class<?> getAssociatedClass();
+}

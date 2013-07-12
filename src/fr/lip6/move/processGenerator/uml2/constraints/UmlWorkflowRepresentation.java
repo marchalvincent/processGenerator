@@ -8,6 +8,8 @@ import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
 import org.eclipse.uml2.uml.ExecutableNode;
+import org.eclipse.uml2.uml.ForkNode;
+import org.eclipse.uml2.uml.JoinNode;
 import org.eclipse.uml2.uml.UMLFactory;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 import fr.lip6.move.processGenerator.uml2.UmlNameManager;
@@ -41,6 +43,27 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 		controlTwins = new HashMap<String, String>();
 	}
 	
+
+	/**
+	 * Créé et lie à la représentation un {@link ForkNode}.
+	 * @return
+	 */
+	public ForkNode buildForkNode() {
+		ForkNode node = UMLFactory.eINSTANCE.createForkNode();
+		this.nameAndLinkNode(node);
+		return node;
+	}
+	
+	/**
+	 * Créé et lie à la représentation un {@link JoinNode}.
+	 * @return
+	 */
+	public JoinNode buildJoinNode() {
+		JoinNode node = UMLFactory.eINSTANCE.createJoinNode();
+		this.nameAndLinkNode(node);
+		return node;
+	}
+	
 	/**
 	 * Créé et lie à la représentation un {@link ControlFlow}.
 	 * @param source la source de l'arc.
@@ -60,15 +83,12 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	}
 	
 	/**
-	 * Créé un {@link ExecutableNode} et le lie à la représentation.
+	 * Créé et lie à la représentation un {@link ExecutableNode}.
 	 * @return
 	 */
 	public ExecutableNode buildExecutableNode() {
 		ExecutableNode node = this.getRandomExecutableNode();
-
-		node.setName(UmlNameManager.instance.getActivityNodeName(node));
-		getNodes().add(node);
-		
+		this.nameAndLinkNode(node);
 		return node;
 	}
 	
@@ -78,6 +98,11 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	 */
 	private ExecutableNode getRandomExecutableNode() {
 		return UmlProcess.generateExecutableNode();
+	}
+	
+	private void nameAndLinkNode(ActivityNode node) {
+		node.setName(UmlNameManager.instance.getActivityNodeName(node));
+		nodes.add(node);
 	}
 
 	@Override

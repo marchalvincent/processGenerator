@@ -49,4 +49,9 @@ public enum EUmlElement implements IEnumElement {
 	public IHierarchicalEnum getParent() {
 		return parent;
 	}
+
+	@Override
+	public Class<?> getAssociatedClass() {
+		return clazz;
+	}
 }

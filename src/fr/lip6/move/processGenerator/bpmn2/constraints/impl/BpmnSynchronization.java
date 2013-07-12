@@ -1,10 +1,12 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
+import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Task;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
@@ -13,15 +15,16 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * @author Vincent
  * 
  */
-public class BpmnSynchronization extends AbstractBpmnOclSolver {
+public class BpmnSynchronization extends AbstractJavaSolver {
 	
-	public BpmnSynchronization() throws BpmnException {
-		super();
-		StringBuilder sb = new StringBuilder();
-		sb.append("ParallelGateway.allInstances()->select(");
-		sb.append("gate : ParallelGateway | gate.gatewayDirection = GatewayDirection::Converging");
-		sb.append(")->size()");
-		super.setOclQuery(sb.toString());
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof BpmnProcess)) {
+			System.err.println("Matches method : The object is not a " + BpmnProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		BpmnProcess process = (BpmnProcess) object;
+		return BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING).size();
 	}
 	
 	@Override

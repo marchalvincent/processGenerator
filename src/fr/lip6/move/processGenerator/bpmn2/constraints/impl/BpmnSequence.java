@@ -1,28 +1,42 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
+import java.util.List;
 import org.eclipse.bpmn2.Task;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
  * Représente le WP1 - Sequence.
  * 
  * @author Vincent
- * 
+ *
  */
-public class BpmnSequence extends AbstractBpmnOclSolver {
+public class BpmnSequence extends AbstractJavaSolver {
 	
-	public BpmnSequence() throws BpmnException {
+	public BpmnSequence() {
 		super();
-		StringBuilder sb = new StringBuilder();
-		sb.append("Activity.allInstances()->select(");
-		sb.append("activity : Activity | activity.outgoing->exists(");
-		sb.append("sequence : SequenceFlow | sequence.targetRef.oclIsKindOf(Activity)");
-		sb.append(")");
-		sb.append(")->size()");
-		super.setOclQuery(sb.toString());
+	}
+	
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof BpmnProcess)) {
+			System.err.println("Matches method : The object is not a " + BpmnProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		
+		int count = 0;
+		BpmnProcess process = (BpmnProcess) object;
+		
+		// on récupère toutes les Tasks
+		List<Task> list = BpmnFilter.byType(Task.class, process.getProcess().getFlowElements());
+		for (Task task : list) {
+			if (task.getOutgoing().get(0).getTargetRef() instanceof Task)
+				count++;
+		}
+		return count;
 	}
 	
 	@Override

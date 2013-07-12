@@ -1,27 +1,30 @@
 package fr.lip6.move.processGenerator.bpmn2.constraints.impl;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.Task;
-import fr.lip6.move.processGenerator.bpmn2.BpmnException;
-import fr.lip6.move.processGenerator.bpmn2.constraints.AbstractBpmnOclSolver;
+import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 
 /**
  * Représente le WP5 - Simple Merge.
  * 
  * @author Vincent
- * 
+ *
  */
-public class BpmnSimpleMerge extends AbstractBpmnOclSolver {
+public class BpmnSimpleMerge extends AbstractJavaSolver {
 	
-	public BpmnSimpleMerge() throws BpmnException {
-		super();
-		StringBuilder sb = new StringBuilder();
-		sb.append("ExclusiveGateway.allInstances()->select(");
-		sb.append("gate : ExclusiveGateway | gate.gatewayDirection = GatewayDirection::Converging");
-		sb.append(")->size()");
-		super.setOclQuery(sb.toString());
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof BpmnProcess)) {
+			System.err.println("Matches method : The object is not a " + BpmnProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		BpmnProcess process = (BpmnProcess) object;
+		return BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING).size();
 	}
 	
 	@Override

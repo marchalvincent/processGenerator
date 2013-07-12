@@ -31,14 +31,14 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 	}
 	
 	@Override
-	public int matches(Object object) throws Exception {
-		
-		int count = 0;
+	public int matches(Object object) {
 		
 		if (!(object instanceof BpmnProcess)) {
 			System.err.println("Error, the eObject is not a Bpmn Process.");
-			return count;
+			return 0;
 		}
+
+		int count = 0;
 		
 		BpmnProcess process = (BpmnProcess) object;
 		JungProcess jung = new JungProcess(process);

@@ -1044,8 +1044,6 @@ public class ProcessGeneratorView extends ViewPart {
 	public void majTreeOfChangePatterns(IEnumChangePattern<?>[] eBpmnChangePatterns) {
 		this.newTreeChangePattern();
 		this.addChangePatternToTree(eBpmnChangePatterns);
-//		grpElementsParameters.layout(true);
-		treeChangePatterns.layout(true);
 	}
 
 	private void newTreeElement() {
