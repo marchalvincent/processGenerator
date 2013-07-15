@@ -11,12 +11,12 @@ import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.Utils;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.BpmnWorkflowRepresentation;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
 import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
+import fr.lip6.move.processGenerator.jung.JungEdge;
+import fr.lip6.move.processGenerator.jung.JungProcess;
+import fr.lip6.move.processGenerator.jung.JungVertex;
 
 /**
  * Représente le WP10 - Arbitrary Cycle.
@@ -26,10 +26,6 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  */
 public class BpmnArbitraryCycle extends AbstractJavaSolver {
 	
-	public BpmnArbitraryCycle() {
-		super();
-	}
-	
 	@Override
 	public int matches(Object object) {
 		
@@ -37,7 +33,7 @@ public class BpmnArbitraryCycle extends AbstractJavaSolver {
 			System.err.println("Error, the eObject is not a Bpmn Process.");
 			return 0;
 		}
-
+		
 		int count = 0;
 		
 		BpmnProcess process = (BpmnProcess) object;

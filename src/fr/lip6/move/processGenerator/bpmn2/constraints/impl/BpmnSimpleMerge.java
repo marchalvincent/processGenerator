@@ -13,7 +13,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP5 - Simple Merge.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnSimpleMerge extends AbstractJavaSolver {
 	
@@ -24,7 +24,8 @@ public class BpmnSimpleMerge extends AbstractJavaSolver {
 			return 0;
 		}
 		BpmnProcess process = (BpmnProcess) object;
-		return BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING).size();
+		return BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING)
+				.size();
 	}
 	
 	@Override

@@ -24,7 +24,8 @@ public class BpmnExclusiveChoice extends AbstractJavaSolver {
 			return 0;
 		}
 		BpmnProcess process = (BpmnProcess) object;
-		return BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING).size();
+		return BpmnFilter.byType(ExclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING)
+				.size();
 	}
 	
 	@Override
@@ -50,5 +51,5 @@ public class BpmnExclusiveChoice extends AbstractJavaSolver {
 		representation.setEnd(merge);
 		
 		return representation;
-	}	
+	}
 }

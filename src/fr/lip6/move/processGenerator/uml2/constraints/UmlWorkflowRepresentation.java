@@ -46,9 +46,9 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 		controlTwins = new HashMap<>();
 	}
 	
-
 	/**
 	 * Créé et lie à la représentation un {@link ForkNode}.
+	 * 
 	 * @return
 	 */
 	public ForkNode buildForkNode() {
@@ -59,6 +59,7 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	
 	/**
 	 * Créé et lie à la représentation un {@link JoinNode}.
+	 * 
 	 * @return
 	 */
 	public JoinNode buildJoinNode() {
@@ -69,8 +70,11 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	
 	/**
 	 * Créé et lie à la représentation un {@link ControlFlow}.
-	 * @param source la source de l'arc.
-	 * @param target la destination de l'arc.
+	 * 
+	 * @param source
+	 *            la source de l'arc.
+	 * @param target
+	 *            la destination de l'arc.
 	 * @return
 	 */
 	public ControlFlow buildControlFlow(ActivityNode source, ActivityNode target) {
@@ -87,6 +91,7 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	
 	/**
 	 * Créé et lie à la représentation un {@link Action}.
+	 * 
 	 * @return
 	 */
 	public Action buildAction() {
@@ -97,14 +102,16 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	
 	/**
 	 * Renvoie un {@link Action} tiré au hasard.
+	 * 
 	 * @return
 	 */
 	private Action getRandomAction() {
 		return UmlProcess.generateAction();
 	}
-
+	
 	/**
 	 * Créé et lie à la représentation un {@link DecisionNode}.
+	 * 
 	 * @return
 	 */
 	public DecisionNode buildDecisionNode() {
@@ -112,9 +119,10 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 		this.nameAndLinkNode(node);
 		return node;
 	}
-
+	
 	/**
 	 * Créé et lie à la représentation un {@link MergeNode}.
+	 * 
 	 * @return
 	 */
 	public MergeNode buildMergeNode() {
@@ -125,13 +133,14 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	
 	/**
 	 * Nomme et lie un noeud à la représentation.
+	 * 
 	 * @param node
 	 */
 	private void nameAndLinkNode(ActivityNode node) {
 		node.setName(UmlNameManager.instance.getActivityNodeName(node));
 		nodes.add(node);
 	}
-
+	
 	@Override
 	public void setBegin(Object begin) {
 		if (begin instanceof ActivityNode)
@@ -172,9 +181,10 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	public List<ActivityEdge> getEdges() {
 		return edges;
 	}
-
+	
 	/**
 	 * Lie deux {@link ControlNode}s comme étant des jumeaux.
+	 * 
 	 * @param diverging
 	 * @param converging
 	 */

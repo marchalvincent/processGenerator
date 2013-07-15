@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
  * Teste l'insertion d'un nouveau thread.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnThreadInsertTest {
 	
@@ -28,7 +28,7 @@ public class BpmnThreadInsertTest {
 		
 		BpmnThreadInsertRandom insert = new BpmnThreadInsertRandom();
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(process.getProcess().getFlowElements().size() == 15);
 		assertTrue(BpmnChangePatternHelper.instance.countActivity(process) == 4);
 		assertTrue(BpmnChangePatternHelper.instance.countSequenceFlow(process) == 7);

@@ -23,7 +23,7 @@ public class UmlElementConstraint extends AbstractJavaSolver {
 	@Override
 	public int matches(Object object) throws Exception {
 		if (!(object instanceof UmlProcess)) {
-			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
+			System.err.println("Matches method : The object is not an " + UmlProcess.class.getSimpleName() + ".");
 			return 0;
 		}
 		UmlProcess process = (UmlProcess) object;

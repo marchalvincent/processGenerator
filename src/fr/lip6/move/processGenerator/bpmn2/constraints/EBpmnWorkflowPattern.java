@@ -45,7 +45,7 @@ public enum EBpmnWorkflowPattern implements IEnumWorkflowPattern {
 	public IStructuralConstraint newInstance() throws Exception {
 		return this.clazz.newInstance();
 	}
-
+	
 	@Override
 	public IHierarchicalEnum getParent() {
 		// les workflows patterns n'ont pas de hierarchie

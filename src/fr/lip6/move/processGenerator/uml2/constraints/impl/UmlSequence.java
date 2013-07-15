@@ -19,7 +19,7 @@ public class UmlSequence extends AbstractJavaSolver {
 	@Override
 	public int matches(Object object) throws Exception {
 		if (!(object instanceof UmlProcess)) {
-			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
+			System.err.println("Matches method : The object is not an " + UmlProcess.class.getSimpleName() + ".");
 			return 0;
 		}
 		UmlProcess process = (UmlProcess) object;
@@ -31,7 +31,8 @@ public class UmlSequence extends AbstractJavaSolver {
 				if (action.getOutgoings().get(0).getTarget() instanceof Action)
 					count++;
 			} catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
-				System.err.println(e.getClass().getSimpleName() + " : " + UmlSequence.class.getSimpleName() + ", method matches.");
+				System.err
+						.println(e.getClass().getSimpleName() + " : " + UmlSequence.class.getSimpleName() + ", method matches.");
 			}
 		}
 		return count;

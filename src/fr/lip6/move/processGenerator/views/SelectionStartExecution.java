@@ -97,7 +97,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 		List<StructuralConstraintChecker> contraintesWorkflows = null;
 		try {
 			contraintesElements = this.buildStructuralConstraints(treeElements.getItems(), ConstraintType.Element, factory, null);
-			contraintesWorkflows = this.buildStructuralConstraints(treeWorkflows.getItems(), ConstraintType.Workflow, factory, null);
+			contraintesWorkflows = this.buildStructuralConstraints(treeWorkflows.getItems(), ConstraintType.Workflow, factory,
+					null);
 		} catch (Exception ex) {
 			view.printError(ex.getMessage());
 			System.err.println(ex.getMessage());
@@ -274,7 +275,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 		
 		// pour chaque ligne du tableau
 		for (TreeItem item : items) {
-
+			
 			// on applique la récursivité sur les fils
 			List<IChangePattern<?>> listTemp = this.getChangePatterns(item.getItems(), sb);
 			changePatterns.addAll(listTemp);
@@ -294,7 +295,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 				// on vérifie que l'item est bien une enum de change pattern
 				if (item.getData(Utils.NAME_KEY) instanceof IEnumChangePattern<?>) {
 					// si oui, on instancie dynamiquement la classe
-					IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData(Utils.NAME_KEY)).newInstance((String) item.getData(Utils.NUMBER_KEY));
+					IChangePattern<?> cPattern = ((IEnumChangePattern<?>) item.getData(Utils.NAME_KEY)).newInstance((String) item
+							.getData(Utils.NUMBER_KEY));
 					changePatterns.add(cPattern);
 				} else {
 					System.err.println("Carreful, the item data is not a " + IEnumChangePattern.class.getSimpleName() + ".");
@@ -310,7 +312,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 	 * Construit une liste de {@link StructuralConstraintChecker} en fonction de l'arbre passé en paramètre. Cette
 	 * méthode fonctionne à la fois pour l'arbre des éléments mais aussi pour l'arbre des workflow patterns.
 	 * 
-	 * @param treeElements l'arbre à parser pour construire les checkeurs contraintes.
+	 * @param treeElements
+	 *            l'arbre à parser pour construire les checkeurs contraintes.
 	 * @param constraintType
 	 * @param factory
 	 * @return
@@ -331,7 +334,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 		for (TreeItem item : items) {
 			
 			// on applique la récursivité sur les fils
-			List<StructuralConstraintChecker> listTemp = this.buildStructuralConstraints(item.getItems(), constraintType, factory, sb);
+			List<StructuralConstraintChecker> listTemp = this.buildStructuralConstraints(item.getItems(), constraintType,
+					factory, sb);
 			liste.addAll(listTemp);
 			
 			// on récupère la quantité
@@ -340,7 +344,8 @@ public class SelectionStartExecution extends SelectionAdapter {
 			int number = 1, weight = 1;
 			try {
 				/*
-				 * puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à la volée)
+				 * puis le nombre (normalement le parseInt ne renvoie pas d'exception car le traitement est déjà fait à
+				 * la volée)
 				 */
 				number = Integer.parseInt((String) item.getData(Utils.NUMBER_KEY));
 				// ainsi que le poids
@@ -382,7 +387,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 				} else {
 					contrainte = factory.newWorkflowPatternConstraint(item.getData(Utils.NAME_KEY));
 				}
-
+				
 				// on construit le checker puis on l'ajoute à la liste
 				StructuralConstraintChecker checker = new StructuralConstraintChecker(contrainte, quantity, number, weight);
 				liste.add(checker);

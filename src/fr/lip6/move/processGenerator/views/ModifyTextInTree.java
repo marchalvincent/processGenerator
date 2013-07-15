@@ -30,6 +30,7 @@ public class ModifyTextInTree implements FocusListener {
 	
 	/**
 	 * Temporaire, les change patterns vont être dans un arbre eux aussi (cf. constructeur précédent)
+	 * 
 	 * @param tableItem
 	 * @param text2
 	 * @param indexOfTable2
@@ -40,7 +41,7 @@ public class ModifyTextInTree implements FocusListener {
 		this.text = text;
 		this.indexOfTable = indexOfTable;
 	}
-
+	
 	@Override
 	public void focusLost(FocusEvent me) {
 		// on n'accepte que les nombres
@@ -55,7 +56,7 @@ public class ModifyTextInTree implements FocusListener {
 		else
 			table.setText(indexOfTable, text.getText());
 	}
-
+	
 	@Override
 	public void focusGained(FocusEvent e) {}
 }

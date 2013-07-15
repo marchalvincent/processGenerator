@@ -29,7 +29,7 @@ public enum EBpmnElement implements IEnumElement {
 	EVENT(null, Event.class),
 	START_EVENT(EVENT, StartEvent.class),
 	END_EVENT(EVENT, EndEvent.class),
-
+	
 	TASK(null, Task.class),
 	MANUAL_TASK(TASK, ManualTask.class),
 	RECEIVE_TASK(TASK, ReceiveTask.class),
@@ -41,7 +41,7 @@ public enum EBpmnElement implements IEnumElement {
 	PARALLEL_GATEWAY(GATEWAY, ParallelGateway.class),
 	EXCLUSIVE_GATEWAY(GATEWAY, ExclusiveGateway.class),
 	INCLUSIVE_GATEWAY(GATEWAY, InclusiveGateway.class);
-
+	
 	private IHierarchicalEnum parent;
 	private Class<? extends FlowElement> clazz;
 	
@@ -54,12 +54,12 @@ public enum EBpmnElement implements IEnumElement {
 	public String toString() {
 		return this.clazz.getSimpleName();
 	}
-
+	
 	@Override
 	public IHierarchicalEnum getParent() {
 		return parent;
 	}
-
+	
 	@Override
 	public Class<?> getAssociatedClass() {
 		return clazz;

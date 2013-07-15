@@ -11,7 +11,6 @@ import fr.lip6.move.processGenerator.bpmn2.EBpmnElement;
 import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnElementConstraint;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
-
 public class ElementConstraintTest {
 	
 	private BpmnProcess process;
@@ -28,7 +27,7 @@ public class ElementConstraintTest {
 	
 	@Test(expected = Exception.class)
 	public void test0() throws Exception {
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.END_EVENT), 
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.END_EVENT),
 				EQuantity.EQUAL, -1);
 		checker.check(process);
 	}
@@ -40,7 +39,7 @@ public class ElementConstraintTest {
 		process = BpmnBuilder.instance.initialFinal();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.TASK), 
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.TASK),
 				EQuantity.EQUAL, 0);
 		assertTrue(checker.check(process));
 	}
@@ -52,8 +51,8 @@ public class ElementConstraintTest {
 		process = BpmnBuilder.instance.getLoopExample();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.START_EVENT), 
-				EQuantity.EQUAL, 1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(
+				new BpmnElementConstraint(EBpmnElement.START_EVENT), EQuantity.EQUAL, 1);
 		assertTrue(checker.check(process));
 	}
 	
@@ -64,8 +63,8 @@ public class ElementConstraintTest {
 		process = BpmnBuilder.instance.getComplexLoopExample();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.EXCLUSIVE_GATEWAY),
-				EQuantity.EQUAL, 4);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(
+				EBpmnElement.EXCLUSIVE_GATEWAY), EQuantity.EQUAL, 4);
 		assertTrue(checker.check(process));
 	}
 	
@@ -76,16 +75,14 @@ public class ElementConstraintTest {
 		process = BpmnBuilder.instance.buildSpecifiqueTask();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.SCRIPT_TASK), 
-				EQuantity.EQUAL, 2);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(
+				new BpmnElementConstraint(EBpmnElement.SCRIPT_TASK), EQuantity.EQUAL, 2);
 		assertTrue(checker.check(process));
-
-		checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.USER_TASK), 
-				EQuantity.EQUAL, 1);
+		
+		checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.USER_TASK), EQuantity.EQUAL, 1);
 		assertTrue(checker.check(process));
-
-		checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.SERVICE_TASK), 
-				EQuantity.EQUAL, 0);
+		
+		checker = new StructuralConstraintChecker(new BpmnElementConstraint(EBpmnElement.SERVICE_TASK), EQuantity.EQUAL, 0);
 		assertTrue(checker.check(process));
 	}
 }

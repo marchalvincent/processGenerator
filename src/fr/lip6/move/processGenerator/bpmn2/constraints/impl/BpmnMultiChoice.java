@@ -25,7 +25,8 @@ public class BpmnMultiChoice extends AbstractJavaSolver {
 			return 0;
 		}
 		BpmnProcess process = (BpmnProcess) object;
-		return BpmnFilter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING).size();
+		return BpmnFilter.byType(InclusiveGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING)
+				.size();
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @see {@link BpmnThreadInsertRandom} ajout d'un nouveau thread implicite ou explicite.
  */
 public class BpmnThreadInsertImplicite extends AbstractChangePattern<BpmnProcess> {
-
+	
 	// pour éviter trop d'instanciation de la part du thread insert random
 	public static BpmnThreadInsertImplicite instance = new BpmnThreadInsertImplicite();
 	

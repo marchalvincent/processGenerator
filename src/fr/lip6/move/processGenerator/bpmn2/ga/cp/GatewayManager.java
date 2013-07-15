@@ -12,10 +12,10 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungEdge;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungProcess;
-import fr.lip6.move.processGenerator.bpmn2.jung.JungVertex;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.jung.JungEdge;
+import fr.lip6.move.processGenerator.jung.JungProcess;
+import fr.lip6.move.processGenerator.jung.JungVertex;
 
 /**
  * Cette classe se charge de retrouver la gateway "jumelle" d'une autre par rapport à un diagramme d'activité.

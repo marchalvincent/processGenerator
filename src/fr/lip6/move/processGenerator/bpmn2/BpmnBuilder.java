@@ -492,6 +492,7 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un process avec des Task spécifiques : StartEvent -> ScriptTask -> ScriptTask -> UserTask -> EndEvent
+	 * 
 	 * @return
 	 */
 	public BpmnProcess buildSpecifiqueTask() {
@@ -585,6 +586,7 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une terminaison implicite.
+	 * 
 	 * @return
 	 */
 	public BpmnProcess buildImpliciteTermination() {
@@ -609,6 +611,7 @@ public class BpmnBuilder {
 	
 	/**
 	 * Créé un exemple avec une terminaison explicite.
+	 * 
 	 * @return
 	 */
 	public BpmnProcess buildExpliciteTermination() {

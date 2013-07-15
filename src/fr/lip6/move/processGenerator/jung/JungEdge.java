@@ -1,10 +1,11 @@
-package fr.lip6.move.processGenerator.bpmn2.jung;
+package fr.lip6.move.processGenerator.jung;
 
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.uml2.uml.ActivityEdge;
 
 /**
- * Représente un arc bpmn (SequenceFlow). Cette classe est destinée à être manipulée par la librairie JUNG afin d'y
- * appliquer certains algorithmes.
+ * Représente un arc bpmn ({@link SequenceFlow}) ou uml ({@link ActivityEdge}). Cette classe est destinée à être
+ * manipulée par la librairie JUNG afin d'y appliquer certains algorithmes.
  * 
  * @author Vincent
  * 
@@ -13,9 +14,24 @@ public class JungEdge {
 	
 	private String id;
 	
+	/**
+	 * Constructeur à partir d'un {@link SequenceFlow} bpmn2.0.
+	 * 
+	 * @param sequence
+	 */
 	public JungEdge(SequenceFlow sequence) {
 		super();
 		this.id = sequence.getId();
+	}
+	
+	/**
+	 * Constructeur à partir d'un {@link ActivityEdge} uml2.0.
+	 * 
+	 * @param edge
+	 */
+	public JungEdge(ActivityEdge edge) {
+		super();
+		this.id = edge.getName();
 	}
 	
 	@Override

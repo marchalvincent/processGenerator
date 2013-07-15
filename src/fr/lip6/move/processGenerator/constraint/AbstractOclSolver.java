@@ -52,7 +52,8 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 	 * @param object
 	 *            l'objet à évaluer.
 	 * @return le nombre de structure trouvée par la contrainte ocl.
-	 * @throws ParserException si la création de la requête à échouée
+	 * @throws ParserException
+	 *             si la création de la requête à échouée
 	 */
 	protected int resolveQuery(EClass eClass, Object object) throws ParserException {
 		// create an OCL instance for Ecore

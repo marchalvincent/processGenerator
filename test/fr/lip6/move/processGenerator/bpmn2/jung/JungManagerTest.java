@@ -10,6 +10,9 @@ import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.jung.JungEdge;
+import fr.lip6.move.processGenerator.jung.JungProcess;
+import fr.lip6.move.processGenerator.jung.JungVertex;
 
 public class JungManagerTest {
 	

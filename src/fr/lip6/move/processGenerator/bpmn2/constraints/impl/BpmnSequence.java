@@ -12,7 +12,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP1 - Sequence.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnSequence extends AbstractJavaSolver {
 	

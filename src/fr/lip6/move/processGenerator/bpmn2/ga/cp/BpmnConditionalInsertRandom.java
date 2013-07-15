@@ -21,7 +21,7 @@ public class BpmnConditionalInsertRandom extends AbstractChangePattern<BpmnProce
 	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
-
+		
 		// on récupère le nombre de séquence et le nombre d'exclusive gateway
 		int nbSequence = BpmnChangePatternHelper.instance.countSequenceFlow(oldProcess);
 		int nbConditional = BpmnChangePatternHelper.instance.countConditionalGateway(oldProcess);
@@ -46,7 +46,8 @@ public class BpmnConditionalInsertRandom extends AbstractChangePattern<BpmnProce
 			tableau[i] = 1;
 		}
 		
-		// on procède au tirage au sort. 0 pour une insertion sur un arc, 1 pour une insertion sur des Gateways déjà existantes.
+		// on procède au tirage au sort. 0 pour une insertion sur un arc, 1 pour une insertion sur des Gateways déjà
+		// existantes.
 		int tirage = tableau[rng.nextInt(tableau.length)];
 		if (tirage == 0)
 			return BpmnConditionalInsertSequence.instance.apply(oldProcess, rng, structuralConstraints);

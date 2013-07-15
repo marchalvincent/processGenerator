@@ -13,14 +13,14 @@ import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
  * Représente le WP2 - Parallel Split.
  * 
  * @author Vincent
- *
+ * 
  */
 public class UmlParallelSplit extends AbstractJavaSolver {
 	
 	@Override
 	public int matches(Object object) throws Exception {
 		if (!(object instanceof UmlProcess)) {
-			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
+			System.err.println("Matches method : The object is not an " + UmlProcess.class.getSimpleName() + ".");
 			return 0;
 		}
 		UmlProcess process = (UmlProcess) object;
@@ -30,8 +30,8 @@ public class UmlParallelSplit extends AbstractJavaSolver {
 	@Override
 	public IWorkflowRepresentation getRepresentation() {
 		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();
-
-		// on construit les noeuds 
+		
+		// on construit les noeuds
 		ForkNode fork = representation.buildForkNode();
 		Action a = representation.buildAction();
 		Action b = representation.buildAction();

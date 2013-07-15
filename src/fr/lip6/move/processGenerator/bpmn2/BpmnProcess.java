@@ -171,11 +171,12 @@ public class BpmnProcess {
 	
 	/**
 	 * Nomme et associe la Task passée en paramètre au process.
+	 * 
 	 * @param createScriptTask
 	 * @return
 	 */
 	public Task buildTask(Task task) {
-
+		
 		String name = BpmnNameManager.instance.getTaskName();
 		task.setId("id_" + name);
 		task.setName(name);

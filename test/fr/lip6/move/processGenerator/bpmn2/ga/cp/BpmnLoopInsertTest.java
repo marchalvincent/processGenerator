@@ -9,8 +9,9 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
  * Test l'insertion d'une boucle.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnLoopInsertTest {
 	
@@ -26,7 +27,7 @@ public class BpmnLoopInsertTest {
 		
 		BpmnLoopInsert insert = new BpmnLoopInsert();
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(BpmnChangePatternHelper.instance.countActivity(process) == 3);
 		assertTrue(BpmnChangePatternHelper.instance.countSequenceFlow(process) == 7);
 		assertTrue(BpmnChangePatternHelper.instance.countConditionalGateway(process) == 2);

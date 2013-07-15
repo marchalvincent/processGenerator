@@ -30,7 +30,7 @@ public enum EUmlChangePattern implements IEnumChangePattern<UmlProcess> {
 		cp.setProba(proba);
 		return cp;
 	}
-
+	
 	@Override
 	public IHierarchicalEnum getParent() {
 		return parent;

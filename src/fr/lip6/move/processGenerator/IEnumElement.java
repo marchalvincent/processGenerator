@@ -14,6 +14,7 @@ public interface IEnumElement extends IHierarchicalEnum {
 	
 	/**
 	 * Renvoie la classe associée à l'énumération.
+	 * 
 	 * @return
 	 */
 	Class<?> getAssociatedClass();

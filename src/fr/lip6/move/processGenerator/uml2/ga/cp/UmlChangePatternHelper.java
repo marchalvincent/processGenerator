@@ -41,19 +41,21 @@ public class UmlChangePatternHelper {
 		
 		return list.get(rng.nextInt(list.size()));
 	}
-
+	
 	/**
 	 * Compte le nombre d'{@link Action} d'un process UML2.0.
 	 * 
-	 * @param process {@link UmlProcess}.
+	 * @param process
+	 *            {@link UmlProcess}.
 	 * @return int.
 	 */
 	public int countAction(UmlProcess process) {
 		return Filter.byType(Action.class, process.getActivity().getNodes()).size();
 	}
-
+	
 	/**
 	 * Compte le nombre de {@link ControlNode} d'un process uml2.0.
+	 * 
 	 * @param process
 	 * @return
 	 */

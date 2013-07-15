@@ -13,7 +13,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP2 - Parallel Split.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnParallelSplit extends AbstractJavaSolver {
 	
@@ -25,7 +25,8 @@ public class BpmnParallelSplit extends AbstractJavaSolver {
 		}
 		
 		BpmnProcess process = (BpmnProcess) object;
-		return BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING).size();
+		return BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.DIVERGING)
+				.size();
 	}
 	
 	@Override

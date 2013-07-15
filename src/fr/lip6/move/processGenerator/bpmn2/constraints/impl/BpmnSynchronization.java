@@ -24,7 +24,8 @@ public class BpmnSynchronization extends AbstractJavaSolver {
 			return 0;
 		}
 		BpmnProcess process = (BpmnProcess) object;
-		return BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING).size();
+		return BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements(), GatewayDirection.CONVERGING)
+				.size();
 	}
 	
 	@Override

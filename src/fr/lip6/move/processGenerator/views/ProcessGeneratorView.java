@@ -456,7 +456,7 @@ public class ProcessGeneratorView extends ViewPart {
 		treeChangePatterns.setLinesVisible(true);
 		treeChangePatterns.setHeaderVisible(true);
 		treeChangePatterns.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
+		
 		toolkit.adapt(treeChangePatterns);
 		toolkit.paintBordersFor(treeChangePatterns);
 		
@@ -601,7 +601,7 @@ public class ProcessGeneratorView extends ViewPart {
 	 * Toutes les opérations codées à la main
 	 */
 	private void manualCode() {
-
+		
 		// les préférences utilisateur pour la partie run
 		setPathDirectory(ConfigurationManager.instance.getLocation());
 		getSpinnerNbNode().setSelection(ConfigurationManager.instance.getNbNodes());
@@ -757,10 +757,13 @@ public class ProcessGeneratorView extends ViewPart {
 	}
 	
 	/**
-	 * Cette fonction ajoute un élément dans un arbre. Si son élément parent n'existe pas encore, alors celui ci est 
+	 * Cette fonction ajoute un élément dans un arbre. Si son élément parent n'existe pas encore, alors celui ci est
 	 * automatiquement ajouté récursivement.
-	 * @param tree l'arbre.
-	 * @param elem l'élément à ajouter.
+	 * 
+	 * @param tree
+	 *            l'arbre.
+	 * @param elem
+	 *            l'élément à ajouter.
 	 * @return {@link TreeItem} le nouvel item ajouté.
 	 */
 	private TreeItem addToTree(Tree tree, IHierarchicalEnum elem) {
@@ -786,7 +789,7 @@ public class ProcessGeneratorView extends ViewPart {
 			// exception pour l'arbre des change pattern, on n'expande pas
 			if (tree == treeChangePatterns)
 				parentItem.setExpanded(false);
-		} 
+		}
 		// sinon, on peut ajouter l'élément directement sur l'arbre
 		else {
 			newTreeItem = new TreeItem(tree, SWT.NONE);
@@ -794,11 +797,14 @@ public class ProcessGeneratorView extends ViewPart {
 		
 		return newTreeItem;
 	}
-
+	
 	/**
 	 * Cherche un {@link TreeItem} parmis ceux passé en paramètre ou parmis leurs fils selon leur nom.
-	 * @param items les items ainsi que leurs fils qu'il faut parcourir.
-	 * @param elem le nom dont on cherche l'item.
+	 * 
+	 * @param items
+	 *            les items ainsi que leurs fils qu'il faut parcourir.
+	 * @param elem
+	 *            le nom dont on cherche l'item.
 	 * @return {@link TreeItem}.
 	 */
 	private TreeItem findItem(TreeItem[] items, String elem) {
@@ -820,13 +826,15 @@ public class ProcessGeneratorView extends ViewPart {
 		// si on a rien trouvé, on renvoie faux
 		return null;
 	}
-
+	
 	/**
 	 * Rempli le Tree des change patterns selon les {@link IHierarchicalEnum} passés en paramètres.
-	 * @param changePatterns les {@link IHierarchicalEnum} représentant les change patterns.
+	 * 
+	 * @param changePatterns
+	 *            les {@link IHierarchicalEnum} représentant les change patterns.
 	 */
 	private void addChangePatternToTree(IHierarchicalEnum[] changePatterns) {
-
+		
 		// on récupère les préférences utilisateurs
 		String lecturePreferences = ConfigurationManager.instance.getChangePatternAttributes();
 		Map<String, String[]> preferences = new HashMap<>();
@@ -882,11 +890,11 @@ public class ProcessGeneratorView extends ViewPart {
 	public Combo getComboTypeFile() {
 		return comboTypeFile;
 	}
-
+	
 	public Tree getTreeElements() {
 		return treeElements;
 	}
-
+	
 	public Tree getTreeWorkflows() {
 		return treeWorkflows;
 	}
@@ -1021,6 +1029,7 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	/**
 	 * Met à jour l'arbre des éléments
+	 * 
 	 * @param elements
 	 */
 	public void majTreeOfElements(IEnumElement[] elements) {
@@ -1030,6 +1039,7 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	/**
 	 * Met à jour l'arbre des workflows
+	 * 
 	 * @param elements
 	 */
 	public void majTreeOfWorkflows(IEnumWorkflowPattern[] elements) {
@@ -1039,13 +1049,14 @@ public class ProcessGeneratorView extends ViewPart {
 	
 	/**
 	 * Met à jour l'arbre des changes patterns
+	 * 
 	 * @param eBpmnChangePatterns
 	 */
 	public void majTreeOfChangePatterns(IEnumChangePattern<?>[] eBpmnChangePatterns) {
 		this.newTreeChangePattern();
 		this.addChangePatternToTree(eBpmnChangePatterns);
 	}
-
+	
 	private void newTreeElement() {
 		treeElements.removeAll();
 		treeElements.dispose();
@@ -1120,14 +1131,14 @@ public class ProcessGeneratorView extends ViewPart {
 		TreeColumn trclmnChangePattern = new TreeColumn(treeChangePatterns, SWT.NONE);
 		trclmnChangePattern.setWidth(160);
 		trclmnChangePattern.setText("Change pattern");
-
+		
 		TreeColumn treeColumn_5 = new TreeColumn(treeChangePatterns, SWT.NONE);
 		treeColumn_5.setWidth(60);
 		treeColumn_5.setText("Probability");
 		
 		groupMutationParameters.layout(true);
 	}
-
+	
 	public void majGeneticAlgorithmInfos() {
 		// on met également les infos path, nbNode et margin au passage...
 		getLabelLocation().setText(ConfigurationManager.instance.getLocation());

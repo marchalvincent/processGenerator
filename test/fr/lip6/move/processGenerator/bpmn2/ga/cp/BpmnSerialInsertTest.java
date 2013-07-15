@@ -8,9 +8,10 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
- * Teste l'insertion "serial" d'une Task 
+ * Teste l'insertion "serial" d'une Task
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnSerialInsertTest {
 	
@@ -26,7 +27,7 @@ public class BpmnSerialInsertTest {
 		
 		BpmnSerialInsert insert = new BpmnSerialInsert();
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(BpmnChangePatternHelper.instance.countActivity(process) == 4);
 		assertTrue(BpmnChangePatternHelper.instance.countSequenceFlow(process) == 5);
 		assertTrue(BpmnChangePatternHelper.instance.countConditionalGateway(process) == 0);

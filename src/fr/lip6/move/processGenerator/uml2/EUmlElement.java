@@ -44,12 +44,12 @@ public enum EUmlElement implements IEnumElement {
 	public String toString() {
 		return this.clazz.getSimpleName();
 	}
-
+	
 	@Override
 	public IHierarchicalEnum getParent() {
 		return parent;
 	}
-
+	
 	@Override
 	public Class<?> getAssociatedClass() {
 		return clazz;

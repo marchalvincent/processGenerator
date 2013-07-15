@@ -88,8 +88,7 @@ public class ChangePatternTest {
 		listeCandidat = mutation.apply(listeCandidat, rng);
 		listeCandidat = mutation.apply(listeCandidat, rng);
 		
-		listeCandidat.get(0)
-				.save(System.getProperty("user.home") + Utils.projectPath + "gen/test.bpmn");
+		listeCandidat.get(0).save(System.getProperty("user.home") + Utils.projectPath + "gen/test.bpmn");
 	}
 	
 	// @Test

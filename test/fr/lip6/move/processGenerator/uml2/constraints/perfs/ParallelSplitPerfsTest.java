@@ -12,7 +12,6 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlParallelSplit;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlParallelSplitOcl;
 
-
 @SuppressWarnings("deprecation")
 public class ParallelSplitPerfsTest {
 	
@@ -20,7 +19,7 @@ public class ParallelSplitPerfsTest {
 	
 	public void test(IStructuralConstraint constraint, String name, boolean bool) throws Exception {
 		long startTime = System.nanoTime();
-
+		
 		// init du process
 		process = UmlBuilder.instance.initialFinal();
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(constraint, EQuantity.EQUAL, 0);
@@ -46,14 +45,15 @@ public class ParallelSplitPerfsTest {
 		if (bool)
 			System.out.print(estimatedTime + ";");
 	}
-
+	
 	@Test
 	public void testOCL() throws Exception {
-		// on fait 2 exec pour que les objets soient initialisés correctement et ne fausse pas les test par rapport au Java
+		// on fait 2 exec pour que les objets soient initialisés correctement et ne fausse pas les test par rapport au
+		// Java
 		IStructuralConstraint c1 = new UmlParallelSplitOcl();
 		this.test(c1, "OCL", false);
 		this.test(c1, "OCL", true);
-
+		
 		IStructuralConstraint c2 = new UmlParallelSplit();
 		this.test(c2, "Java", false);
 		this.test(c2, "Java", true);

@@ -15,7 +15,7 @@ import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlSequence;
  * Teste le workflow pattern {@link UmlSequence}.
  * 
  * @author Vincent
- *
+ * 
  */
 public class UmlSequenceTest {
 	

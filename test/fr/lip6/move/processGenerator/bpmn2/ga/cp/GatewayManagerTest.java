@@ -22,8 +22,7 @@ public class GatewayManagerTest {
 			if (twin != null) {
 				countTwin++;
 				System.out.println("The twin of " + gateway.getId() + " is " + twin.getId());
-			}
-			else {
+			} else {
 				countNoTwin++;
 				System.out.println("No twin found for " + gateway.getId());
 			}

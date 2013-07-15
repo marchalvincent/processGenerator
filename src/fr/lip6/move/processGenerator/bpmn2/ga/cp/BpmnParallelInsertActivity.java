@@ -13,22 +13,23 @@ import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
- * Ce change pattern représente l'ajout d'une Task en parallèle à une autre entrainant donc la création de deux gateways parallèles.
+ * Ce change pattern représente l'ajout d'une Task en parallèle à une autre entrainant donc la création de deux gateways
+ * parallèles.
  * 
  * @see BpmnParallelInsertGateway insertion d'une Task sur des gateways déjà existantes.
  * @see BpmnParallelInsertRandom insertion d'une Task au hasard dans le process.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnParallelInsertActivity extends AbstractChangePattern<BpmnProcess> {
 	
 	// pour éviter trop d'instanciation d'un même objet
 	public static final BpmnParallelInsertActivity instance = new BpmnParallelInsertActivity();
-
+	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
-
+		
 		BpmnProcess process = null;
 		try {
 			process = new BpmnProcess(oldProcess);

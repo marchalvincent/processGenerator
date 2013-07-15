@@ -15,7 +15,7 @@ import java.util.Properties;
  * 
  */
 public class ConfigurationManager {
-
+	
 	private final String TYPE_FILE = "0";
 	private final String LOCATION = Utils.configurationFolder;
 	private final String NODES = "30";

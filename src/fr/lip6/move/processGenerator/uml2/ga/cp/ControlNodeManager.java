@@ -3,8 +3,6 @@ package fr.lip6.move.processGenerator.uml2.ga.cp;
 import org.eclipse.uml2.uml.ControlNode;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
-
-
 public class ControlNodeManager {
 	
 	public static ControlNodeManager instance = new ControlNodeManager();
@@ -25,7 +23,7 @@ public class ControlNodeManager {
 			return twin;
 		
 		// sinon il faut chercher dans le process à la main
-		//TODO
+		// TODO
 		return null;
 	}
 }

@@ -19,7 +19,7 @@ public class UmlSimpleMergeOcl extends AbstractUmlOclSolver {
 		super();
 		super.setOclQuery("MergeNode.allInstances()->size()");
 	}
-
+	
 	@Override
 	public IWorkflowRepresentation getRepresentation() {
 		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();

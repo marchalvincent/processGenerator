@@ -1,4 +1,4 @@
-package fr.lip6.move.processGenerator.bpmn2.jung;
+package fr.lip6.move.processGenerator.jung;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,14 +6,18 @@ import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.uml2.uml.Activity;
+import org.eclipse.uml2.uml.ActivityEdge;
+import org.eclipse.uml2.uml.ActivityNode;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
 /**
- * Représente un process bpmn ({@link BpmnProcess}). Cette classe est destinée à être manipulée par la librairie JUNG
- * afin d'y appliquer certains algorithmes.
+ * Représente un process bpmn ({@link BpmnProcess}) ou uml ({@link UmlProcess}). Cette classe est destinée à être
+ * manipulée par la librairie JUNG afin d'y appliquer certains algorithmes.
  * 
  * @author Vincent
  * 
@@ -46,8 +50,8 @@ public class JungProcess {
 	 */
 	public JungProcess(Process process) {
 		super();
-		graph = new SparseMultigraph<JungVertex, JungEdge>();
-		allVertices = new HashMap<String, JungVertex>();
+		graph = new SparseMultigraph<>();
+		allVertices = new HashMap<>();
 		
 		// on parcours chaque élément du process pour y mettre dans un premier temps les FlowNodes
 		for (FlowElement element : process.getFlowElements()) {
@@ -61,12 +65,45 @@ public class JungProcess {
 		// et on peut enfin mettre les arcs
 		for (FlowElement element : process.getFlowElements()) {
 			if (element instanceof SequenceFlow) {
-				
 				SequenceFlow sequence = (SequenceFlow) element;
 				JungVertex v1 = allVertices.get(sequence.getSourceRef().getId());
 				JungVertex v2 = allVertices.get(sequence.getTargetRef().getId());
 				graph.addEdge(new JungEdge(sequence), v1, v2, EdgeType.DIRECTED);
 			}
+		}
+	}
+	
+	/**
+	 * Constructeur à partir d'un {@link UmlProcess}.
+	 * 
+	 * @param process
+	 */
+	public JungProcess(UmlProcess process) {
+		this(process.getActivity());
+	}
+	
+	/**
+	 * Constructeur à partir d'une {@link Activity} UML2.0.
+	 * 
+	 * @param process
+	 */
+	public JungProcess(Activity process) {
+		super();
+		graph = new SparseMultigraph<>();
+		allVertices = new HashMap<>();
+		
+		// on parcours chaque node du process
+		for (ActivityNode node : process.getNodes()) {
+			JungVertex vertex = new JungVertex(node);
+			allVertices.put(node.getName(), vertex);
+			graph.addVertex(vertex);
+		}
+		
+		// et on peut enfin mettre les arcs
+		for (ActivityEdge edge : process.getEdges()) {
+			JungVertex v1 = allVertices.get(edge.getSource().getName());
+			JungVertex v2 = allVertices.get(edge.getTarget().getName());
+			graph.addEdge(new JungEdge(edge), v1, v2, EdgeType.DIRECTED);
 		}
 	}
 	

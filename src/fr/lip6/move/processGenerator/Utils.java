@@ -28,11 +28,10 @@ public class Utils {
 	public static final String DEFAULT_NUMBER = "1";
 	public static final String WEIGHT_KEY = "weightKey";
 	public static final String DEFAULT_WEIGHT = "1";
-
+	
 	public static final String projectPath = "/Documents/workspace/processGenerator/";
 	public static final String bugPathBpmn = projectPath + "gen/bug.bpmn";
 	public static final String bugPathUml = projectPath + "gen/bug.uml";
-	
 	
 	public static Utils instance = new Utils();
 	

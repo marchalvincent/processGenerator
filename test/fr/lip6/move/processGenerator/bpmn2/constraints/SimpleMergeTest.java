@@ -24,8 +24,7 @@ public class SimpleMergeTest {
 		process = null;
 	}
 	
-	@Test(
-			expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void test0() throws Exception {
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnSimpleMerge(), EQuantity.EQUAL, -1);
 		checker.check(process);

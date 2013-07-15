@@ -35,6 +35,7 @@ public class UmlBuilder {
 	
 	/**
 	 * Construit un process : initial -> A -> B -> final.
+	 * 
 	 * @return
 	 */
 	public UmlProcess initialABFinal() {
@@ -56,6 +57,7 @@ public class UmlBuilder {
 	
 	/**
 	 * Construit un process : initial -> A -> B -> C -> final.
+	 * 
 	 * @return
 	 */
 	public UmlProcess initialABCFinal() {
@@ -79,6 +81,7 @@ public class UmlBuilder {
 	
 	/**
 	 * Construit un process contenant un fork.
+	 * 
 	 * @return
 	 */
 	public UmlProcess buildForkExample() {
@@ -105,6 +108,7 @@ public class UmlBuilder {
 	
 	/**
 	 * Créé un process avec un exemple de décision.
+	 * 
 	 * @return
 	 */
 	public UmlProcess buildDecisionExample() {

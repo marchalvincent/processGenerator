@@ -14,7 +14,7 @@ import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlSynchronization;
  * Teste le workflow pattern {@link UmlSynchronization}.
  * 
  * @author Vincent
- *
+ * 
  */
 public class UmlSynchronizationTest {
 	

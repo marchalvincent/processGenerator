@@ -10,7 +10,6 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnExpliciteTermination;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
-
 public class ExpliciteTerminationTest {
 	
 	private BpmnProcess process;
@@ -27,8 +26,7 @@ public class ExpliciteTerminationTest {
 	
 	@Test(expected = Exception.class)
 	public void test0() throws Exception {
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExpliciteTermination(), 
-				EQuantity.EQUAL, -1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExpliciteTermination(), EQuantity.EQUAL, -1);
 		checker.check(process);
 	}
 	
@@ -39,8 +37,7 @@ public class ExpliciteTerminationTest {
 		process = BpmnBuilder.instance.buildImpliciteTermination();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExpliciteTermination(), 
-				EQuantity.EQUAL, 0);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExpliciteTermination(), EQuantity.EQUAL, 0);
 		assertTrue(checker.check(process));
 	}
 	
@@ -51,8 +48,7 @@ public class ExpliciteTerminationTest {
 		process = BpmnBuilder.instance.buildExpliciteTermination();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExpliciteTermination(), 
-				EQuantity.EQUAL, 1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnExpliciteTermination(), EQuantity.EQUAL, 1);
 		assertTrue(checker.check(process));
 	}
 }

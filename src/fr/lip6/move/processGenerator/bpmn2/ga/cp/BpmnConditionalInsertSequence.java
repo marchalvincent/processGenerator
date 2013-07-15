@@ -19,16 +19,16 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @see BpmnConditionalInsertRandom insertion conditionnelle au hasard.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnConditionalInsertSequence extends AbstractChangePattern<BpmnProcess> {
-
+	
 	// évite trop d'instanciations d'un même objet
 	public static final BpmnConditionalInsertSequence instance = new BpmnConditionalInsertSequence();
 	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
-
+		
 		// on copie le candidat
 		BpmnProcess process = null;
 		try {

@@ -23,7 +23,7 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * @see {@link BpmnThreadInsertRandom} ajout d'un nouveau thread implicite ou explicite.
  */
 public class BpmnThreadInsertExplicite extends AbstractChangePattern<BpmnProcess> {
-
+	
 	// pour éviter trop d'instanciation de la part du thread insert random
 	public static BpmnThreadInsertExplicite instance = new BpmnThreadInsertExplicite();
 	
@@ -54,7 +54,8 @@ public class BpmnThreadInsertExplicite extends AbstractChangePattern<BpmnProcess
 			process.buildSequenceFlow(fork, a);
 			process.buildSequenceFlow(a, end);
 			
-			// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event (terminaison explicite)
+			// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event (terminaison
+			// explicite)
 			end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
 			
 		} catch (GeneticException e) {

@@ -23,8 +23,8 @@ public class UmlParallelSplitOcl extends AbstractUmlOclSolver {
 	@Override
 	public IWorkflowRepresentation getRepresentation() {
 		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();
-
-		// on construit les noeuds 
+		
+		// on construit les noeuds
 		ForkNode fork = representation.buildForkNode();
 		Action a = representation.buildAction();
 		Action b = representation.buildAction();

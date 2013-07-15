@@ -25,8 +25,7 @@ public class StructuredSynchronizingMergeTest {
 		process = null;
 	}
 	
-	@Test(
-			expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void test0() throws Exception {
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(new BpmnStructuredSynchronizingMerge(),
 				EQuantity.EQUAL, -1);

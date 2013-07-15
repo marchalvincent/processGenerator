@@ -10,8 +10,9 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
 /**
  * Teste l'insertion d'une Action dans le process.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class UmlSerialInsertTest {
 	
@@ -26,13 +27,13 @@ public class UmlSerialInsertTest {
 		
 		UmlSerialInsert insert = new UmlSerialInsert();
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(UmlChangePatternHelper.instance.countAction(process) == 1);
 		assertTrue(UmlChangePatternHelper.instance.countControlNode(process) == 2);
 		assertTrue(process.getActivity().getEdges().size() == 2);
-
+		
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(UmlChangePatternHelper.instance.countAction(process) == 2);
 		assertTrue(UmlChangePatternHelper.instance.countControlNode(process) == 2);
 		assertTrue(process.getActivity().getEdges().size() == 3);

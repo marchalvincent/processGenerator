@@ -27,7 +27,7 @@ public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 	SERIAL_INSERT(null, BpmnSerialInsert.class),
 	REMOVE(null, BpmnRemove.class),
 	LOOP_INSERT(null, BpmnLoopInsert.class),
-
+	
 	THREAD_INSERT(null, BpmnThreadInsertRandom.class),
 	THREAD_IMPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertImplicite.class),
 	THREAD_EXPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertExplicite.class);
@@ -46,7 +46,7 @@ public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 		cp.setProba(proba);
 		return cp;
 	}
-
+	
 	@Override
 	public IHierarchicalEnum getParent() {
 		return parent;

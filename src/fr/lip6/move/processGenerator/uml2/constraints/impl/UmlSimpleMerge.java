@@ -13,20 +13,20 @@ import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
  * Représente le WP5 - Simple Merge.
  * 
  * @author Vincent
- *
+ * 
  */
 public class UmlSimpleMerge extends AbstractJavaSolver {
 	
 	@Override
 	public int matches(Object object) throws Exception {
 		if (!(object instanceof UmlProcess)) {
-			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
+			System.err.println("Matches method : The object is not an " + UmlProcess.class.getSimpleName() + ".");
 			return 0;
 		}
 		UmlProcess process = (UmlProcess) object;
 		return UmlFilter.byType(MergeNode.class, process.getActivity().getNodes()).size();
 	}
-
+	
 	@Override
 	public IWorkflowRepresentation getRepresentation() {
 		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();

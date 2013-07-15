@@ -12,7 +12,6 @@ import fr.lip6.move.processGenerator.bpmn2.constraints.impl.BpmnMultiChoiceOcl;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 
-
 @SuppressWarnings("deprecation")
 public class MultiChoicePerfsTest {
 	
@@ -20,7 +19,7 @@ public class MultiChoicePerfsTest {
 	
 	public void test(IStructuralConstraint constraint, String name, boolean bool) throws Exception {
 		long startTime = System.nanoTime();
-
+		
 		// init du process
 		process = BpmnBuilder.instance.initialFinal();
 		StructuralConstraintChecker checker = new StructuralConstraintChecker(constraint, EQuantity.EQUAL, 0);
@@ -94,14 +93,15 @@ public class MultiChoicePerfsTest {
 		if (bool)
 			System.out.print(estimatedTime + ";");
 	}
-
+	
 	@Test
 	public void run() throws Exception {
-		// on fait 2 exec pour que les objets soient initialisés correctement et ne fausse pas les test par rapport au Java
+		// on fait 2 exec pour que les objets soient initialisés correctement et ne fausse pas les test par rapport au
+		// Java
 		IStructuralConstraint c1 = new BpmnMultiChoiceOcl();
 		this.test(c1, "OCL", false);
 		this.test(c1, "OCL", true);
-
+		
 		IStructuralConstraint c2 = new BpmnMultiChoice();
 		this.test(c2, "Java", false);
 		this.test(c2, "Java", true);

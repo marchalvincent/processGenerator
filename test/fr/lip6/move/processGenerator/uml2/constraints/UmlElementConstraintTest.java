@@ -11,7 +11,6 @@ import fr.lip6.move.processGenerator.uml2.UmlBuilder;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlElementConstraint;
 
-
 public class UmlElementConstraintTest {
 	
 	private UmlProcess process;
@@ -27,8 +26,8 @@ public class UmlElementConstraintTest {
 	@Test(expected = Exception.class)
 	public void test0() throws Exception {
 		process = new UmlProcess();
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new UmlElementConstraint(EUmlElement.ACTIVITY_FINAL_NODE),
-				EQuantity.EQUAL, -1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(new UmlElementConstraint(
+				EUmlElement.ACTIVITY_FINAL_NODE), EQuantity.EQUAL, -1);
 		checker.check(process);
 	}
 	
@@ -63,8 +62,8 @@ public class UmlElementConstraintTest {
 		process = UmlBuilder.instance.buildDecisionExample();
 		
 		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(new UmlElementConstraint(EUmlElement.DECISION_NODE),
-				EQuantity.EQUAL, 1);
+		StructuralConstraintChecker checker = new StructuralConstraintChecker(
+				new UmlElementConstraint(EUmlElement.DECISION_NODE), EQuantity.EQUAL, 1);
 		assertTrue(checker.check(process));
 	}
 }

@@ -8,9 +8,10 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
- * Teste l'insertion en conditionelle d'une Task. 
+ * Teste l'insertion en conditionelle d'une Task.
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnConditionalInsertTest {
 	
@@ -27,7 +28,7 @@ public class BpmnConditionalInsertTest {
 		
 		BpmnConditionalInsertRandom insert = new BpmnConditionalInsertRandom();
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(BpmnChangePatternHelper.instance.countActivity(process) == 4);
 		assertTrue(BpmnChangePatternHelper.instance.countSequenceFlow(process) == 8);
 		assertTrue(BpmnChangePatternHelper.instance.countConditionalGateway(process) == 2);

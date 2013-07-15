@@ -9,8 +9,9 @@ import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 
 /**
  * teste la suppression d'une Task
+ * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnRemoveTest {
 	
@@ -26,7 +27,7 @@ public class BpmnRemoveTest {
 		
 		BpmnRemove insert = new BpmnRemove();
 		process = insert.apply(process, rng, null);
-
+		
 		assertTrue(BpmnChangePatternHelper.instance.countActivity(process) == 2);
 		assertTrue(BpmnChangePatternHelper.instance.countSequenceFlow(process) == 3);
 		assertTrue(BpmnChangePatternHelper.instance.countConditionalGateway(process) == 0);

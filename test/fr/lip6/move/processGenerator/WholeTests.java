@@ -12,14 +12,13 @@ import fr.lip6.move.processGenerator.uml2.constraints.perfs.AllUmlPerfsTests;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	AllBpmnConstraintsTests.class,
+	AllBpmnConstraintsTests.class, 
 	AllBpmnPerfsTests.class, 
 	AllBpmnGaTests.class, 
 	AllBpmnCpTests.class,
 	AllBpmnJungTests.class,
-	//TODO uml2.0
+	// TODO uml2.0
 	
 	AllUmlPerfsTests.class,
-	
 })
 public class WholeTests {}

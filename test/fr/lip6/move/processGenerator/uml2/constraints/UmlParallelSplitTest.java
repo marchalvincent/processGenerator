@@ -10,7 +10,6 @@ import fr.lip6.move.processGenerator.uml2.UmlBuilder;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlParallelSplit;
 
-
 public class UmlParallelSplitTest {
 	
 	private UmlProcess process;

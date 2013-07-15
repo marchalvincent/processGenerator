@@ -11,20 +11,20 @@ import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
 import fr.lip6.move.processGenerator.ga.GeneticException;
 
 /**
- * Ce change pattern représente l'insertion conditionnelle d'une activité. Elle ne s'applique que sur des gateways déjà existantes
- * entrainant donc l'ajout d'un chemin supplémentaire à celles ci.
+ * Ce change pattern représente l'insertion conditionnelle d'une activité. Elle ne s'applique que sur des gateways déjà
+ * existantes entrainant donc l'ajout d'un chemin supplémentaire à celles ci.
  * 
  * @see BpmnConditionalInsertSequence insertion conditionnelle sur un SequenceFlow.
  * @see BpmnConditionalInsertRandom insertion conditionnelle au hasard.
  * 
  * @author Vincent
- *
+ * 
  */
 public class BpmnConditionalInsertGateway extends AbstractChangePattern<BpmnProcess> {
 	
 	// évite trop d'instanciations d'un même objet
 	public static final BpmnConditionalInsertGateway instance = new BpmnConditionalInsertGateway();
-
+	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
 		
