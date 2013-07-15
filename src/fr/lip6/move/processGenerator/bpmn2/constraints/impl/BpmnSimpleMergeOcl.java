@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP5 - Simple Merge.
  * 
  * @author Vincent
- * @deprecated Use {@link BpmnSimpleMerge}.
+ * @deprecated {@link BpmnSimpleMerge} est plus performante.
  */
 public class BpmnSimpleMergeOcl extends AbstractBpmnOclSolver {
 	

@@ -3,30 +3,23 @@ package fr.lip6.move.processGenerator.uml2.constraints.impl;
 import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.DecisionNode;
 import org.eclipse.uml2.uml.MergeNode;
-import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.constraints.AbstractUmlOclSolver;
 import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
 
 /**
  * Représente le WP4 - Exclusive Choice.
  * 
  * @author Vincent
- * 
+ * @deprecated {@link UmlExclusiveChoice} est plus performante.
  */
-public class UmlExclusiveChoice extends AbstractJavaSolver {
+public class UmlExclusiveChoiceOcl extends AbstractUmlOclSolver {
 	
-	@Override
-	public int matches(Object object) throws Exception {
-		if (!(object instanceof UmlProcess)) {
-			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
-			return 0;
-		}
-		UmlProcess process = (UmlProcess) object;
-		return UmlFilter.byType(DecisionNode.class, process.getActivity().getNodes()).size();
+	public UmlExclusiveChoiceOcl() {
+		super();
+		super.setOclQuery("DecisionNode.allInstances()->size()");
 	}
-
+	
 	@Override
 	public IWorkflowRepresentation getRepresentation() {
 		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();

@@ -1,23 +1,30 @@
 package fr.lip6.move.processGenerator.uml2.constraints.impl;
 
-import org.eclipse.uml2.uml.ExecutableNode;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.JoinNode;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.constraints.AbstractUmlOclSolver;
+import fr.lip6.move.processGenerator.uml2.UmlProcess;
 import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
+import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
 
 /**
- * Représente le WP3 - Synchronization.
+ * Représente le WP3 - Synchronization
  * 
  * @author Vincent
- *
+ * 
  */
-public class UmlSynchronization extends AbstractUmlOclSolver {
+public class UmlSynchronization extends AbstractJavaSolver {
 	
-	public UmlSynchronization() {
-		super();
-		super.setOclQuery("JoinNode.allInstances()->size()");
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof UmlProcess)) {
+			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		UmlProcess process = (UmlProcess) object;
+		return UmlFilter.byType(JoinNode.class, process.getActivity().getNodes()).size();
 	}
 	
 	@Override
@@ -26,9 +33,11 @@ public class UmlSynchronization extends AbstractUmlOclSolver {
 
 		// on construit les noeuds 
 		ForkNode fork = representation.buildForkNode();
-		ExecutableNode a = representation.buildExecutableNode();
-		ExecutableNode b = representation.buildExecutableNode();
+		Action a = representation.buildAction();
+		Action b = representation.buildAction();
 		JoinNode join = representation.buildJoinNode();
+		
+		representation.linkControlNodes(fork, join);
 		
 		// puis on construit les arcs
 		representation.buildControlFlow(fork, a);

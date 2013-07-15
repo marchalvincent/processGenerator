@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP4 - Exclusive Choice.
  * 
  * @author Vincent
- * @deprecated Use {@link BpmnExclusiveChoice}.
+ * @deprecated {@link BpmnExclusiveChoice} est plus performante.
  */
 public class BpmnExclusiveChoiceOcl extends AbstractBpmnOclSolver {
 	

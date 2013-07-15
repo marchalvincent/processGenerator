@@ -9,7 +9,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP1 - Sequence.
  * 
  * @author Vincent
- * @deprecated Use {@link BpmnSequence}.
+ * @deprecated {@link BpmnSequence} est plus performante.
  */
 public class BpmnSequenceOcl extends AbstractBpmnOclSolver {
 	

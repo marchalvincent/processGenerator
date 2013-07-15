@@ -1,10 +1,10 @@
 package fr.lip6.move.processGenerator.uml2;
 
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityFinalNode;
 import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.ExecutableNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -29,8 +29,8 @@ public enum EUmlElement implements IEnumElement {
 	DECISION_NODE(CONTROL_NODE, DecisionNode.class),
 	MERGE_NODE(CONTROL_NODE, MergeNode.class),
 	
-	EXECUTABLE_NODE(null, ExecutableNode.class),
-	OPAQUE_ACTION(EXECUTABLE_NODE, OpaqueAction.class);
+	ACTION(null, Action.class),
+	OPAQUE_ACTION(ACTION, OpaqueAction.class);
 	
 	private IHierarchicalEnum parent;
 	private Class<? extends Element> clazz;

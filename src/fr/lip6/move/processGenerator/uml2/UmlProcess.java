@@ -19,7 +19,7 @@ import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
 import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
-import org.eclipse.uml2.uml.ExecutableNode;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -92,22 +92,22 @@ public class UmlProcess {
 	}
 	
 	/**
-	 * Créé et lie au process un {@link ExecutableNode} choisi au hasard.
+	 * Créé et lie au process un {@link Action} choisi au hasard.
 	 * 
 	 * @return
 	 */
-	public ExecutableNode buildRandomExecutableNode() {
-		ExecutableNode node = generateExecutableNode();
+	public Action buildRandomAction() {
+		Action node = generateAction();
 		linkedAndNameNode(node);
 		return node;
 	}
 	
 	/**
-	 * Renvoie un {@link ExecutableNode} tiré au hasard.
+	 * Renvoie un {@link Action} tiré au hasard.
 	 * 
 	 * @return
 	 */
-	public static ExecutableNode generateExecutableNode() {
+	public static Action generateAction() {
 		return UMLFactory.eINSTANCE.createOpaqueAction();
 	}
 	

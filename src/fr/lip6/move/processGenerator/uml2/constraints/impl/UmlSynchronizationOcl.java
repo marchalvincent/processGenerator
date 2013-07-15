@@ -3,28 +3,21 @@ package fr.lip6.move.processGenerator.uml2.constraints.impl;
 import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.JoinNode;
-import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.constraints.AbstractUmlOclSolver;
 import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
 
 /**
- * Représente le WP2 - Parallel Split.
+ * Représente le WP3 - Synchronization.
  * 
  * @author Vincent
- *
+ * @deprecated {@link UmlSynchronization} est plus performante.
  */
-public class UmlParallelSplit extends AbstractJavaSolver {
+public class UmlSynchronizationOcl extends AbstractUmlOclSolver {
 	
-	@Override
-	public int matches(Object object) throws Exception {
-		if (!(object instanceof UmlProcess)) {
-			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
-			return 0;
-		}
-		UmlProcess process = (UmlProcess) object;
-		return UmlFilter.byType(ForkNode.class, process.getActivity().getNodes()).size();
+	public UmlSynchronizationOcl() {
+		super();
+		super.setOclQuery("JoinNode.allInstances()->size()");
 	}
 	
 	@Override

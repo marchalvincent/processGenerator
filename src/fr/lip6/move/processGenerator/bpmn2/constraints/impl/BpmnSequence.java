@@ -33,8 +33,12 @@ public class BpmnSequence extends AbstractJavaSolver {
 		// on récupère toutes les Tasks
 		List<Task> list = BpmnFilter.byType(Task.class, process.getProcess().getFlowElements());
 		for (Task task : list) {
-			if (task.getOutgoing().get(0).getTargetRef() instanceof Task)
-				count++;
+			try {
+				if (task.getOutgoing().get(0).getTargetRef() instanceof Task)
+					count++;
+			} catch (NullPointerException e) {
+				System.err.println("NullPointerException : " + BpmnSequence.class.getSimpleName() + ", method matches.");
+			}
 		}
 		return count;
 	}

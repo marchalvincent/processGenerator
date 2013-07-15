@@ -1,9 +1,12 @@
 package fr.lip6.move.processGenerator.uml2.constraints.impl;
 
-import org.eclipse.uml2.uml.ExecutableNode;
+import java.util.List;
+import org.eclipse.uml2.uml.Action;
+import fr.lip6.move.processGenerator.constraint.AbstractJavaSolver;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
-import fr.lip6.move.processGenerator.uml2.constraints.AbstractUmlOclSolver;
+import fr.lip6.move.processGenerator.uml2.UmlProcess;
 import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
+import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
 
 /**
  * Représente le WP1 - Sequence.
@@ -11,17 +14,27 @@ import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
  * @author Vincent
  * 
  */
-public class UmlSequence extends AbstractUmlOclSolver {
+public class UmlSequence extends AbstractJavaSolver {
 	
-	public UmlSequence() {
-		super();
-		StringBuilder sb = new StringBuilder();
-		sb.append("ExecutableNode.allInstances()->select(");
-		sb.append("node : ExecutableNode | node.outgoing->exists(");
-		sb.append("edge : ActivityEdge | edge.target.oclIsKindOf(ExecutableNode)");
-		sb.append(")");
-		sb.append(")->size()");
-		super.setOclQuery(sb.toString());
+	@Override
+	public int matches(Object object) throws Exception {
+		if (!(object instanceof UmlProcess)) {
+			System.err.println("Matches method : The object is not a " + UmlProcess.class.getSimpleName() + ".");
+			return 0;
+		}
+		UmlProcess process = (UmlProcess) object;
+		
+		int count = 0;
+		List<Action> list = UmlFilter.byType(Action.class, process.getActivity().getNodes());
+		for (Action action : list) {
+			try {
+				if (action.getOutgoings().get(0).getTarget() instanceof Action)
+					count++;
+			} catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+				System.err.println(e.getClass().getSimpleName() + " : " + UmlSequence.class.getSimpleName() + ", method matches.");
+			}
+		}
+		return count;
 	}
 	
 	@Override
@@ -29,8 +42,8 @@ public class UmlSequence extends AbstractUmlOclSolver {
 		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();
 		
 		// on construit 2 noeuds executables
-		ExecutableNode a = representation.buildExecutableNode();
-		ExecutableNode b = representation.buildExecutableNode();
+		Action a = representation.buildAction();
+		Action b = representation.buildAction();
 		
 		// puis l'arc entre les deux
 		representation.buildControlFlow(a, b);

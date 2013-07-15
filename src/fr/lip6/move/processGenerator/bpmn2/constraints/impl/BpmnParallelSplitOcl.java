@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP2 - Parallel Split.
  * 
  * @author Vincent
- * @deprecated Use {@link BpmnParallelSplit}.
+ * @deprecated {@link BpmnParallelSplit} est plus performante.
  */
 public class BpmnParallelSplitOcl extends AbstractBpmnOclSolver {
 	

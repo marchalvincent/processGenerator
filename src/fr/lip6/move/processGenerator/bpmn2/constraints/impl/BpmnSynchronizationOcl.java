@@ -11,7 +11,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP3 - Synchronisation.
  * 
  * @author Vincent
- * @deprecated Use {@link BpmnSynchronization}.
+ * @deprecated {@link BpmnSynchronization} est plus performante.
  */
 public class BpmnSynchronizationOcl extends AbstractBpmnOclSolver {
 	

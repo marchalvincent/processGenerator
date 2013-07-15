@@ -1,5 +1,6 @@
 package fr.lip6.move.processGenerator.bpmn2;
 
+import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.InclusiveGateway;
@@ -490,6 +491,29 @@ public class BpmnBuilder {
 	}
 	
 	/**
+	 * Créé un process avec des Task spécifiques : StartEvent -> ScriptTask -> ScriptTask -> UserTask -> EndEvent
+	 * @return
+	 */
+	public BpmnProcess buildSpecifiqueTask() {
+		BpmnProcess process = new BpmnProcess();
+		
+		// les noeuds
+		StartEvent start = process.buildStartEvent();
+		Task a = process.buildTask(Bpmn2Factory.eINSTANCE.createScriptTask());
+		Task b = process.buildTask(Bpmn2Factory.eINSTANCE.createScriptTask());
+		Task c = process.buildTask(Bpmn2Factory.eINSTANCE.createUserTask());
+		EndEvent end = process.buildEndEvent();
+		
+		// les arcs
+		process.buildSequenceFlow(start, a);
+		process.buildSequenceFlow(a, b);
+		process.buildSequenceFlow(b, c);
+		process.buildSequenceFlow(c, end);
+		
+		return process;
+	}
+	
+	/**
 	 * Créé un exemple avec une boucle qui peut être simplifiée et supprimée par le {@link BpmnChangePatternHelper}.
 	 * 
 	 * @return
@@ -555,6 +579,55 @@ public class BpmnBuilder {
 		process.buildSequenceFlow(b, merge2);
 		process.buildSequenceFlow(merge2, merge1);
 		process.buildSequenceFlow(merge1, end);
+		
+		return process;
+	}
+	
+	/**
+	 * Créé un exemple avec une terminaison implicite.
+	 * @return
+	 */
+	public BpmnProcess buildImpliciteTermination() {
+		
+		BpmnProcess process = new BpmnProcess();
+		
+		StartEvent start = process.buildStartEvent();
+		ParallelGateway fork = process.buildParallelGatewayDiverging();
+		Task a = process.buildTask();
+		Task b = process.buildTask();
+		EndEvent end = process.buildEndEvent();
+		EndEvent implicite = process.buildEndEvent();
+		
+		process.buildSequenceFlow(start, fork);
+		process.buildSequenceFlow(fork, a);
+		process.buildSequenceFlow(a, implicite);
+		process.buildSequenceFlow(fork, b);
+		process.buildSequenceFlow(b, end);
+		
+		return process;
+	}
+	
+	/**
+	 * Créé un exemple avec une terminaison explicite.
+	 * @return
+	 */
+	public BpmnProcess buildExpliciteTermination() {
+		
+		BpmnProcess process = new BpmnProcess();
+		
+		StartEvent start = process.buildStartEvent();
+		ParallelGateway fork = process.buildParallelGatewayDiverging();
+		Task a = process.buildTask();
+		Task b = process.buildTask();
+		EndEvent end = process.buildEndEvent();
+		EndEvent explicite = process.buildEndEvent();
+		explicite.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
+		
+		process.buildSequenceFlow(start, fork);
+		process.buildSequenceFlow(fork, a);
+		process.buildSequenceFlow(a, explicite);
+		process.buildSequenceFlow(fork, b);
+		process.buildSequenceFlow(b, end);
 		
 		return process;
 	}

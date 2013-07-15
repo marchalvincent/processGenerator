@@ -12,7 +12,7 @@ import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
  * Représente le WP6 - Multi Choice.
  * 
  * @author Vincent
- * @deprecated Use {@link BpmnMultiChoice}.
+ * @deprecated {@link BpmnMultiChoice} est plus performante.
  */
 public class BpmnMultiChoiceOcl extends AbstractBpmnOclSolver {
 	

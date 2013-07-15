@@ -2,7 +2,7 @@ package fr.lip6.move.processGenerator.uml2;
 
 import org.eclipse.uml2.uml.ActivityFinalNode;
 import org.eclipse.uml2.uml.DecisionNode;
-import org.eclipse.uml2.uml.ExecutableNode;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -42,8 +42,8 @@ public class UmlBuilder {
 		
 		// les noeuds
 		InitialNode init = process.buildInitialNode();
-		ExecutableNode a = process.buildRandomExecutableNode();
-		ExecutableNode b = process.buildRandomExecutableNode();
+		Action a = process.buildRandomAction();
+		Action b = process.buildRandomAction();
 		ActivityFinalNode finalNode = process.buildActivityFinalNode();
 		
 		// les arcs
@@ -63,9 +63,9 @@ public class UmlBuilder {
 		
 		// les noeuds
 		InitialNode init = process.buildInitialNode();
-		ExecutableNode a = process.buildRandomExecutableNode();
-		ExecutableNode b = process.buildRandomExecutableNode();
-		ExecutableNode c = process.buildRandomExecutableNode();
+		Action a = process.buildRandomAction();
+		Action b = process.buildRandomAction();
+		Action c = process.buildRandomAction();
 		ActivityFinalNode finalNode = process.buildActivityFinalNode();
 		
 		// les arcs
@@ -87,8 +87,8 @@ public class UmlBuilder {
 		// les noeuds
 		InitialNode initial = process.buildInitialNode();
 		ForkNode fork = process.buildForkNode();
-		ExecutableNode a = process.buildRandomExecutableNode();
-		ExecutableNode b = process.buildRandomExecutableNode();
+		Action a = process.buildRandomAction();
+		Action b = process.buildRandomAction();
 		JoinNode join = process.buildJoinNode();
 		ActivityFinalNode finalNode = process.buildActivityFinalNode();
 		
@@ -113,8 +113,8 @@ public class UmlBuilder {
 		// les noeuds
 		InitialNode initial = process.buildInitialNode();
 		DecisionNode decision = process.buildDecisionNode();
-		ExecutableNode a = process.buildRandomExecutableNode();
-		ExecutableNode b = process.buildRandomExecutableNode();
+		Action a = process.buildRandomAction();
+		Action b = process.buildRandomAction();
 		MergeNode merge = process.buildMergeNode();
 		ActivityFinalNode finalNode = process.buildActivityFinalNode();
 		

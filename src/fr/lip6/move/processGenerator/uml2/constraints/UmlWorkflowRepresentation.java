@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
-import org.eclipse.uml2.uml.ExecutableNode;
+import org.eclipse.uml2.uml.ControlNode;
+import org.eclipse.uml2.uml.DecisionNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.JoinNode;
+import org.eclipse.uml2.uml.MergeNode;
 import org.eclipse.uml2.uml.UMLFactory;
 import fr.lip6.move.processGenerator.constraint.IWorkflowRepresentation;
 import fr.lip6.move.processGenerator.uml2.UmlNameManager;
@@ -40,7 +43,7 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 		super();
 		nodes = new ArrayList<>();
 		edges = new ArrayList<>();
-		controlTwins = new HashMap<String, String>();
+		controlTwins = new HashMap<>();
 	}
 	
 
@@ -83,23 +86,47 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	}
 	
 	/**
-	 * Créé et lie à la représentation un {@link ExecutableNode}.
+	 * Créé et lie à la représentation un {@link Action}.
 	 * @return
 	 */
-	public ExecutableNode buildExecutableNode() {
-		ExecutableNode node = this.getRandomExecutableNode();
+	public Action buildAction() {
+		Action node = this.getRandomAction();
 		this.nameAndLinkNode(node);
 		return node;
 	}
 	
 	/**
-	 * Renvoie un {@link ExecutableNode} tiré au hasard.
+	 * Renvoie un {@link Action} tiré au hasard.
 	 * @return
 	 */
-	private ExecutableNode getRandomExecutableNode() {
-		return UmlProcess.generateExecutableNode();
+	private Action getRandomAction() {
+		return UmlProcess.generateAction();
+	}
+
+	/**
+	 * Créé et lie à la représentation un {@link DecisionNode}.
+	 * @return
+	 */
+	public DecisionNode buildDecisionNode() {
+		DecisionNode node = UMLFactory.eINSTANCE.createDecisionNode();
+		this.nameAndLinkNode(node);
+		return node;
+	}
+
+	/**
+	 * Créé et lie à la représentation un {@link MergeNode}.
+	 * @return
+	 */
+	public MergeNode buildMergeNode() {
+		MergeNode node = UMLFactory.eINSTANCE.createMergeNode();
+		this.nameAndLinkNode(node);
+		return node;
 	}
 	
+	/**
+	 * Nomme et lie un noeud à la représentation.
+	 * @param node
+	 */
 	private void nameAndLinkNode(ActivityNode node) {
 		node.setName(UmlNameManager.instance.getActivityNodeName(node));
 		nodes.add(node);
@@ -144,5 +171,15 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 	@Override
 	public List<ActivityEdge> getEdges() {
 		return edges;
+	}
+
+	/**
+	 * Lie deux {@link ControlNode}s comme étant des jumeaux.
+	 * @param diverging
+	 * @param converging
+	 */
+	public void linkControlNodes(ControlNode diverging, ControlNode converging) {
+		controlTwins.put(diverging.getName(), converging.getName());
+		controlTwins.put(converging.getName(), diverging.getName());
 	}
 }
