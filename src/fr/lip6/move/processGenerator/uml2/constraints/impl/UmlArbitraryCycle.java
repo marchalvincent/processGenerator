@@ -2,8 +2,10 @@ package fr.lip6.move.processGenerator.uml2.constraints.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityNode;
+import org.eclipse.uml2.uml.DecisionNode;
 import org.eclipse.uml2.uml.MergeNode;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import fr.lip6.move.processGenerator.Utils;
@@ -13,6 +15,7 @@ import fr.lip6.move.processGenerator.jung.JungEdge;
 import fr.lip6.move.processGenerator.jung.JungProcess;
 import fr.lip6.move.processGenerator.jung.JungVertex;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.constraints.UmlWorkflowRepresentation;
 import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
 
 /**
@@ -87,7 +90,24 @@ public class UmlArbitraryCycle extends AbstractJavaSolver {
 	
 	@Override
 	public IWorkflowRepresentation getRepresentation() {
-		// TODO
-		return null;
+		UmlWorkflowRepresentation representation = new UmlWorkflowRepresentation();
+		
+		// on construit les noeuds
+		MergeNode merge = representation.buildMergeNode();
+		Action action = representation.buildAction();
+		DecisionNode decision = representation.buildDecisionNode();
+		
+		representation.linkControlNodes(merge, decision);
+		
+		// puis on construit les arcs
+		representation.buildControlFlow(merge, action);
+		representation.buildControlFlow(action, decision);
+		representation.buildControlFlow(decision, merge);
+		
+		// on définit le début et la fin de la représentation
+		representation.setBegin(merge);
+		representation.setEnd(decision);
+		
+		return representation;
 	}
 }

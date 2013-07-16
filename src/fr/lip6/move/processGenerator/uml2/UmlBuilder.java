@@ -132,4 +132,64 @@ public class UmlBuilder {
 		
 		return process;
 	}
+	
+	/**
+	 * Créé un process avec un exemple de boucle (1 boucle).
+	 * 
+	 * @return
+	 */
+	public UmlProcess buildLoopExample() {
+		UmlProcess process = new UmlProcess();
+		
+		// les noeuds
+		InitialNode initial = process.buildInitialNode();
+		MergeNode merge = process.buildMergeNode();
+		Action a = process.buildRandomAction();
+		DecisionNode decision = process.buildDecisionNode();
+		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		
+		// les arcs
+		process.buildControlFlow(initial, merge);
+		process.buildControlFlow(merge, a);
+		process.buildControlFlow(a, decision);
+		process.buildControlFlow(decision, merge);
+		process.buildControlFlow(decision, finalNode);
+		
+		return process;
+	}
+	
+	/**
+	 * Créé un process avec un exemple de boucle (2 boucles).
+	 * 
+	 * @return
+	 */
+	public UmlProcess buildDoubleLoopExample() {
+		UmlProcess process = new UmlProcess();
+		
+		// les noeuds
+		InitialNode initial = process.buildInitialNode();
+		MergeNode merge1 = process.buildMergeNode();
+		Action a = process.buildRandomAction();
+		DecisionNode decision1 = process.buildDecisionNode();
+		MergeNode merge2 = process.buildMergeNode();
+		Action b = process.buildRandomAction();
+		DecisionNode decision2 = process.buildDecisionNode();
+		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		
+		// les arcs
+		process.buildControlFlow(initial, merge1);
+		
+		process.buildControlFlow(merge1, a);
+		process.buildControlFlow(a, decision1);
+		process.buildControlFlow(decision1, merge1);
+		
+		process.buildControlFlow(decision1, merge2);
+		process.buildControlFlow(merge2, b);
+		process.buildControlFlow(b, decision2);
+		process.buildControlFlow(decision2, merge2);
+		
+		process.buildControlFlow(decision2, finalNode);
+		
+		return process;
+	}
 }

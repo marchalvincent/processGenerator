@@ -11,14 +11,9 @@ import fr.lip6.move.processGenerator.bpmn2.jung.AllBpmnJungTests;
 import fr.lip6.move.processGenerator.uml2.constraints.perfs.AllUmlPerfsTests;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	AllBpmnConstraintsTests.class, 
-	AllBpmnPerfsTests.class, 
-	AllBpmnGaTests.class, 
-	AllBpmnCpTests.class,
-	AllBpmnJungTests.class,
-	// TODO uml2.0
-	
-	AllUmlPerfsTests.class,
-})
+@SuiteClasses({AllBpmnConstraintsTests.class, AllBpmnPerfsTests.class, AllBpmnGaTests.class, AllBpmnCpTests.class,
+		AllBpmnJungTests.class,
+		// TODO uml2.0
+		
+		AllUmlPerfsTests.class,})
 public class WholeTests {}
