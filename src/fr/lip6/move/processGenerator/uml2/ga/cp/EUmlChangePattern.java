@@ -14,7 +14,11 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  */
 public enum EUmlChangePattern implements IEnumChangePattern<UmlProcess> {
 	
-	SERIAL_INSERT(null, UmlSerialInsert.class);
+	SERIAL_INSERT(null, UmlSerialInsert.class),
+	
+	CONDITIONAL_INSERT(null, UmlConditionalInsertRandom.class),
+	CONDITIONAL_ON_EDGE(CONDITIONAL_INSERT, UmlConditionalInsertEdge.class),
+	CONDITIONAL_ON_DECISION_MERGE(CONDITIONAL_INSERT, UmlConditionalInsertDecisionMerge.class);
 	
 	private Class<? extends IChangePattern<UmlProcess>> clazz;
 	private IHierarchicalEnum parent;

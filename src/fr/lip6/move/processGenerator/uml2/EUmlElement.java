@@ -5,6 +5,7 @@ import org.eclipse.uml2.uml.ActivityFinalNode;
 import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.FlowFinalNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -23,6 +24,7 @@ public enum EUmlElement implements IEnumElement {
 	
 	CONTROL_NODE(null, ControlNode.class),
 	INITIAL_NODE(CONTROL_NODE, InitialNode.class),
+	FLOW_FINAL_NODE(CONTROL_NODE, FlowFinalNode.class),
 	ACTIVITY_FINAL_NODE(CONTROL_NODE, ActivityFinalNode.class),
 	FORK_NODE(CONTROL_NODE, ForkNode.class),
 	JOIN_NODE(CONTROL_NODE, JoinNode.class),

@@ -1,8 +1,9 @@
 package fr.lip6.move.processGenerator.uml2;
 
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityFinalNode;
 import org.eclipse.uml2.uml.DecisionNode;
-import org.eclipse.uml2.uml.Action;
+import org.eclipse.uml2.uml.FlowFinalNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -21,14 +22,14 @@ public class UmlBuilder {
 	private UmlBuilder() {}
 	
 	/**
-	 * Construit un process simple : InitialNode -> ActivityFinalNode.
+	 * Construit un process simple : InitialNode -> FlowFinalNode.
 	 * 
 	 * @return
 	 */
 	public UmlProcess initialFinal() {
 		UmlProcess process = new UmlProcess();
 		InitialNode init = process.buildInitialNode();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		process.buildControlFlow(init, finalNode);
 		return process;
 	}
@@ -43,9 +44,9 @@ public class UmlBuilder {
 		
 		// les noeuds
 		InitialNode init = process.buildInitialNode();
-		Action a = process.buildRandomAction();
-		Action b = process.buildRandomAction();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		Action a = process.buildAction();
+		Action b = process.buildAction();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		
 		// les arcs
 		process.buildControlFlow(init, a);
@@ -65,10 +66,10 @@ public class UmlBuilder {
 		
 		// les noeuds
 		InitialNode init = process.buildInitialNode();
-		Action a = process.buildRandomAction();
-		Action b = process.buildRandomAction();
-		Action c = process.buildRandomAction();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		Action a = process.buildAction();
+		Action b = process.buildAction();
+		Action c = process.buildAction();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		
 		// les arcs
 		process.buildControlFlow(init, a);
@@ -90,10 +91,10 @@ public class UmlBuilder {
 		// les noeuds
 		InitialNode initial = process.buildInitialNode();
 		ForkNode fork = process.buildForkNode();
-		Action a = process.buildRandomAction();
-		Action b = process.buildRandomAction();
+		Action a = process.buildAction();
+		Action b = process.buildAction();
 		JoinNode join = process.buildJoinNode();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		
 		// les arcs
 		process.buildControlFlow(initial, fork);
@@ -117,10 +118,10 @@ public class UmlBuilder {
 		// les noeuds
 		InitialNode initial = process.buildInitialNode();
 		DecisionNode decision = process.buildDecisionNode();
-		Action a = process.buildRandomAction();
-		Action b = process.buildRandomAction();
+		Action a = process.buildAction();
+		Action b = process.buildAction();
 		MergeNode merge = process.buildMergeNode();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		
 		// les arcs
 		process.buildControlFlow(initial, decision);
@@ -144,9 +145,9 @@ public class UmlBuilder {
 		// les noeuds
 		InitialNode initial = process.buildInitialNode();
 		MergeNode merge = process.buildMergeNode();
-		Action a = process.buildRandomAction();
+		Action a = process.buildAction();
 		DecisionNode decision = process.buildDecisionNode();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		
 		// les arcs
 		process.buildControlFlow(initial, merge);
@@ -169,12 +170,12 @@ public class UmlBuilder {
 		// les noeuds
 		InitialNode initial = process.buildInitialNode();
 		MergeNode merge1 = process.buildMergeNode();
-		Action a = process.buildRandomAction();
+		Action a = process.buildAction();
 		DecisionNode decision1 = process.buildDecisionNode();
 		MergeNode merge2 = process.buildMergeNode();
-		Action b = process.buildRandomAction();
+		Action b = process.buildAction();
 		DecisionNode decision2 = process.buildDecisionNode();
-		ActivityFinalNode finalNode = process.buildActivityFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
 		
 		// les arcs
 		process.buildControlFlow(initial, merge1);
@@ -189,6 +190,54 @@ public class UmlBuilder {
 		process.buildControlFlow(decision2, merge2);
 		
 		process.buildControlFlow(decision2, finalNode);
+		
+		return process;
+	}
+
+	/**
+	 * Créé un process avec une terminaison explicite.
+	 * 
+	 * @return
+	 */
+	public UmlProcess buildExpliciteTermination() {
+		UmlProcess process = new UmlProcess();
+		
+		// les noeuds
+		InitialNode initial = process.buildInitialNode();
+		ForkNode fork = process.buildForkNode();
+		Action a = process.buildAction();
+		ActivityFinalNode finalExplicitNode = process.buildActivityFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
+		
+		// les arcs
+		process.buildControlFlow(initial, fork);
+		process.buildControlFlow(fork, a);
+		process.buildControlFlow(a, finalExplicitNode);
+		process.buildControlFlow(fork, finalNode);
+		
+		return process;
+	}
+
+	/**
+	 * Créé un process avec une terminaison implicite.
+	 * 
+	 * @return
+	 */
+	public UmlProcess buildImplicitTermination() {
+		UmlProcess process = new UmlProcess();
+		
+		// les noeuds
+		InitialNode initial = process.buildInitialNode();
+		ForkNode fork = process.buildForkNode();
+		Action a = process.buildAction();
+		FlowFinalNode finalImplicitNode = process.buildFlowFinalNode();
+		FlowFinalNode finalNode = process.buildFlowFinalNode();
+		
+		// les arcs
+		process.buildControlFlow(initial, fork);
+		process.buildControlFlow(fork, a);
+		process.buildControlFlow(a, finalImplicitNode);
+		process.buildControlFlow(fork, finalNode);
 		
 		return process;
 	}

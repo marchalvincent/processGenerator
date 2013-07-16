@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.resource.Resource.Factory;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityFinalNode;
@@ -19,7 +20,7 @@ import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
 import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
-import org.eclipse.uml2.uml.Action;
+import org.eclipse.uml2.uml.FlowFinalNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InitialNode;
 import org.eclipse.uml2.uml.JoinNode;
@@ -96,7 +97,7 @@ public class UmlProcess {
 	 * 
 	 * @return
 	 */
-	public Action buildRandomAction() {
+	public Action buildAction() {
 		Action node = generateAction();
 		linkedAndNameNode(node);
 		return node;
@@ -123,7 +124,18 @@ public class UmlProcess {
 	}
 	
 	/**
-	 * Créé et lie au process une {@link ActivityFinalNode}.
+	 * Créé et lie au process une {@link FlowFinalNode}.
+	 * 
+	 * @return
+	 */
+	public FlowFinalNode buildFlowFinalNode() {
+		FlowFinalNode finalNode = UMLFactory.eINSTANCE.createFlowFinalNode();
+		linkedAndNameNode(finalNode);
+		return finalNode;
+	}
+	
+	/**
+	 * Créé et lie au process un {@link ActivityFinalNode}.
 	 * 
 	 * @return
 	 */

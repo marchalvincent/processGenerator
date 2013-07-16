@@ -1,13 +1,17 @@
 package fr.lip6.move.processGenerator.uml2.ga.cp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ControlNode;
+import org.eclipse.uml2.uml.DecisionNode;
+import org.eclipse.uml2.uml.MergeNode;
 import fr.lip6.move.processGenerator.Filter;
 import fr.lip6.move.processGenerator.uml2.UmlException;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
+import fr.lip6.move.processGenerator.uml2.utils.UmlFilter;
 
 /**
  * Cette classe permet de simplifier la manipulation des {@link UmlProcess}.
@@ -61,5 +65,48 @@ public class UmlChangePatternHelper {
 	 */
 	public int countControlNode(UmlProcess process) {
 		return Filter.byType(ControlNode.class, process.getActivity().getNodes()).size();
+	}
+	
+	/**
+	 * Compte le nombre d'arc présents dans le process.
+	 * 
+	 * @param process
+	 * @return
+	 */
+	public int countEdges(UmlProcess process) {
+		return process.getActivity().getNodes().size();
+	}
+	
+	/**
+	 * Compte le nombre de {@link DecisionNode} linké avec un autre noeud (typiquement un {@link MergeNode}).
+	 * 
+	 * @param process
+	 * @return
+	 */
+	public int countConditional(UmlProcess process) {
+		int count = 0;
+		List<DecisionNode> list = UmlFilter.byType(DecisionNode.class, process.getActivity().getNodes());
+		for (DecisionNode decisionNode : list) {
+			if (process.getTwin(decisionNode.getName()) != null)
+				count ++;
+		}
+		return count;
+	}
+	
+	/**
+	 * Renvoie un {@link DecisionNode} linké avec un autre noeuds au hasard parmis ceux du process passé en paramètre.
+	 * 
+	 * @param process
+	 * @param rng
+	 * @return
+	 */
+	public DecisionNode getRandomDecisionLinked(UmlProcess process, Random rng) {
+		List<DecisionNode> elus = new ArrayList<>();
+		List<DecisionNode> list = UmlFilter.byType(DecisionNode.class, process.getActivity().getNodes());
+		for (DecisionNode decisionNode : list) {
+			if (process.getTwin(decisionNode.getName()) != null)
+				elus.add(decisionNode);
+		}
+		return elus.get(rng.nextInt(elus.size()));
 	}
 }

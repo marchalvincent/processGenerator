@@ -13,7 +13,7 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
 public class UmlCandidatFactory extends CandidatFactory<UmlProcess> {
 	
 	/**
-	 * Le process initial sera ainsi : InitialNode -> ActivityFinalNode
+	 * Le process initial sera ainsi : InitialNode -> FlowFinalNode
 	 */
 	public UmlCandidatFactory() {
 		this(null);

@@ -3,7 +3,10 @@ package fr.lip6.move.processGenerator.uml2.constraints;
 import fr.lip6.move.processGenerator.IHierarchicalEnum;
 import fr.lip6.move.processGenerator.constraint.IEnumWorkflowPattern;
 import fr.lip6.move.processGenerator.constraint.IStructuralConstraint;
+import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlArbitraryCycle;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlExclusiveChoice;
+import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlExplicitTermination;
+import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlImplicitTermination;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlParallelSplit;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlSequence;
 import fr.lip6.move.processGenerator.uml2.constraints.impl.UmlSimpleMerge;
@@ -21,7 +24,10 @@ public enum EUmlWorkflowPattern implements IEnumWorkflowPattern {
 	PARALLEL_SPLIT(UmlParallelSplit.class),
 	SYNCHRONIZATION(UmlSynchronization.class),
 	EXCLUSIVE_CHOICE(UmlExclusiveChoice.class),
-	SIMPLE_MERGE(UmlSimpleMerge.class);
+	SIMPLE_MERGE(UmlSimpleMerge.class),
+	ARBITRARY_CYCLE(UmlArbitraryCycle.class),
+	EXPLICIT_TERMINATION(UmlExplicitTermination.class),
+	IMPLICIT_TERMINATION(UmlImplicitTermination.class);
 	
 	private Class<? extends IStructuralConstraint> clazz;
 	

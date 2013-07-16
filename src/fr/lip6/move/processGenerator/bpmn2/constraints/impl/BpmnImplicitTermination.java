@@ -63,16 +63,14 @@ public class BpmnImplicitTermination extends AbstractJavaSolver {
 		ParallelGateway gateway = representation.buildParallelGatewayDiverging();
 		Task a = representation.buildTask();
 		EndEvent end = representation.buildEndEvent();
-		Task b = representation.buildTask();
 		
 		// puis on construit les arcs
 		representation.buildSequenceFlow(gateway, a);
 		representation.buildSequenceFlow(a, end);
-		representation.buildSequenceFlow(gateway, b);
 		
 		// et enfin on set le début et la fin de cette représentation
 		representation.setBegin(gateway);
-		representation.setEnd(b);
+		representation.setEnd(gateway);
 		
 		return representation;
 	}

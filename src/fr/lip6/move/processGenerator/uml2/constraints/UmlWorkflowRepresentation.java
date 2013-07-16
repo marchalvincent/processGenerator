@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityEdge;
+import org.eclipse.uml2.uml.ActivityFinalNode;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ControlFlow;
 import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
+import org.eclipse.uml2.uml.FlowFinalNode;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.JoinNode;
 import org.eclipse.uml2.uml.MergeNode;
@@ -44,6 +46,28 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 		nodes = new ArrayList<>();
 		edges = new ArrayList<>();
 		controlTwins = new HashMap<>();
+	}
+	
+	/**
+	 * Créé et lie à la représentation un {@link ActivityFinalNode}.
+	 * 
+	 * @return
+	 */
+	public ActivityFinalNode buildActivityFinalNode() {
+		ActivityFinalNode finalNode = UMLFactory.eINSTANCE.createActivityFinalNode();
+		this.nameAndLinkNode(finalNode);
+		return finalNode;
+	}
+	
+	/**
+	 * Créé et lie à la représentation un {@link FlowFinalNode}.
+	 * 
+	 * @return
+	 */
+	public FlowFinalNode buildFlowFinalNode() {
+		FlowFinalNode finalNode = UMLFactory.eINSTANCE.createFlowFinalNode();
+		this.nameAndLinkNode(finalNode);
+		return finalNode;
 	}
 	
 	/**
@@ -192,4 +216,5 @@ public class UmlWorkflowRepresentation implements IWorkflowRepresentation {
 		controlTwins.put(diverging.getName(), converging.getName());
 		controlTwins.put(converging.getName(), diverging.getName());
 	}
+
 }

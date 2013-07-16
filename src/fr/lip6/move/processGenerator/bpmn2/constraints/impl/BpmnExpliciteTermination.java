@@ -60,18 +60,15 @@ public class BpmnExpliciteTermination extends AbstractJavaSolver {
 		Task a = representation.buildTask();
 		EndEvent end = representation.buildEndEvent();
 		end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
-		Task b = representation.buildTask();
 		
 		// puis on construit les arcs
 		representation.buildSequenceFlow(gateway, a);
 		representation.buildSequenceFlow(a, end);
-		representation.buildSequenceFlow(gateway, b);
 		
 		// et enfin on set le début et la fin de cette représentation
 		representation.setBegin(gateway);
-		representation.setEnd(b);
+		representation.setEnd(gateway);
 		
 		return representation;
 	}
-	
 }
