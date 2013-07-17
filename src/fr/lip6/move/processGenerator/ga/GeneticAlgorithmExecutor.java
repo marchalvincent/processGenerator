@@ -258,7 +258,7 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	 * 
 	 * @param initialProcess
 	 *            le process initial ou null s'il n'existe pas.
-	 * @return {@link CandidatFactory}.
+	 * @return {@link CandidateFactory}.
 	 */
-	protected abstract CandidatFactory<T> getCandidateFactory(T initialProcess);
+	protected abstract CandidateFactory<T> getCandidateFactory(T initialProcess);
 }

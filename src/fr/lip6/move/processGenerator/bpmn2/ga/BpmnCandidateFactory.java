@@ -2,7 +2,7 @@ package fr.lip6.move.processGenerator.bpmn2.ga;
 
 import fr.lip6.move.processGenerator.bpmn2.BpmnBuilder;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
-import fr.lip6.move.processGenerator.ga.CandidatFactory;
+import fr.lip6.move.processGenerator.ga.CandidateFactory;
 
 /**
  * Représente la factory qui va créer la population initiale de l'algorithme génétique pour le type de fichier BPMN2.
@@ -10,7 +10,7 @@ import fr.lip6.move.processGenerator.ga.CandidatFactory;
  * @author Vincent
  * 
  */
-public class BpmnCandidateFactory extends CandidatFactory<BpmnProcess> {
+public class BpmnCandidateFactory extends CandidateFactory<BpmnProcess> {
 	
 	/**
 	 * Le process initial sera ainsi : InitialNode -> FinalNode

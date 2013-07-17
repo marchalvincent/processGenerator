@@ -7,7 +7,7 @@ import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.ga.CandidatFactory;
+import fr.lip6.move.processGenerator.ga.CandidateFactory;
 import fr.lip6.move.processGenerator.ga.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmExecutor;
 import fr.lip6.move.processGenerator.ga.GeneticException;
@@ -49,7 +49,7 @@ public class BpmnGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<BpmnP
 	}
 	
 	@Override
-	protected CandidatFactory<BpmnProcess> getCandidateFactory(BpmnProcess process) {
+	protected CandidateFactory<BpmnProcess> getCandidateFactory(BpmnProcess process) {
 		return new BpmnCandidateFactory(process);
 	}
 }

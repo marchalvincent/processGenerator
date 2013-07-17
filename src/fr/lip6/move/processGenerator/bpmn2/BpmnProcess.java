@@ -54,7 +54,7 @@ public class BpmnProcess {
 	 * Cette map permet de lier deux {@link Gateway} entre elles et donc de faciliter leurs manipulations. En général
 	 * les deux gateways liées sont une ouvrante et une fermante.
 	 */
-	private Map<String, String> gatewaysLinked = new HashMap<String, String>();
+	private Map<String, String> gatewaysLinked = new HashMap<>();
 	
 	/**
 	 * Créé un process vide.

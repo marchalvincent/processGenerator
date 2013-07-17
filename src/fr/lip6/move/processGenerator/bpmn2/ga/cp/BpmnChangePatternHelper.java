@@ -173,7 +173,7 @@ public class BpmnChangePatternHelper {
 		int count = 0;
 		List<ParallelGateway> list = BpmnFilter.byType(ParallelGateway.class, process.getProcess().getFlowElements());
 		for (ParallelGateway parallelGateway : list)
-			if (process.getTwin(parallelGateway.getId()) != null)
+			if (GatewayManager.instance.findTwinGateway(process, parallelGateway) != null)
 				count++;
 		return count;
 	}

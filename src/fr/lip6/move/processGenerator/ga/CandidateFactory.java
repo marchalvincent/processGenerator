@@ -11,14 +11,14 @@ import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
  * @param <T>
  *            le type de candidat que doit créer cette factory.
  */
-public abstract class CandidatFactory<T> extends AbstractCandidateFactory<T> {
+public abstract class CandidateFactory<T> extends AbstractCandidateFactory<T> {
 	
 	public T process;
 	
 	/**
 	 * Construit la factory sans process définit. Le process initial sera simple : initial -> final
 	 */
-	public CandidatFactory() {
+	public CandidateFactory() {
 		this(null);
 	}
 	
@@ -27,7 +27,7 @@ public abstract class CandidatFactory<T> extends AbstractCandidateFactory<T> {
 	 * 
 	 * @param process
 	 */
-	public CandidatFactory(T process) {
+	public CandidateFactory(T process) {
 		super();
 		this.process = process;
 	}

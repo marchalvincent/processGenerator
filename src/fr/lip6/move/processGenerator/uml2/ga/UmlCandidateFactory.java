@@ -1,6 +1,6 @@
 package fr.lip6.move.processGenerator.uml2.ga;
 
-import fr.lip6.move.processGenerator.ga.CandidatFactory;
+import fr.lip6.move.processGenerator.ga.CandidateFactory;
 import fr.lip6.move.processGenerator.uml2.UmlBuilder;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
@@ -10,12 +10,12 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  * @author Vincent
  * 
  */
-public class UmlCandidatFactory extends CandidatFactory<UmlProcess> {
+public class UmlCandidateFactory extends CandidateFactory<UmlProcess> {
 	
 	/**
 	 * Le process initial sera ainsi : InitialNode -> FlowFinalNode
 	 */
-	public UmlCandidatFactory() {
+	public UmlCandidateFactory() {
 		this(null);
 	}
 	
@@ -24,7 +24,7 @@ public class UmlCandidatFactory extends CandidatFactory<UmlProcess> {
 	 * 
 	 * @param process
 	 */
-	public UmlCandidatFactory(UmlProcess process) {
+	public UmlCandidateFactory(UmlProcess process) {
 		super(process);
 	}
 	

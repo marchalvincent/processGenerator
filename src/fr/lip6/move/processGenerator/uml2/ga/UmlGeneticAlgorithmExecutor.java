@@ -6,7 +6,7 @@ import java.util.List;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
-import fr.lip6.move.processGenerator.ga.CandidatFactory;
+import fr.lip6.move.processGenerator.ga.CandidateFactory;
 import fr.lip6.move.processGenerator.ga.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmExecutor;
 import fr.lip6.move.processGenerator.ga.GeneticException;
@@ -52,7 +52,7 @@ public class UmlGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<UmlPro
 	}
 	
 	@Override
-	protected CandidatFactory<UmlProcess> getCandidateFactory(UmlProcess process) {
-		return new UmlCandidatFactory(process);
+	protected CandidateFactory<UmlProcess> getCandidateFactory(UmlProcess process) {
+		return new UmlCandidateFactory(process);
 	}
 }

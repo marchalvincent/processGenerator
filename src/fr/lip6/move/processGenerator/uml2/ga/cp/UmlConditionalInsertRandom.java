@@ -21,9 +21,9 @@ public class UmlConditionalInsertRandom extends AbstractChangePattern<UmlProcess
 	@Override
 	public UmlProcess apply(UmlProcess oldProcess, Random rng, List<StructuralConstraintChecker> structuralConstraints) {
 		
-		// on récupère le nombre de séquence et le nombre d'exclusive gateway
+		// on récupère le nombre d'arc et le nombre de conditional node 
 		int nbEdges = UmlChangePatternHelper.instance.countEdges(oldProcess);
-		int nbConditional = UmlChangePatternHelper.instance.countConditional(oldProcess);
+		int nbConditional = UmlChangePatternHelper.instance.countConditionalLinked(oldProcess);
 		
 		// si on a aucune chance de procéder à la mutation
 		if ((nbEdges + nbConditional) == 0)

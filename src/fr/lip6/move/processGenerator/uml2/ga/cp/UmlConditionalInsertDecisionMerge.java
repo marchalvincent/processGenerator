@@ -7,6 +7,7 @@ import org.eclipse.uml2.uml.ControlNode;
 import org.eclipse.uml2.uml.DecisionNode;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
+import fr.lip6.move.processGenerator.uml2.UmlException;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
 /**
@@ -30,8 +31,14 @@ public class UmlConditionalInsertDecisionMerge extends AbstractChangePattern<Uml
 		UmlProcess process = new UmlProcess(oldProcess);
 		
 		// on récupère un DecisionNode au hasard ainsi que son MergeNode associé
-		DecisionNode decision = UmlChangePatternHelper.instance.getRandomDecisionLinked(process, rng);
-		ControlNode merge = process.getTwin(decision.getName());
+		DecisionNode decision;
+		try {
+			decision = UmlChangePatternHelper.instance.getRandomDecisionNodeLinked(process, rng);
+		} catch (UmlException e) {
+			// une exception ici signifie qu'il n'y a pas de DecisionNode, ce n'est pas une erreur mais il faut gérer le cas
+			return process;
+		}
+		ControlNode merge = ControlNodeManager.instance.findControlNodeTwin(process, decision);
 		
 		// on construit la nouvelle Action
 		Action a = process.buildAction();

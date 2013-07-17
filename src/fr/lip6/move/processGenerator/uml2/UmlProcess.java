@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -37,9 +38,16 @@ import org.eclipse.uml2.uml.resource.UMLResource;
  */
 public class UmlProcess {
 	
+	/**
+	 * Représente le diagramme d'activité.
+	 */
 	private Activity activity;
 	
-	private Map<String, String> twins;
+	/**
+	 * Cette Map permet de lier deux {@link ControlNode} entre eux selon leurs noms. Par exemple on peut lier un 
+	 * {@link DecisionNode} avec un {@link MergeNode} pour pouvoir manipuler le diagramme plus facilement.
+	 */
+	private Map<String, String> twins = new HashMap<>();
 	
 	/**
 	 * Créé un process UML vide.
@@ -58,6 +66,9 @@ public class UmlProcess {
 	public UmlProcess(UmlProcess processToCopy) {
 		super();
 		this.activity = EcoreUtil.copy(processToCopy.getActivity());
+		for (String key : processToCopy.twins.keySet()) {
+			twins.put(new String(key), new String(processToCopy.twins.get(key)));
+		}
 	}
 	
 	/**
