@@ -46,7 +46,7 @@ public class BpmnSerialInsert extends AbstractChangePattern<BpmnProcess> {
 		
 		// on modifie la destination de l'ancien arc
 		ancienArc.setTargetRef(task);
-		
+
 		return process;
 	}
 }

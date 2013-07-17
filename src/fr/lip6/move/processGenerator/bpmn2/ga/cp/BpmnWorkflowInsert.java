@@ -72,31 +72,32 @@ public class BpmnWorkflowInsert extends AbstractChangePattern<BpmnProcess> {
 		BpmnWorkflowRepresentation representation = (BpmnWorkflowRepresentation) rep;
 		
 		// ici, on a notre représentation. Maintenant, on va pouvoir l'insérer au candidat.
+		SequenceFlow arcBefore;
 		try {
-			SequenceFlow arcBefore = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
-			FlowNode cible = arcBefore.getTargetRef();
-			
-			// 1. on ajoute chaque flow Element au process (nodes et edges)
-			for (FlowElement element : representation.getNodes())
-				process.getProcess().getFlowElements().add(element);
-			for (FlowElement element : representation.getEdges())
-				process.getProcess().getFlowElements().add(element);
-			
-			// 1bis. On ajoute les liens de gateways
-			process.addLinksGateways(representation.getLinks());
-			
-			// 2. On fait le lien avec l'ancien arc
-			arcBefore.setTargetRef(representation.getBegin());
-			
-			// 3. On construit le dernier arc qui relie la représentation à la cible
-			process.buildSequenceFlow(representation.getEnd(), cible);
-			
+			arcBefore = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
-			System.err.println(getClass().getSimpleName() + " : Impossible to get a random sequence flow from the process.");
+			// pas de sequenceFlow = erreur
 			e.printStackTrace();
 			return process;
 		}
 		
+		FlowNode cible = arcBefore.getTargetRef();
+		
+		// 1. on ajoute chaque flow Element au process (nodes et edges)
+		for (FlowElement element : representation.getNodes())
+			process.getProcess().getFlowElements().add(element);
+		for (FlowElement element : representation.getEdges())
+			process.getProcess().getFlowElements().add(element);
+		
+		// 1bis. On ajoute les liens de gateways
+		process.addLinksGateways(representation.getLinks());
+		
+		// 2. On fait le lien avec l'ancien arc
+		arcBefore.setTargetRef(representation.getBegin());
+		
+		// 3. On construit le dernier arc qui relie la représentation à la cible
+		process.buildSequenceFlow(representation.getEnd(), cible);
+
 		return process;
 	}
 	

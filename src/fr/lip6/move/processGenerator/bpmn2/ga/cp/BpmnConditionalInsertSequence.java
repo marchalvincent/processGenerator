@@ -77,7 +77,7 @@ public class BpmnConditionalInsertSequence extends AbstractChangePattern<BpmnPro
 		
 		// l'ancien arc a maintenant une nouvelle destination
 		ancienArc.setTargetRef(choice);
-		
+
 		return process;
 	}
 }

@@ -49,7 +49,7 @@ public class BpmnConditionalInsertRandom extends AbstractChangePattern<BpmnProce
 		// on procède au tirage au sort. 0 pour une insertion sur un arc, 1 pour une insertion sur des Gateways déjà
 		// existantes.
 		int tirage = tableau[rng.nextInt(tableau.length)];
-		if (tirage == 0)
+		if (tirage == 0) 
 			return BpmnConditionalInsertSequence.instance.apply(oldProcess, rng, structuralConstraints);
 		else
 			return BpmnConditionalInsertGateway.instance.apply(oldProcess, rng, structuralConstraints);

@@ -83,6 +83,7 @@ public class BpmnRemove extends AbstractChangePattern<BpmnProcess> {
 		
 		// on simplifie les fork et decision "vides" si on vient d'en créer
 		BpmnChangePatternHelper.instance.cleanProcess(process);
+
 		return process;
 	}
 }

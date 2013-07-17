@@ -29,8 +29,8 @@ public enum EBpmnChangePattern implements IEnumChangePattern<BpmnProcess> {
 	LOOP_INSERT(null, BpmnLoopInsert.class),
 	
 	THREAD_INSERT(null, BpmnThreadInsertRandom.class),
-	THREAD_IMPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertImplicite.class),
-	THREAD_EXPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertExplicite.class);
+	THREAD_IMPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertImplicit.class),
+	THREAD_EXPLICITE_INSERT(THREAD_INSERT, BpmnThreadInsertExplicit.class);
 	
 	private Class<? extends IChangePattern<BpmnProcess>> clazz;
 	private IHierarchicalEnum parent;

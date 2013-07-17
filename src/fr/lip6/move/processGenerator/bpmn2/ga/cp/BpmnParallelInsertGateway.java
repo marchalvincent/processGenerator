@@ -58,7 +58,7 @@ public class BpmnParallelInsertGateway extends AbstractChangePattern<BpmnProcess
 		// et enfin les nouveaux arcs
 		process.buildSequenceFlow(parallelDiverging, newTask);
 		process.buildSequenceFlow(newTask, parallelConverging);
-		
+
 		return process;
 	}
 	

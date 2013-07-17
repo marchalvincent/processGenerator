@@ -75,7 +75,7 @@ public class BpmnLoopInsert extends AbstractChangePattern<BpmnProcess> {
 		// et on modifie les anciens arcs
 		arcIn.setTargetRef(merge);
 		arcOut.setSourceRef(choice);
-		
+
 		return process;
 	}
 }

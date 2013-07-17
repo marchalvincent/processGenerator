@@ -100,7 +100,7 @@ public class BpmnProcess {
 			gatewaysLinked.put(new String(key), new String(processToCopy.gatewaysLinked.get(key)));
 		}
 	}
-	
+
 	/**
 	 * Créé un BpmnProcess à partir d'un {@link DocumentRoot} et d'un {@link Process}.
 	 * 

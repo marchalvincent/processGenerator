@@ -82,7 +82,7 @@ public class BpmnParallelInsertActivity extends AbstractChangePattern<BpmnProces
 		process.buildSequenceFlow(newTask, join);
 		process.buildSequenceFlow(activity, join);
 		arcOut.setSourceRef(join);
-		
+
 		return process;
 	}
 }

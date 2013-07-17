@@ -19,13 +19,13 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * 
  * @author Vincent
  * 
- * @see {@link BpmnThreadInsertImplicite} ajout d'un nouveau thread implicite.
+ * @see {@link BpmnThreadInsertImplicit} ajout d'un nouveau thread implicite.
  * @see {@link BpmnThreadInsertRandom} ajout d'un nouveau thread implicite ou explicite.
  */
-public class BpmnThreadInsertExplicite extends AbstractChangePattern<BpmnProcess> {
+public class BpmnThreadInsertExplicit extends AbstractChangePattern<BpmnProcess> {
 	
 	// pour éviter trop d'instanciation de la part du thread insert random
-	public static BpmnThreadInsertExplicite instance = new BpmnThreadInsertExplicite();
+	public static BpmnThreadInsertExplicit instance = new BpmnThreadInsertExplicit();
 	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
@@ -40,27 +40,31 @@ public class BpmnThreadInsertExplicite extends AbstractChangePattern<BpmnProcess
 		}
 		
 		// on récupère une séquence au hasard
+		SequenceFlow sequence;
 		try {
-			SequenceFlow sequence = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
-			
-			// on créé la parallel, la task sainsi que l'EndEvent (correspondant au nouveau thread)
-			ParallelGateway fork = process.buildParallelGatewayDiverging();
-			Task a = process.buildTask();
-			EndEvent end = process.buildEndEvent();
-			
-			// on créé les sequences flow
-			process.buildSequenceFlow(fork, sequence.getTargetRef());
-			sequence.setTargetRef(fork);
-			process.buildSequenceFlow(fork, a);
-			process.buildSequenceFlow(a, end);
-			
-			// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event (terminaison
-			// explicite)
-			end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
-			
+			sequence = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
+			// s'il n'y a aucun sequenceFlow c'est une erreur...
 			e.printStackTrace();
+			return process;
 		}
+
+		// on créé la parallel, la task sainsi que l'EndEvent (correspondant au nouveau thread)
+		ParallelGateway fork = process.buildParallelGatewayDiverging();
+		Task a = process.buildTask();
+		EndEvent end = process.buildEndEvent();
+		
+		// on créé les sequences flow
+		process.buildSequenceFlow(fork, sequence.getTargetRef());
+		sequence.setTargetRef(fork);
+		process.buildSequenceFlow(fork, a);
+		process.buildSequenceFlow(a, end);
+		
+		// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event (terminaison
+		// explicite)
+		end.getEventDefinitions().add(Bpmn2Factory.eINSTANCE.createTerminateEventDefinition());
+		
+		
 		return process;
 	}
 }

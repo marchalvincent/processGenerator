@@ -18,13 +18,13 @@ import fr.lip6.move.processGenerator.ga.GeneticException;
  * 
  * @author Vincent
  * 
- * @see {@link BpmnThreadInsertExplicite} ajout d'un nouveau thread explicite.
+ * @see {@link BpmnThreadInsertExplicit} ajout d'un nouveau thread explicite.
  * @see {@link BpmnThreadInsertRandom} ajout d'un nouveau thread implicite ou explicite.
  */
-public class BpmnThreadInsertImplicite extends AbstractChangePattern<BpmnProcess> {
+public class BpmnThreadInsertImplicit extends AbstractChangePattern<BpmnProcess> {
 	
 	// pour éviter trop d'instanciation de la part du thread insert random
-	public static BpmnThreadInsertImplicite instance = new BpmnThreadInsertImplicite();
+	public static BpmnThreadInsertImplicit instance = new BpmnThreadInsertImplicit();
 	
 	@Override
 	public BpmnProcess apply(BpmnProcess oldProcess, Random rng, List<StructuralConstraintChecker> workflowsConstraints) {
@@ -39,23 +39,26 @@ public class BpmnThreadInsertImplicite extends AbstractChangePattern<BpmnProcess
 		}
 		
 		// on récupère une séquence au hasard
+		SequenceFlow sequence;
 		try {
-			SequenceFlow sequence = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
-			
-			// on créé la parallel, la task sainsi que l'EndEvent (correspondant au nouveau thread)
-			ParallelGateway fork = process.buildParallelGatewayDiverging();
-			Task a = process.buildTask();
-			EndEvent end = process.buildEndEvent();
-			
-			// on créé les sequences flow
-			process.buildSequenceFlow(fork, sequence.getTargetRef());
-			sequence.setTargetRef(fork);
-			process.buildSequenceFlow(fork, a);
-			process.buildSequenceFlow(a, end);
-			
+			sequence = BpmnChangePatternHelper.instance.getRandomSequenceFlow(process, rng);
 		} catch (GeneticException e) {
+			// s'il n'y a pas de sequenceFlow c'est une erreur
 			e.printStackTrace();
+			return process;
 		}
+
+		// on créé la parallel, la task sainsi que l'EndEvent (correspondant au nouveau thread)
+		ParallelGateway fork = process.buildParallelGatewayDiverging();
+		Task a = process.buildTask();
+		EndEvent end = process.buildEndEvent();
+		
+		// on créé les sequences flow
+		process.buildSequenceFlow(fork, sequence.getTargetRef());
+		sequence.setTargetRef(fork);
+		process.buildSequenceFlow(fork, a);
+		process.buildSequenceFlow(a, end);
+		
 		return process;
 	}
 }
