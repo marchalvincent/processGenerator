@@ -1,9 +1,17 @@
 package fr.lip6.move.processGenerator.ga;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.search.internal.ui.SearchPlugin;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.ide.IDE;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.EvolutionEngine;
@@ -29,6 +37,7 @@ import fr.lip6.move.processGenerator.views.ProcessGeneratorView;
  * @param <T>
  *            le type de candidat que fait évoluer l'algorithme génétique.
  */
+@SuppressWarnings("restriction")
 public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	
 	private String location;
@@ -192,9 +201,35 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 		
 		// la sauvegarde du process winner
 		try {
-			this.saveWinner(winner, location);
+			String path = this.saveWinner(winner, location);
+			this.openFile(path);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Ouvre le fichier dont le path est passé en paramètre sur l'editeur d'eclipse. Utilise l'éditeur par défaut.
+	 * 
+	 * @param path
+	 */
+	private void openFile(String path) {
+		File fileToOpen = new File(path);
+		
+		if (fileToOpen.exists() && fileToOpen.isFile()) {
+			final IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
+			final IWorkbenchPage page = SearchPlugin.getActivePage();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						IDE.openEditorOnFileStore(page, fileStore);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} else {
+			System.err.println("The file does not exist.");
 		}
 	}
 	
@@ -205,10 +240,11 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	 *            le candidat sélectionné.
 	 * @param location
 	 *            le chemin du dossier de travail
+	 * @return String le path complet du fichier qui vient d'être créé
 	 * @throws IOException
 	 *             lorsque l'enregistrement à échoué
 	 */
-	protected abstract void saveWinner(T winner, String location) throws IOException;
+	protected abstract String saveWinner(T winner, String location) throws IOException;
 	
 	/**
 	 * Renvoie la classe chargée de l'évaluation "fitness" de chaque candidat selon les contraintes spécifiée par

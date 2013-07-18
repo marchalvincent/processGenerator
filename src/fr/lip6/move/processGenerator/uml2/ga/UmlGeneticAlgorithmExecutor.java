@@ -21,16 +21,13 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  */
 public class UmlGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<UmlProcess> {
 	
-	public UmlGeneticAlgorithmExecutor() {
-		super();
-	}
-	
 	@Override
-	protected void saveWinner(UmlProcess winner, String location) throws IOException {
+	protected String saveWinner(UmlProcess winner, String location) throws IOException {
 		int i = 0;
 		while (new File(location + "uGen" + i + ".uml").exists())
 			i++;
 		winner.save(location + "uGen" + i + ".uml");
+		return location + "uGen" + i + ".uml";
 	}
 	
 	@Override

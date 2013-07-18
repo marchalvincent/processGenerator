@@ -22,11 +22,12 @@ import fr.lip6.move.processGenerator.ga.IChangePattern;
 public class BpmnGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<BpmnProcess> {
 	
 	@Override
-	protected void saveWinner(BpmnProcess winner, String location) throws IOException {
+	protected String saveWinner(BpmnProcess winner, String location) throws IOException {
 		int i = 0;
 		while (new File(location + "bGen" + i + ".bpmn").exists())
 			i++;
 		winner.save(location + "bGen" + i + ".bpmn");
+		return location + "bGen" + i + ".bpmn";
 	}
 	
 	@Override
