@@ -27,7 +27,7 @@ public class UmlConditionalInsertRandom extends AbstractChangePattern<UmlProcess
 		
 		// si on a aucune chance de procéder à la mutation
 		if ((nbEdges + nbConditional) == 0)
-			return oldProcess;
+			return new UmlProcess(oldProcess);
 		
 		// on fait un random équitable pour savoir si on applique la condition sur un arc ou sur un Decision/Merge deja existant
 		int[] tableau = new int[nbEdges + nbConditional];

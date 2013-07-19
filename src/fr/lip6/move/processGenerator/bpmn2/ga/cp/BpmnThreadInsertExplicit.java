@@ -56,9 +56,10 @@ public class BpmnThreadInsertExplicit extends AbstractChangePattern<BpmnProcess>
 		
 		// on créé les sequences flow
 		process.buildSequenceFlow(fork, sequence.getTargetRef());
-		sequence.setTargetRef(fork);
 		process.buildSequenceFlow(fork, a);
 		process.buildSequenceFlow(a, end);
+
+		sequence.setTargetRef(fork);
 		
 		// ici on ajoute une propriété spécifiant que le process sera quitté directement à cette event (terminaison
 		// explicite)

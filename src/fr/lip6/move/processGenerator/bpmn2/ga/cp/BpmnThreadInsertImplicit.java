@@ -55,9 +55,10 @@ public class BpmnThreadInsertImplicit extends AbstractChangePattern<BpmnProcess>
 		
 		// on créé les sequences flow
 		process.buildSequenceFlow(fork, sequence.getTargetRef());
-		sequence.setTargetRef(fork);
 		process.buildSequenceFlow(fork, a);
 		process.buildSequenceFlow(a, end);
+		
+		sequence.setTargetRef(fork);
 		
 		return process;
 	}

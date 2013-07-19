@@ -2,6 +2,7 @@ package fr.lip6.move.processGenerator.bpmn2.ga.cp;
 
 import java.util.List;
 import java.util.Random;
+import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
 import fr.lip6.move.processGenerator.ga.AbstractChangePattern;
@@ -27,14 +28,23 @@ public class BpmnConditionalInsertRandom extends AbstractChangePattern<BpmnProce
 		int nbConditional = BpmnChangePatternHelper.instance.countConditionalGateway(oldProcess);
 		if (nbConditional % 2 != 0) {
 			System.err.println("Error, the number of ExclusiveGateway is odd.");
-			return oldProcess;
+			try {
+				return new BpmnProcess(oldProcess);
+			} catch (BpmnException e) {
+				return oldProcess;
+			}
 		}
 		
 		// on divise par deux le nombre d'ExclusiveGateway car il y a une ouvrante et une fermante.
 		nbConditional = nbConditional / 2;
 		
-		if ((nbSequence + nbConditional) == 0)
-			return oldProcess;
+		if ((nbSequence + nbConditional) == 0) {
+			try {
+				return new BpmnProcess(oldProcess);
+			} catch (BpmnException e) {
+				return oldProcess;
+			}
+		}
 		
 		// on fait un random équitable pour savoir si on applique la condition sur un arc ou sur une ExclusiveGateway
 		// deja existante

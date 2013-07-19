@@ -28,7 +28,7 @@ public class UmlParallelInsertRandom extends AbstractChangePattern<UmlProcess> {
 		
 		// si on a aucune chance de procéder à la mutation
 		if ((nbAction + nbFork) == 0)
-			return oldProcess;
+			return new UmlProcess(oldProcess);
 		
 		// on fait un random équitable pour savoir si on applique le parallèle sur une Action ou sur un Fork/Join deja existant
 		int[] tableau = new int[nbAction + nbFork];
