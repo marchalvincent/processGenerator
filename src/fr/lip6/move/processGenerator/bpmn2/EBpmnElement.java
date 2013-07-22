@@ -11,7 +11,6 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.ReceiveTask;
 import org.eclipse.bpmn2.ScriptTask;
 import org.eclipse.bpmn2.ServiceTask;
-import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.UserTask;
 import fr.lip6.move.processGenerator.IEnumElement;
@@ -27,7 +26,6 @@ import fr.lip6.move.processGenerator.IHierarchicalEnum;
 public enum EBpmnElement implements IEnumElement {
 	
 	EVENT(null, Event.class),
-	START_EVENT(EVENT, StartEvent.class),
 	END_EVENT(EVENT, EndEvent.class),
 	
 	TASK(null, Task.class),

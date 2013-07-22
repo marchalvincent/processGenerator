@@ -45,18 +45,6 @@ public class ElementConstraintTest {
 	}
 	
 	@Test
-	public void test2() throws Exception {
-		
-		// init du process
-		process = BpmnBuilder.instance.getLoopExample();
-		
-		// init du workflow checker
-		StructuralConstraintChecker checker = new StructuralConstraintChecker(
-				new BpmnElementConstraint(EBpmnElement.START_EVENT), EQuantity.EQUAL, 1);
-		assertTrue(checker.check(process));
-	}
-	
-	@Test
 	public void test3() throws Exception {
 		
 		// init du process

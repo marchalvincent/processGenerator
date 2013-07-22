@@ -381,13 +381,20 @@ public class BpmnProcess {
 	}
 	
 	/**
-	 * Supprime un {@link FlowNode} du process.
+	 * Supprime un {@link FlowNode} du process. Si le flow node possède un noeud "jumeau" alors ils sont tous les deux supprimés
+	 * de la map les contenants.
 	 * 
 	 * @param flowNode
 	 *            le {@link FlowNode} à supprimer.
 	 * @return true si le noeud à été supprimé, false sinon.
 	 */
 	public boolean removeFlowNode(FlowNode flowNode) {
+		// on le supprime des twins éventuelles
+		Gateway twin = getTwin(flowNode.getId());
+		if (twin != null) {
+			gatewaysLinked.remove(flowNode);
+			gatewaysLinked.remove(twin);
+		}
 		return process.getFlowElements().remove(flowNode);
 	}
 	

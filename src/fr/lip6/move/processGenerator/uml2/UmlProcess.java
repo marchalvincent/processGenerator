@@ -228,6 +228,35 @@ public class UmlProcess {
 	}
 	
 	/**
+	 * Supprime un arc du process.
+	 * 
+	 * @param edge
+	 * @return
+	 */
+	public boolean removeActivityEdge(ActivityEdge edge) {
+		edge.setTarget(null);
+		edge.setSource(null);
+		return getActivity().getEdges().remove(edge);
+	}
+	
+	/**
+	 * Supprime un {@link ActivityNode} du process. Si le noeud possède un ControlNode jumeau alors ils sont supprimés de la map
+	 * contenant les twins.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean removeActivityNode(ActivityNode node) {
+		// on supprime les éventuelles twins
+		ControlNode twin = getTwin(node.getName());
+		if (twin != null) {
+			twins.remove(twin);
+			twins.remove(node);
+		}
+		return getActivity().getNodes().remove(node);
+	}
+	
+	/**
 	 * Getter.
 	 * 
 	 * @return {@link Activity}.

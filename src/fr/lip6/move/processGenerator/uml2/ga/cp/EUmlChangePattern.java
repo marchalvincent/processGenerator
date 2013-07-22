@@ -25,7 +25,7 @@ public enum EUmlChangePattern implements IEnumChangePattern<UmlProcess> {
 	PARALLEL_ON_FORK_JOIN(PARALLEL_INSERT, UmlParallelInsertForkJoin.class),
 	
 	SERIAL_INSERT(null, UmlSerialInsert.class),
-	// TODO remove
+	REMOVE(null, UmlRemove.class),
 	LOOP_INSERT(null, UmlLoopInsert.class),
 	
 	THREAD_INSERT(null, UmlThreadInsertRandom.class),

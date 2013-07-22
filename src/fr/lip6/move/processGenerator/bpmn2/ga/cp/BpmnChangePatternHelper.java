@@ -230,22 +230,21 @@ public class BpmnChangePatternHelper {
 			// si la parallelGateway possède plusieurs chemins
 			if (parallelGateway.getOutgoing().size() > 1) {
 				
-				List<SequenceFlow> listeToRemove = new ArrayList<SequenceFlow>();
-				// on parcours chaque arc sortant et on regarde s'il n'arrive pas directement à la ParallelGateway
-				// converging
+				SequenceFlow toRemove = null;
+				// on parcours chaque arc sortant et on regarde s'il n'arrive pas directement à la parallel converging
 				for (SequenceFlow sequenceFlow : parallelGateway.getOutgoing()) {
 					
 					if (sequenceFlow.getTargetRef() == parallelConverging) {
 						// on ajoute l'arc dans la liste de ceux a supprimer
-						listeToRemove.add(sequenceFlow);
+						toRemove = sequenceFlow;
 						// ici on fait un break sinon on risque de supprimer trop d'arc et couper le process en deux...
 						break;
 					}
 				}
 				
 				// puis on fait les removes nécessaires
-				for (SequenceFlow sequenceFlow : listeToRemove)
-					process.removeSequenceFlow(sequenceFlow);
+				if (toRemove != null)
+					process.removeSequenceFlow(toRemove);
 			} // fin de : si la parallelGateway divergente a plusieurs sorties
 			
 			// si la parallelGateway n'a qu'une seule sortie, on peut simplifier
