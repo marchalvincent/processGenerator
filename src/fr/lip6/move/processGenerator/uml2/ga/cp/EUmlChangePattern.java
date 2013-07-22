@@ -14,7 +14,7 @@ import fr.lip6.move.processGenerator.uml2.UmlProcess;
  */
 public enum EUmlChangePattern implements IEnumChangePattern<UmlProcess> {
 	
-	// TODO workflow insert
+	WORKFLOW_PATTERN_INSERT(null, UmlWorkflowInsert.class),
 	
 	CONDITIONAL_INSERT(null, UmlConditionalInsertRandom.class),
 	CONDITIONAL_ON_EDGE(CONDITIONAL_INSERT, UmlConditionalInsertEdge.class),
