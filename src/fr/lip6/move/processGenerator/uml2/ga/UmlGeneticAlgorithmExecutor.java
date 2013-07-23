@@ -6,6 +6,7 @@ import java.util.List;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 import fr.lip6.move.processGenerator.constraint.StructuralConstraintChecker;
+import fr.lip6.move.processGenerator.dot.DotGenerator;
 import fr.lip6.move.processGenerator.ga.CandidateFactory;
 import fr.lip6.move.processGenerator.ga.FitnessWeightHelper;
 import fr.lip6.move.processGenerator.ga.GeneticAlgorithmExecutor;
@@ -28,6 +29,13 @@ public class UmlGeneticAlgorithmExecutor extends GeneticAlgorithmExecutor<UmlPro
 			i++;
 		winner.save(location + "uGen" + i + ".uml");
 		return location + "uGen" + i + ".uml";
+	}
+
+	@Override
+	protected String saveDigraph(UmlProcess winner, String location) throws IOException {
+		DotGenerator generator = new DotGenerator(winner);
+		generator.generateDot(location, "digraph");
+		return location + "digraph";
 	}
 	
 	@Override

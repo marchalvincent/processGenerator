@@ -13,6 +13,8 @@ import org.eclipse.uml2.uml.ActivityEdge;
 public class JungEdge {
 	
 	private String id;
+	private String source;
+	private String target;
 	
 	/**
 	 * Constructeur à partir d'un {@link SequenceFlow} bpmn2.0.
@@ -22,6 +24,8 @@ public class JungEdge {
 	public JungEdge(SequenceFlow sequence) {
 		super();
 		this.id = sequence.getId();
+		this.source = sequence.getSourceRef().getId();
+		this.target = sequence.getTargetRef().getId();
 	}
 	
 	/**
@@ -32,6 +36,16 @@ public class JungEdge {
 	public JungEdge(ActivityEdge edge) {
 		super();
 		this.id = edge.getName();
+		this.source = edge.getSource().getName();
+		this.target = edge.getTarget().getName();
+	}
+	
+	public String getSource() {
+		return source;
+	}
+	
+	public String getTarget() {
+		return target;
 	}
 	
 	@Override

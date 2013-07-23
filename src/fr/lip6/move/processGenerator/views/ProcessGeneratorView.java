@@ -1023,6 +1023,10 @@ public class ProcessGeneratorView extends ViewPart {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblResult, text));
 	}
 	
+	public void printAppend(String text) {
+		Display.getDefault().asyncExec(new RunnablePrintAppendView(lblResult, text));
+	}
+	
 	public void printError(String text) {
 		Display.getDefault().asyncExec(new RunnablePrintView(lblErrors, text));
 	}

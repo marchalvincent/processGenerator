@@ -15,6 +15,7 @@ public class Utils {
 	
 	public static final String configurationFolder = System.getProperty("user.home") + File.separator;
 	public static final boolean DEBUG = true;
+	// si cette variable est a true, un fichier sera créé pour faire des études sur la rapidité du plugin
 	public static final boolean BENCH = false;
 	
 	/*

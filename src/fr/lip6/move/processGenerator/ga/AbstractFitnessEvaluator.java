@@ -146,7 +146,7 @@ public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T>
 				if (constr.check(candidate))
 					constraintsMatches += constr.getWeight();
 			} catch (Exception e) {
-				System.err.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		

@@ -1,5 +1,8 @@
 package fr.lip6.move.processGenerator.bpmn2;
 
+import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.Gateway;
+
 /**
  * Cette classe s'assure que chaque identifiant attribué aux éléments d'un process BPMN sera différent.
  * 
@@ -20,38 +23,13 @@ public class BpmnNameManager {
 		return "process_" + process;
 	}
 	
-	public String getTaskName() {
+	public String getFlowElementName(FlowElement elem) {
 		count++;
-		return "task_" + count;
+		return elem.getClass().getSimpleName().replace("Impl", "") + "_" + count;
 	}
 	
-	public String getParallelName(String direction) {
+	public String getGatewayName(Gateway gate, String direction) {
 		count++;
-		return "parallel" + direction + "_" + count;
-	}
-	
-	public String getExclusiveName(String direction) {
-		count++;
-		return "exclusive" + direction + "_" + count;
-	}
-	
-	public String getInclusiveName(String direction) {
-		count++;
-		return "inclusive" + direction + "_" + count;
-	}
-	
-	public String getSequenceName() {
-		count++;
-		return "sequence_" + count;
-	}
-	
-	public String getStartName() {
-		count++;
-		return "start_" + count;
-	}
-	
-	public String getEndName() {
-		count++;
-		return "end_" + count;
+		return gate.getClass().getSimpleName().replace("Impl", "") + direction + "_" + count;
 	}
 }

@@ -13,6 +13,8 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
+import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
+import fr.lip6.move.processGenerator.dot.DotGraphicManager;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
 /**
@@ -54,12 +56,16 @@ public class JungProcess {
 		allVertices = new HashMap<>();
 		
 		// on parcours chaque élément du process pour y mettre dans un premier temps les FlowNodes
-		for (FlowElement element : process.getFlowElements()) {
-			if (element instanceof FlowNode) {
-				JungVertex vertex = new JungVertex((FlowNode) element);
-				allVertices.put(vertex.getId(), vertex);
-				graph.addVertex(vertex);
-			}
+		for (FlowNode element : BpmnFilter.byType(FlowNode.class, process.getFlowElements())) {
+			
+			String type = DotGraphicManager.instance.getShape(element);
+			String color = DotGraphicManager.instance.getFillColor(element);
+			String width = DotGraphicManager.instance.getWidth(element);
+			String height = DotGraphicManager.instance.getHeight(element);
+			
+			JungVertex vertex = new JungVertex(element, type, color, width, height);
+			allVertices.put(vertex.getId(), vertex);
+			graph.addVertex(vertex);
 		}
 		
 		// et on peut enfin mettre les arcs
@@ -94,13 +100,23 @@ public class JungProcess {
 		
 		// on parcours chaque node du process
 		for (ActivityNode node : process.getNodes()) {
-			JungVertex vertex = new JungVertex(node);
+
+			String type = DotGraphicManager.instance.getShape(node);
+			String color = DotGraphicManager.instance.getFillColor(node);
+			String width = DotGraphicManager.instance.getWidth(node);
+			String height = DotGraphicManager.instance.getHeight(node);
+			
+			JungVertex vertex = new JungVertex(node, type, color, width, height);
 			allVertices.put(node.getName(), vertex);
 			graph.addVertex(vertex);
 		}
 		
 		// et on peut enfin mettre les arcs
 		for (ActivityEdge edge : process.getEdges()) {
+			System.out.println(edge);
+			System.out.println(edge.getSource());
+			System.out.println(edge.getTarget());
+			System.out.println();
 			JungVertex v1 = allVertices.get(edge.getSource().getName());
 			JungVertex v2 = allVertices.get(edge.getTarget().getName());
 			graph.addEdge(new JungEdge(edge), v1, v2, EdgeType.DIRECTED);

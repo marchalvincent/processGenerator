@@ -101,7 +101,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 					null);
 		} catch (Exception ex) {
 			view.printError(ex.getMessage());
-			System.err.println(ex.getMessage());
+			ex.printStackTrace();
 			return;
 		}
 		
@@ -140,7 +140,7 @@ public class SelectionStartExecution extends SelectionAdapter {
 				changePatterns = this.getChangePatterns(view.getTreeMutationParameters().getItems(), null);
 			} catch (Exception ex) {
 				view.printError(ex.getMessage());
-				System.err.println(ex.getMessage());
+				ex.printStackTrace();
 				return;
 			}
 		}
