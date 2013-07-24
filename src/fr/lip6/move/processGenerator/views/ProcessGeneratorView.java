@@ -194,9 +194,11 @@ public class ProcessGeneratorView extends ViewPart {
 		btnStop.setText("Stop");
 		
 		lblResult = new Label(compSctnRun, SWT.NONE);
+		lblResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		toolkit.adapt(lblResult, true, true);
 		
 		lblErrors = new Label(compSctnRun, SWT.NONE);
+		lblErrors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		toolkit.adapt(lblErrors, true, true);
 		
 		TabItem tbtmTargetConfiguration = new TabItem(tabFolder, SWT.NONE);

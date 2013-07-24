@@ -59,6 +59,12 @@ public class UmlWorkflowInsert extends AbstractChangePattern<UmlProcess> {
 					+ "is not correct.");
 			return process;
 		}
+		// si le début ou la fin n'est pas bien définie
+		if (rep.getBegin() == null || rep.getEnd() == null) {
+			System.err.println("The beginning or the end of the workflows representation is not defined : " + 
+					checker.getClass().getSimpleName());
+		}
+		
 		UmlWorkflowRepresentation representation = (UmlWorkflowRepresentation) rep;
 		
 		// ici, on a notre représentation. Maintenant, on va pouvoir l'insérer au candidat.
@@ -76,10 +82,14 @@ public class UmlWorkflowInsert extends AbstractChangePattern<UmlProcess> {
 			return process;
 		
 		// 1. on ajoute chaque ActivityNode et ActivityEdge au process
-		for (ActivityNode node : representation.getNodes())
+		for (ActivityNode node : representation.getNodes()) {
 			process.getActivity().getNodes().add(node);
-		for (ActivityEdge edge : representation.getEdges())
+			node.setActivity(process.getActivity());
+		}
+		for (ActivityEdge edge : representation.getEdges()) {
 			process.getActivity().getEdges().add(edge);
+			edge.setActivity(process.getActivity());
+		}
 		
 		// 1bis. On ajoute les liens de gateways
 		process.addLinksControlNodes(representation.getLinks());

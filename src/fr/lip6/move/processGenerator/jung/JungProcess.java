@@ -113,10 +113,6 @@ public class JungProcess {
 		
 		// et on peut enfin mettre les arcs
 		for (ActivityEdge edge : process.getEdges()) {
-			System.out.println(edge);
-			System.out.println(edge.getSource());
-			System.out.println(edge.getTarget());
-			System.out.println();
 			JungVertex v1 = allVertices.get(edge.getSource().getName());
 			JungVertex v2 = allVertices.get(edge.getTarget().getName());
 			graph.addEdge(new JungEdge(edge), v1, v2, EdgeType.DIRECTED);

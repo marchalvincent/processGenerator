@@ -21,6 +21,7 @@ public abstract class AbstractMutationOperation<T> implements EvolutionaryOperat
 	private List<IChangePattern<T>> changePatterns;
 	private List<StructuralConstraintChecker> workflowsConstraints;
 	private Random rng;
+	public static int count = 0;
 	
 	protected AbstractMutationOperation(List<IChangePattern<T>> changePatterns,
 			List<StructuralConstraintChecker> contraintesWorkflows) throws GeneticException {
