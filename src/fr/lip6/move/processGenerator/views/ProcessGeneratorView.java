@@ -573,7 +573,7 @@ public class ProcessGeneratorView extends ViewPart {
 		
 		Label lblWorkflowWeight = new Label(composite_4, SWT.NONE);
 		toolkit.adapt(lblWorkflowWeight, true, true);
-		lblWorkflowWeight.setText("Workflow weight : ");
+		lblWorkflowWeight.setText("Workflow pattern weight : ");
 		
 		spinnerWorkflowWeight = new Spinner(composite_4, SWT.BORDER);
 		spinnerWorkflowWeight.setSelection(1);
