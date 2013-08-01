@@ -54,8 +54,10 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 	 * @return le nombre de structure trouvée par la contrainte ocl.
 	 * @throws ParserException
 	 *             si la création de la requête à échouée
+	 * @throws OclBooleanValue 
+	 * 			   si la valeur renvoyée par la requête OCL est un booléen.
 	 */
-	protected int resolveQuery(EClass eClass, Object object) throws ParserException {
+	protected int resolveQuery(EClass eClass, Object object) throws ParserException, OclBooleanValue {
 		// create an OCL instance for Ecore
 		OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
 		ocl = OCL.newInstance(EcoreEnvironmentFactory.INSTANCE);
@@ -82,6 +84,8 @@ public abstract class AbstractOclSolver implements IStructuralConstraint {
 		Object o = query.evaluate(object);
 		if (o instanceof Integer) {
 			return ((Integer) o).intValue();
+		} else if (o instanceof Boolean) {
+			throw new OclBooleanValue((Boolean) o);
 		} else {
 			System.err.println("Warning, the query result is not an Integer -> " + o.getClass().getSimpleName());
 		}

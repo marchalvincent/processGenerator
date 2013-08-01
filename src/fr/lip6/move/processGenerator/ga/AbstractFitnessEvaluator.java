@@ -141,10 +141,10 @@ public abstract class AbstractFitnessEvaluator<T> implements FitnessEvaluator<T>
 		double totalConstraints = 0;
 		double constraintsMatches = 0;
 		for (StructuralConstraintChecker constr : constraints) {
-			totalConstraints += constr.getWeight();
 			try {
 				if (constr.check(candidate))
 					constraintsMatches += constr.getWeight();
+				totalConstraints += constr.getWeight();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

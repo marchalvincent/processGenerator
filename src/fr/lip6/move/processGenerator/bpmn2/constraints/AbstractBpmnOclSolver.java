@@ -4,6 +4,7 @@ import org.eclipse.ocl.ParserException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnException;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.constraint.AbstractOclSolver;
+import fr.lip6.move.processGenerator.constraint.OclBooleanValue;
 
 /**
  * Cette classe valide une contrainte OCL à partir d'un {@link BpmnProcess} représentant le process à vérifier.
@@ -18,7 +19,7 @@ public abstract class AbstractBpmnOclSolver extends AbstractOclSolver {
 	}
 	
 	@Override
-	public int matches(Object object) throws BpmnException, ParserException {
+	public int matches(Object object) throws BpmnException, ParserException, OclBooleanValue {
 		
 		// on fait juste deux vérifications avant de lancer le solveur
 		if (getOclQuery().isEmpty())

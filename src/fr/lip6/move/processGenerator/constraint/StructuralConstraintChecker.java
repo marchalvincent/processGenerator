@@ -16,15 +16,15 @@ public class StructuralConstraintChecker {
 	private EQuantity quantity;
 	private int number;
 	private int weight;
+	private boolean manualOcl = false;
 	
 	/**
-	 * Construit la {@link StructuralConstraintChecker} avec les valeurs par défaut suivantes : <li>quantité :
-	 * "MORE_OR_EQUAL"</li> <li>nombre : 1</li> <li>poids : 1</li>
-	 * 
+	 * Construit la {@link StructuralConstraintChecker} pour une requête OCL écrite manuellement.
 	 * @param constraint
 	 */
 	public StructuralConstraintChecker(IStructuralConstraint constraint) {
 		this(constraint, EQuantity.MORE_OR_EQUAL, 1);
+		manualOcl = true;
 	}
 	
 	/**
@@ -54,6 +54,16 @@ public class StructuralConstraintChecker {
 	 * @throws Exception
 	 */
 	public boolean check(Object process) throws Exception {
+		if (manualOcl) {
+			try {
+				// comme on est dans une requête manuelle, on doit avoir l'exception
+				constraint.matches(process);
+			} catch (OclBooleanValue e) {
+				return e.getValue();
+			}
+			throw new Exception("The manual Ocl request does not return a boolean value.");
+		}
+		
 		if (number < 0)
 			throw new Exception("The number of the pattern must be higher or equal than 0.");
 		
@@ -62,6 +72,8 @@ public class StructuralConstraintChecker {
 			result = constraint.matches(process);
 		} catch (ParserException e) {
 			return false;
+		} catch (OclBooleanValue e) {
+			throw new Exception("The Ocl request return a boolean value.");
 		}
 		
 		switch (quantity) {

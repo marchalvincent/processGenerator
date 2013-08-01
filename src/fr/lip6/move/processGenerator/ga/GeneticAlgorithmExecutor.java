@@ -111,11 +111,11 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	}
 	
 	public boolean isReady() {
-		return (this.isCheckCrossover == null) || (this.isCheckMutation == null) || (this.changePatterns == null)
+		return !((this.isCheckCrossover == null) || (this.isCheckMutation == null) || (this.changePatterns == null)
 				|| (this.contraintesElements == null) || (this.contraintesWorkflows == null) || (this.elitism == null)
-				|| (this.location == null) || (this.manualOclChecker == null) || (this.margin == null) || (this.nbNodes == null)
+				|| (this.location == null) || (this.margin == null) || (this.nbNodes == null)
 				|| (this.nbPopulation == null) || (this.selectionStrategy == null) || (this.terminationCondition == null)
-				|| (view == null) || (weightHelper == null);
+				|| (view == null) || (weightHelper == null));
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 			view.printError(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * La méthode qui lance l'exécution de l'algorithme génétique.
 	 * 
@@ -232,13 +232,14 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	 * @param path
 	 */
 	private void openFile(String path) {
-		File fileToOpen = new File(path);
+		final File fileToOpen = new File(path);
 		
 		if (fileToOpen.exists() && fileToOpen.isFile()) {
-			final IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
-			final IWorkbenchPage page = SearchPlugin.getActivePage();
+			
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
+					IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
+					IWorkbenchPage page = SearchPlugin.getActivePage();
 					try {
 						IDE.openEditorOnFileStore(page, fileStore);
 					} catch (PartInitException e) {
