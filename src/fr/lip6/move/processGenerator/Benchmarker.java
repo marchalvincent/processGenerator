@@ -14,6 +14,7 @@ public class Benchmarker {
 	
 	private long startTime;
 	private Map<Long, String> numbers;
+	private int nbGeneration;
 	
 	public Benchmarker() {
 		super();
@@ -24,9 +25,10 @@ public class Benchmarker {
 		startTime = System.nanoTime();
 	}
 	
-	public void tic(String bestS) {
+	public void tic(String bestS, int nbGeneration) {
 		long estimatedTimeMillis = (System.nanoTime() - startTime) / 1000000;
 		numbers.put(estimatedTimeMillis, bestS);
+		this.nbGeneration = nbGeneration;
 	}
 	
 	public void stop(String string) {
@@ -42,12 +44,16 @@ public class Benchmarker {
 			Set<Long> keys = numbers.keySet();
 			StringBuilder sb = new StringBuilder();
 			for (Long key : keys) {
-				sb.append(key);
-				sb.append(";");
-				sb.append(numbers.get(key));
-				sb.append("\n");
+				if (numbers.get(key).equals("100")) {
+					sb.append(key);
+					sb.append(";");
+					sb.append(nbGeneration);
+//					sb.append(";");
+//					sb.append(numbers.get(key));
+					sb.append("\n");
+				}
 			}
-			sb.append("\n\n\n");
+//			sb.append("\n\n\n");
 			out.write(sb.toString().getBytes());
 			
 			out.close();

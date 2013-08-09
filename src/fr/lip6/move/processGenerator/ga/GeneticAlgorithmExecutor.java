@@ -200,29 +200,14 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 		bench.stop(location + "bpmn_bench.csv");
 		
 		// la sauvegarde du process winner
-//		String digraph = null;
 		try {
 			String path = this.saveWinner(winner, location);
 			view.printAppend("Your file has been created : " + path);
-			this.openFile(path);
+			if (path.subSequence(path.length() - 4, path.length()).equals(".uml"))
+				this.openFile(path);
 			
-//			// on créé le fichier contenant le graph DOT
-//			digraph = this.saveDigraph(winner, location);
-//			// on lance l'éxécution de la commande DOT pour transformer en fichier pdf, gif, etc.
-//			String[] args = {"/usr/local/bin/dot", "-Tpdf", digraph, "-o", digraph + ".pdf"};
-//			Runtime rt = Runtime.getRuntime();
-//			Process p = rt.exec(args);
-//			p.waitFor();
-//			
-//			this.openFile(digraph + ".pdf");
-//			this.openFile(digraph);
-			
-		} catch (IOException /*| InterruptedException*/ e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-//			view.printError("Cannot run program 'dot'.");
-//			// s'il y a une erreur, on tente quand même d'ouvrir le fichier pour la vue zest graph
-//			if (digraph != null)
-//				this.openFile(digraph);
 		}
 	}
 
@@ -265,16 +250,6 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 	 */
 	protected abstract String saveWinner(T winner, String location) throws IOException;
 
-	/**
-	 * Sauvegarde le candidat sélectionné dans un fichier qui pourra être lu par le plugin Zest Graph.
-	 * 
-	 * @param winner
-	 * @param location2
-	 * @return
-	 * @throws en cas de problème, si on n'a pas pu écrire le fichier digraph
-	 */
-	protected abstract String saveDigraph(T winner, String location) throws IOException;
-	
 	/**
 	 * Renvoie la classe chargée de l'évaluation "fitness" de chaque candidat selon les contraintes spécifiée par
 	 * l'utilisateur.

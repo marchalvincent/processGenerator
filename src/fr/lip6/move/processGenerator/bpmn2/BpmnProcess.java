@@ -416,8 +416,6 @@ public class BpmnProcess {
 	 * 
 	 * @param nameFile
 	 *            le path du fichier.
-	 * @throws IOException
-	 *             en cas de problème d'entrée sortie dans la création du fichier.
 	 */
 	public void save(String nameFile) {
 		

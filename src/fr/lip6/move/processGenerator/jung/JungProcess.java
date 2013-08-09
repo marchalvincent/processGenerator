@@ -14,7 +14,6 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import fr.lip6.move.processGenerator.bpmn2.BpmnProcess;
 import fr.lip6.move.processGenerator.bpmn2.utils.BpmnFilter;
-import fr.lip6.move.processGenerator.dot.DotGraphicManager;
 import fr.lip6.move.processGenerator.uml2.UmlProcess;
 
 /**
@@ -58,12 +57,7 @@ public class JungProcess {
 		// on parcours chaque élément du process pour y mettre dans un premier temps les FlowNodes
 		for (FlowNode element : BpmnFilter.byType(FlowNode.class, process.getFlowElements())) {
 			
-			String type = DotGraphicManager.instance.getShape(element);
-			String color = DotGraphicManager.instance.getFillColor(element);
-			String width = DotGraphicManager.instance.getWidth(element);
-			String height = DotGraphicManager.instance.getHeight(element);
-			
-			JungVertex vertex = new JungVertex(element, type, color, width, height);
+			JungVertex vertex = new JungVertex(element);
 			allVertices.put(vertex.getId(), vertex);
 			graph.addVertex(vertex);
 		}
@@ -101,12 +95,7 @@ public class JungProcess {
 		// on parcours chaque node du process
 		for (ActivityNode node : process.getNodes()) {
 
-			String type = DotGraphicManager.instance.getShape(node);
-			String color = DotGraphicManager.instance.getFillColor(node);
-			String width = DotGraphicManager.instance.getWidth(node);
-			String height = DotGraphicManager.instance.getHeight(node);
-			
-			JungVertex vertex = new JungVertex(node, type, color, width, height);
+			JungVertex vertex = new JungVertex(node);
 			allVertices.put(node.getName(), vertex);
 			graph.addVertex(vertex);
 		}

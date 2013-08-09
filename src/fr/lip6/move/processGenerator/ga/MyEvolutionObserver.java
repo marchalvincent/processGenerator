@@ -30,6 +30,6 @@ public class MyEvolutionObserver<T> implements EvolutionObserver<T> {
 		DecimalFormat df = new DecimalFormat("#.##");
 		String bestS = df.format(best);
 		view.print("Generation " + data.getGenerationNumber() + ": " + bestS + "% matches.");
-		bench.tic(bestS);
+		bench.tic(bestS, data.getGenerationNumber());
 	}
 }
