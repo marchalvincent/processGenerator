@@ -203,9 +203,7 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 		try {
 			String path = this.saveWinner(winner, location);
 			view.printAppend("Your file has been created : " + path);
-			if (path.subSequence(path.length() - 4, path.length()).equals(".uml"))
-				this.openFile(path);
-			
+			this.openFile(path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -226,9 +224,10 @@ public abstract class GeneticAlgorithmExecutor<T> extends Thread {
 					IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
 					IWorkbenchPage page = SearchPlugin.getActivePage();
 					try {
-						IDE.openEditorOnFileStore(page, fileStore);
+						IDE.openInternalEditorOnFileStore(page, fileStore);
 					} catch (PartInitException e) {
 						e.printStackTrace();
+						
 					}
 				}
 			});
